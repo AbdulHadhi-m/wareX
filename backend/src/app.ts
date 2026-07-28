@@ -7,6 +7,7 @@ import { requestLogger, errorHandler, notFoundHandler } from './shared/middlewar
 import { HttpStatus } from './shared/constants/http-status';
 import { toISOString } from './shared/utils/date';
 import { authRouter } from './modules/auth/auth.routes';
+import { warehouseRouter } from './modules/warehouse/warehouse.routes';
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.get(`${appConfig.apiPrefix}/health`, (_req, res) => {
 });
 
 app.use(`${appConfig.apiPrefix}/auth`, authRouter);
+app.use(`${appConfig.apiPrefix}/warehouses`, warehouseRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

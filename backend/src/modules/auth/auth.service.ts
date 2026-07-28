@@ -75,7 +75,7 @@ export class AuthService {
 
     return jwt.sign(payload, environment.JWT_SECRET, {
       expiresIn: environment.JWT_EXPIRES_IN,
-    });
+    } as jwt.SignOptions);
   }
 
   private toUserResponse(user: IUser): UserResponse {

@@ -1,8 +1,8 @@
 export declare class AppError extends Error {
     readonly statusCode: number;
-    readonly isOperational: boolean;
+    isOperational: boolean;
     readonly details?: unknown;
-    constructor(message: string, statusCode: number, details?: unknown);
+    constructor(message: string, statusCode: number, details?: unknown, isOperational?: boolean);
     toJSON(): {
         name: string;
         message: string;

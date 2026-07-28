@@ -1,4 +1,4 @@
-import { UserModel, UserDocument } from './auth.model';
+import { UserModel } from './auth.model';
 import { IUser, RegisterDTO } from './auth.types';
 
 export class AuthRepository {

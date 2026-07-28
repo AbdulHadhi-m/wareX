@@ -38,7 +38,7 @@ const userSchema = new Schema<UserDocument>(
 );
 
 userSchema.set('toJSON', {
-  transform(_doc, ret) {
+  transform(_doc: Record<string, any>, ret: Record<string, any>) {
     ret.id = ret._id.toString();
     delete ret._id;
     delete ret.__v;

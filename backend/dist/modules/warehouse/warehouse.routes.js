@@ -1,0 +1,22 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.warehouseRouter = void 0;
+const express_1 = require("express");
+const warehouse_controller_1 = require("./warehouse.controller");
+const warehouse_service_1 = require("./warehouse.service");
+const warehouse_repository_1 = require("./warehouse.repository");
+const validate_1 = require("../../shared/validation/validate");
+const warehouse_validation_1 = require("./warehouse.validation");
+const auth_middleware_1 = require("../auth/auth.middleware");
+const router = (0, express_1.Router)();
+exports.warehouseRouter = router;
+const repository = new warehouse_repository_1.WarehouseRepository();
+const service = new warehouse_service_1.WarehouseService(repository);
+const controller = new warehouse_controller_1.WarehouseController(service);
+router.use(auth_middleware_1.authenticate);
+router.post('/', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(warehouse_validation_1.createWarehouseSchema), controller.create);
+router.get('/', controller.findAll);
+router.get('/:id', controller.findById);
+router.patch('/:id', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(warehouse_validation_1.warehouseIdSchema, validate_1.ValidationSource.PARAMS), (0, validate_1.validate)(warehouse_validation_1.updateWarehouseSchema), controller.update);
+router.delete('/:id', (0, auth_middleware_1.authorize)('Manager'), controller.delete);
+//# sourceMappingURL=warehouse.routes.js.map

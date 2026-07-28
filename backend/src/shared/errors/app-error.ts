@@ -2,14 +2,14 @@ import { HttpStatus } from '../constants/http-status';
 
 export class AppError extends Error {
   public readonly statusCode: number;
-  public readonly isOperational: boolean;
+  public isOperational: boolean;
   public readonly details?: unknown;
 
-  constructor(message: string, statusCode: number, details?: unknown) {
+  constructor(message: string, statusCode: number, details?: unknown, isOperational = true) {
     super(message);
     this.name = this.constructor.name;
     this.statusCode = statusCode;
-    this.isOperational = true;
+    this.isOperational = isOperational;
     this.details = details;
 
     Error.captureStackTrace(this, this.constructor);
@@ -27,7 +27,6 @@ export class AppError extends Error {
 
 export class InternalError extends AppError {
   constructor(message = 'Internal server error') {
-    super(message, HttpStatus.INTERNAL_SERVER_ERROR);
-    this.isOperational = false;
+    super(message, HttpStatus.INTERNAL_SERVER_ERROR, undefined, false);
   }
 }

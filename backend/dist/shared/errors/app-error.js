@@ -6,11 +6,11 @@ class AppError extends Error {
     statusCode;
     isOperational;
     details;
-    constructor(message, statusCode, details) {
+    constructor(message, statusCode, details, isOperational = true) {
         super(message);
         this.name = this.constructor.name;
         this.statusCode = statusCode;
-        this.isOperational = true;
+        this.isOperational = isOperational;
         this.details = details;
         Error.captureStackTrace(this, this.constructor);
     }
@@ -26,8 +26,7 @@ class AppError extends Error {
 exports.AppError = AppError;
 class InternalError extends AppError {
     constructor(message = 'Internal server error') {
-        super(message, http_status_1.HttpStatus.INTERNAL_SERVER_ERROR);
-        this.isOperational = false;
+        super(message, http_status_1.HttpStatus.INTERNAL_SERVER_ERROR, undefined, false);
     }
 }
 exports.InternalError = InternalError;
