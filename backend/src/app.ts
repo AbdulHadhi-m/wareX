@@ -8,6 +8,7 @@ import { HttpStatus } from './shared/constants/http-status';
 import { toISOString } from './shared/utils/date';
 import { authRouter } from './modules/auth/auth.routes';
 import { warehouseRouter } from './modules/warehouse/warehouse.routes';
+import { zoneRouter, warehouseZoneRouter } from './modules/zone/zone.routes';
 
 const app = express();
 
@@ -29,6 +30,8 @@ app.get(`${appConfig.apiPrefix}/health`, (_req, res) => {
 
 app.use(`${appConfig.apiPrefix}/auth`, authRouter);
 app.use(`${appConfig.apiPrefix}/warehouses`, warehouseRouter);
+app.use(`${appConfig.apiPrefix}/warehouses`, warehouseZoneRouter);
+app.use(`${appConfig.apiPrefix}/zones`, zoneRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -1,0 +1,28 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.warehouseZoneRouter = exports.zoneRouter = void 0;
+const express_1 = require("express");
+const zone_controller_1 = require("./zone.controller");
+const zone_service_1 = require("./zone.service");
+const zone_repository_1 = require("./zone.repository");
+const warehouse_repository_1 = require("../warehouse/warehouse.repository");
+const validate_1 = require("../../shared/validation/validate");
+const zone_validation_1 = require("./zone.validation");
+const auth_middleware_1 = require("../auth/auth.middleware");
+const zoneRepository = new zone_repository_1.ZoneRepository();
+const warehouseRepository = new warehouse_repository_1.WarehouseRepository();
+const service = new zone_service_1.ZoneService(zoneRepository, warehouseRepository);
+const controller = new zone_controller_1.ZoneController(service);
+const zoneRouter = (0, express_1.Router)();
+exports.zoneRouter = zoneRouter;
+zoneRouter.use(auth_middleware_1.authenticate);
+zoneRouter.post('/', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(zone_validation_1.createZoneSchema), controller.create);
+zoneRouter.get('/', controller.findAll);
+zoneRouter.get('/:id', (0, validate_1.validate)(zone_validation_1.zoneIdSchema, validate_1.ValidationSource.PARAMS), controller.findById);
+zoneRouter.patch('/:id', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(zone_validation_1.zoneIdSchema, validate_1.ValidationSource.PARAMS), (0, validate_1.validate)(zone_validation_1.updateZoneSchema), controller.update);
+zoneRouter.delete('/:id', (0, auth_middleware_1.authorize)('Manager'), controller.delete);
+const warehouseZoneRouter = (0, express_1.Router)();
+exports.warehouseZoneRouter = warehouseZoneRouter;
+warehouseZoneRouter.use(auth_middleware_1.authenticate);
+warehouseZoneRouter.get('/:warehouseId/zones', (0, validate_1.validate)(zone_validation_1.warehouseIdParamSchema, validate_1.ValidationSource.PARAMS), controller.findByWarehouse);
+//# sourceMappingURL=zone.routes.js.map
