@@ -15,6 +15,7 @@ import { parsePagination, buildPaginationMeta } from '../../shared/utils/paginat
 import { type PaginationMeta } from '../../shared/types/api-response';
 import { UserModel } from '../auth/auth.model';
 import { DeviceModel } from '../device/device.model';
+import { eventEmitter, Events } from '../../shared/events/event-emitter';
 
 export class PickListService {
   constructor(
@@ -270,6 +271,11 @@ export class PickListService {
 
       await session.commitTransaction();
 
+      eventEmitter.emit(Events.PICK_LIST_COMPLETED, {
+        pickListId: id,
+        deviceIds: pickList.deviceIds,
+      });
+
       return this.toPickListResponse(updated);
     } catch (error) {
       await session.abortTransaction();
@@ -315,6 +321,11 @@ export class PickListService {
       );
 
       await session.commitTransaction();
+
+      eventEmitter.emit(Events.PICK_LIST_CANCELLED, {
+        pickListId: id,
+        deviceIds: pickList.deviceIds,
+      });
 
       return this.toPickListResponse(updated);
     } catch (error) {

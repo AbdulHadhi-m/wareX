@@ -14,6 +14,7 @@ import { binRouter, aisleBinRouter } from './modules/bin/bin.routes';
 import { deviceRouter } from './modules/device/device.routes';
 import { inventoryRouter } from './modules/inventory/inventory.routes';
 import { pickListRouter } from './modules/pick-list/pickList.routes';
+import { orderRouter } from './modules/order/order.routes';
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use(`${appConfig.apiPrefix}/bins`, binRouter);
 app.use(`${appConfig.apiPrefix}/devices`, deviceRouter);
 app.use(`${appConfig.apiPrefix}/inventory`, inventoryRouter);
 app.use(`${appConfig.apiPrefix}/pick-lists`, pickListRouter);
+app.use(`${appConfig.apiPrefix}/orders`, orderRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
