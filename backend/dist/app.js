@@ -17,6 +17,7 @@ const warehouse_routes_1 = require("./modules/warehouse/warehouse.routes");
 const zone_routes_1 = require("./modules/zone/zone.routes");
 const aisle_routes_1 = require("./modules/aisle/aisle.routes");
 const bin_routes_1 = require("./modules/bin/bin.routes");
+const device_routes_1 = require("./modules/device/device.routes");
 const app = (0, express_1.default)();
 exports.app = app;
 app.use((0, helmet_1.default)());
@@ -41,6 +42,7 @@ app.use(`${app_1.appConfig.apiPrefix}/zones`, aisle_routes_1.zoneAisleRouter);
 app.use(`${app_1.appConfig.apiPrefix}/aisles`, aisle_routes_1.aisleRouter);
 app.use(`${app_1.appConfig.apiPrefix}/aisles`, bin_routes_1.aisleBinRouter);
 app.use(`${app_1.appConfig.apiPrefix}/bins`, bin_routes_1.binRouter);
+app.use(`${app_1.appConfig.apiPrefix}/devices`, device_routes_1.deviceRouter);
 app.use(middleware_1.notFoundHandler);
 app.use(middleware_1.errorHandler);
 //# sourceMappingURL=app.js.map

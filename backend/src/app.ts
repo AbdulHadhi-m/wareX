@@ -11,6 +11,7 @@ import { warehouseRouter } from './modules/warehouse/warehouse.routes';
 import { zoneRouter, warehouseZoneRouter } from './modules/zone/zone.routes';
 import { aisleRouter, zoneAisleRouter } from './modules/aisle/aisle.routes';
 import { binRouter, aisleBinRouter } from './modules/bin/bin.routes';
+import { deviceRouter } from './modules/device/device.routes';
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use(`${appConfig.apiPrefix}/zones`, zoneAisleRouter);
 app.use(`${appConfig.apiPrefix}/aisles`, aisleRouter);
 app.use(`${appConfig.apiPrefix}/aisles`, aisleBinRouter);
 app.use(`${appConfig.apiPrefix}/bins`, binRouter);
+app.use(`${appConfig.apiPrefix}/devices`, deviceRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
