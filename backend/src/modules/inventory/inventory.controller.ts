@@ -3,12 +3,26 @@ import { InventoryService } from './inventory.service';
 import { asyncHandler } from '../../shared/middleware/async-handler';
 import { sendCreated, sendSuccess } from '../../shared/utils/api-response';
 import { parsePagination } from '../../shared/utils/pagination';
+import { auditService } from '../audit-log/auditLog.service';
 
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
   move = asyncHandler(async (req: Request, res: Response) => {
     const result = await this.inventoryService.move(req.body, req.userId!);
+
+    auditService.log({
+      userId: req.userId!,
+      userRole: req.userRole!,
+      module: 'Inventory',
+      action: 'Device Movement',
+      resourceType: 'MovementHistory',
+      resourceId: result.id,
+      newData: result,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'] as string | undefined,
+    });
+
     sendCreated(res, result);
   });
 

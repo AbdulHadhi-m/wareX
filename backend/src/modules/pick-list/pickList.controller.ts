@@ -4,12 +4,26 @@ import { asyncHandler } from '../../shared/middleware/async-handler';
 import { sendCreated, sendSuccess } from '../../shared/utils/api-response';
 import { parsePagination } from '../../shared/utils/pagination';
 import { PickListStatus } from './pickList.types';
+import { auditService } from '../audit-log/auditLog.service';
 
 export class PickListController {
   constructor(private readonly pickListService: PickListService) {}
 
   create = asyncHandler(async (req: Request, res: Response) => {
     const result = await this.pickListService.create(req.body, req.userId!);
+
+    auditService.log({
+      userId: req.userId!,
+      userRole: req.userRole!,
+      module: 'Pick List',
+      action: 'Create',
+      resourceType: 'PickList',
+      resourceId: result.id,
+      newData: result,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'] as string | undefined,
+    });
+
     sendCreated(res, result);
   });
 
@@ -49,35 +63,95 @@ export class PickListController {
   });
 
   assign = asyncHandler(async (req: Request, res: Response) => {
+    const oldData = await this.pickListService.findById(String(req.params.id));
     const result = await this.pickListService.assign(
       String(req.params.id),
       req.body,
       req.userId!,
     );
+
+    auditService.log({
+      userId: req.userId!,
+      userRole: req.userRole!,
+      module: 'Pick List',
+      action: 'Assign',
+      resourceType: 'PickList',
+      resourceId: result.id,
+      previousData: oldData,
+      newData: result,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'] as string | undefined,
+    });
+
     sendSuccess(res, result);
   });
 
   start = asyncHandler(async (req: Request, res: Response) => {
+    const oldData = await this.pickListService.findById(String(req.params.id));
     const result = await this.pickListService.start(
       String(req.params.id),
       req.userId!,
     );
+
+    auditService.log({
+      userId: req.userId!,
+      userRole: req.userRole!,
+      module: 'Pick List',
+      action: 'Start',
+      resourceType: 'PickList',
+      resourceId: result.id,
+      previousData: oldData,
+      newData: result,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'] as string | undefined,
+    });
+
     sendSuccess(res, result);
   });
 
   complete = asyncHandler(async (req: Request, res: Response) => {
+    const oldData = await this.pickListService.findById(String(req.params.id));
     const result = await this.pickListService.complete(
       String(req.params.id),
       req.userId!,
     );
+
+    auditService.log({
+      userId: req.userId!,
+      userRole: req.userRole!,
+      module: 'Pick List',
+      action: 'Complete',
+      resourceType: 'PickList',
+      resourceId: result.id,
+      previousData: oldData,
+      newData: result,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'] as string | undefined,
+    });
+
     sendSuccess(res, result);
   });
 
   cancel = asyncHandler(async (req: Request, res: Response) => {
+    const oldData = await this.pickListService.findById(String(req.params.id));
     const result = await this.pickListService.cancel(
       String(req.params.id),
       req.userId!,
     );
+
+    auditService.log({
+      userId: req.userId!,
+      userRole: req.userRole!,
+      module: 'Pick List',
+      action: 'Cancel',
+      resourceType: 'PickList',
+      resourceId: result.id,
+      previousData: oldData,
+      newData: result,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'] as string | undefined,
+    });
+
     sendSuccess(res, result);
   });
 }
