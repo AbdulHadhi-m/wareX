@@ -13,6 +13,7 @@ import { aisleRouter, zoneAisleRouter } from './modules/aisle/aisle.routes';
 import { binRouter, aisleBinRouter } from './modules/bin/bin.routes';
 import { deviceRouter } from './modules/device/device.routes';
 import { inventoryRouter } from './modules/inventory/inventory.routes';
+import { pickListRouter } from './modules/pick-list/pickList.routes';
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use(`${appConfig.apiPrefix}/aisles`, aisleBinRouter);
 app.use(`${appConfig.apiPrefix}/bins`, binRouter);
 app.use(`${appConfig.apiPrefix}/devices`, deviceRouter);
 app.use(`${appConfig.apiPrefix}/inventory`, inventoryRouter);
+app.use(`${appConfig.apiPrefix}/pick-lists`, pickListRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
