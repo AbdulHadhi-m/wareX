@@ -2,11 +2,16 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { DashboardLayout, AuthLayout, PublicLayout } from '@/components/layouts';
 import { ROUTES } from '@/constants';
 import { ComingSoonPage } from '@/features/placeholder/pages/coming-soon-page';
+import { ProtectedRoute, GuestRoute, LoginPage } from '@/features/auth';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <DashboardLayout />,
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
@@ -110,30 +115,31 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.SETTINGS,
         element: (
-          <ComingSoonPage
-            title="Settings"
-            description="Configure system preferences and user settings."
-          />
+          <ProtectedRoute roles={['Manager']}>
+            <ComingSoonPage
+              title="Settings"
+              description="Configure system preferences and user settings."
+            />
+          </ProtectedRoute>
         ),
       },
     ],
   },
   {
     path: '/auth',
-    element: <AuthLayout />,
+    element: (
+      <GuestRoute>
+        <AuthLayout />
+      </GuestRoute>
+    ),
     children: [
       {
         index: true,
-        element: <Navigate to="/auth/login" replace />,
+        element: <Navigate to={ROUTES.AUTH.LOGIN} replace />,
       },
       {
         path: 'login',
-        element: (
-          <ComingSoonPage
-            title="Sign In"
-            description="Authentication coming soon."
-          />
-        ),
+        element: <LoginPage />,
       },
       {
         path: 'register',

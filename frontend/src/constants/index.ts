@@ -13,6 +13,10 @@ export const ROUTES = {
   NOTIFICATIONS: '/notifications',
   REPORTS: '/reports',
   SETTINGS: '/settings',
+  AUTH: {
+    LOGIN: '/auth/login',
+    REGISTER: '/auth/register',
+  },
 } as const;
 
 export const QUERY_KEYS = {

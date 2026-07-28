@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { env } from '@/config/env';
+import { authService } from '@/features/auth/services/auth-service';
+import { useAuthStore } from '@/features/auth/store/auth-store';
 
 export const api = axios.create({
   baseURL: env.API_URL,
@@ -10,7 +12,7 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('warex-token');
+  const token = authService.getToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -21,8 +23,11 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('warex-token');
-      window.location.href = '/auth/login';
+      const token = authService.getToken();
+      if (token && !error.config?.url?.includes('/auth/login')) {
+        authService.removeToken();
+        useAuthStore.getState().clearAuth();
+      }
     }
     return Promise.reject(error);
   },
