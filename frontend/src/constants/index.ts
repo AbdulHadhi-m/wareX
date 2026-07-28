@@ -30,5 +30,13 @@ export const QUERY_KEYS = {
   ORDERS: ['orders'] as const,
   NOTIFICATIONS: ['notifications'] as const,
   REPORTS: ['reports'] as const,
-  DASHBOARD: ['dashboard'] as const,
+  DASHBOARD: {
+    SUMMARY: ['dashboard', 'summary'] as const,
+    DEVICE_STATUS: ['dashboard', 'device-status'] as const,
+    ORDER_STATUS: ['dashboard', 'order-status'] as const,
+    WAREHOUSE_UTILIZATION: ['dashboard', 'warehouse-utilization'] as const,
+    RECENT_ORDERS: ['dashboard', 'recent-orders'] as const,
+    RECENT_PICK_LISTS: ['dashboard', 'recent-pick-lists'] as const,
+    RECENT_NOTIFICATIONS: ['dashboard', 'recent-notifications'] as const,
+  },
 } as const;

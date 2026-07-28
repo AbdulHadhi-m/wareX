@@ -3,6 +3,7 @@ import { DashboardLayout, AuthLayout, PublicLayout } from '@/components/layouts'
 import { ROUTES } from '@/constants';
 import { ComingSoonPage } from '@/features/placeholder/pages/coming-soon-page';
 import { ProtectedRoute, GuestRoute, LoginPage } from '@/features/auth';
+import { DashboardPage } from '@/features/dashboard';
 
 export const router = createBrowserRouter([
   {
@@ -15,12 +16,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <ComingSoonPage
-            title="Dashboard"
-            description="Overview of warehouse operations and key metrics."
-          />
-        ),
+        element: <DashboardPage />,
       },
       {
         path: ROUTES.WAREHOUSES,
