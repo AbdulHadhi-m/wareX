@@ -4,6 +4,12 @@ import { ROUTES } from '@/constants';
 import { ComingSoonPage } from '@/features/placeholder/pages/coming-soon-page';
 import { ProtectedRoute, GuestRoute, LoginPage } from '@/features/auth';
 import { DashboardPage } from '@/features/dashboard';
+import {
+  WarehouseListPage,
+  CreateWarehousePage,
+  EditWarehousePage,
+  WarehouseDetailsPage,
+} from '@/features/warehouse';
 
 export const router = createBrowserRouter([
   {
@@ -20,12 +26,12 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.WAREHOUSES,
-        element: (
-          <ComingSoonPage
-            title="Warehouses"
-            description="Manage warehouse locations and facilities."
-          />
-        ),
+        children: [
+          { index: true, element: <WarehouseListPage /> },
+          { path: 'new', element: <CreateWarehousePage /> },
+          { path: ':id', element: <WarehouseDetailsPage /> },
+          { path: ':id/edit', element: <EditWarehousePage /> },
+        ],
       },
       {
         path: ROUTES.ZONES,
