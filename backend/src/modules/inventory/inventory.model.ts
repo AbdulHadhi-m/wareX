@@ -77,6 +77,9 @@ movementHistorySchema.index({ toBinId: 1, createdAt: -1 });
 movementHistorySchema.index({ toWarehouseId: 1, createdAt: -1 });
 movementHistorySchema.index({ movementType: 1, createdAt: -1 });
 movementHistorySchema.index({ performedBy: 1, createdAt: -1 });
+movementHistorySchema.index({ toZoneId: 1, createdAt: -1 });
+movementHistorySchema.index({ toAisleId: 1, createdAt: -1 });
+movementHistorySchema.index({ movementType: 1 });
 
 export const MovementHistoryModel = mongoose.model<MovementHistoryDocument>(
   'MovementHistory',

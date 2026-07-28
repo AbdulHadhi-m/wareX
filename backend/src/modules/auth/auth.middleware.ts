@@ -5,7 +5,7 @@ import { AuthenticationError } from '../../shared/errors/authentication-error';
 import { AuthorizationError } from '../../shared/errors/authorization-error';
 import { JwtPayload, UserRole } from './auth.types';
 
-export async function authenticate(req: Request, _res: Response, next: NextFunction): Promise<void> {
+export function authenticate(req: Request, _res: Response, next: NextFunction): void {
   try {
     const authHeader = req.headers.authorization;
 

@@ -10,6 +10,7 @@ import {
   notificationQuerySchema,
 } from './notification.validation';
 import { authenticate, authorize } from '../auth/auth.middleware';
+import { logger } from '../../shared/logger/logger';
 import { eventEmitter, Events } from '../../shared/events/event-emitter';
 import { UserModel } from '../auth/auth.model';
 import { NotificationType, NotificationPriority } from './notification.types';
@@ -33,7 +34,7 @@ eventEmitter.on(Events.ORDER_CREATED, async (data: Record<string, unknown>) => {
       relatedResourceId: data.orderId as string,
     });
   } catch (error) {
-    console.error('Failed to create order notification:', error);
+    logger.error({ err: error, type: 'ORDER_CREATED' }, 'Failed to create notification');
   }
 });
 
@@ -49,7 +50,7 @@ eventEmitter.on(Events.ORDER_CANCELLED, async (data: Record<string, unknown>) =>
       relatedResourceId: data.orderId as string,
     });
   } catch (error) {
-    console.error('Failed to create order cancelled notification:', error);
+    logger.error({ err: error, type: 'ORDER_CANCELLED' }, 'Failed to create notification');
   }
 });
 
@@ -65,7 +66,7 @@ eventEmitter.on(Events.ORDER_FULFILLED, async (data: Record<string, unknown>) =>
       relatedResourceId: data.orderId as string,
     });
   } catch (error) {
-    console.error('Failed to create order fulfilled notification:', error);
+    logger.error({ err: error, type: 'ORDER_FULFILLED' }, 'Failed to create notification');
   }
 });
 
@@ -81,7 +82,7 @@ eventEmitter.on(Events.PICK_LIST_ASSIGNED, async (data: Record<string, unknown>)
       relatedResourceId: data.pickListId as string,
     });
   } catch (error) {
-    console.error('Failed to create pick list assigned notification:', error);
+    logger.error({ err: error, type: 'PICK_LIST_ASSIGNED' }, 'Failed to create notification');
   }
 });
 
@@ -97,7 +98,7 @@ eventEmitter.on(Events.PICK_LIST_STARTED, async (data: Record<string, unknown>) 
       relatedResourceId: data.pickListId as string,
     });
   } catch (error) {
-    console.error('Failed to create pick list started notification:', error);
+    logger.error({ err: error, type: 'PICK_LIST_STARTED' }, 'Failed to create notification');
   }
 });
 
@@ -117,7 +118,7 @@ eventEmitter.on(Events.PICK_LIST_COMPLETED, async (data: Record<string, unknown>
 
     await notificationService.create(notificationData);
   } catch (error) {
-    console.error('Failed to create pick list completed notification:', error);
+    logger.error({ err: error, type: 'PICK_LIST_COMPLETED' }, 'Failed to create notification');
   }
 });
 
@@ -133,7 +134,7 @@ eventEmitter.on(Events.PICK_LIST_CANCELLED, async (data: Record<string, unknown>
       relatedResourceId: data.pickListId as string,
     });
   } catch (error) {
-    console.error('Failed to create pick list cancelled notification:', error);
+    logger.error({ err: error, type: 'PICK_LIST_CANCELLED' }, 'Failed to create notification');
   }
 });
 
@@ -154,7 +155,7 @@ eventEmitter.on(Events.DEVICE_MOVED, async (data: Record<string, unknown>) => {
       });
     }
   } catch (error) {
-    console.error('Failed to create device moved notification:', error);
+    logger.error({ err: error, type: 'DEVICE_MOVED' }, 'Failed to create notification');
   }
 });
 
@@ -170,7 +171,7 @@ eventEmitter.on(Events.AUTH_LOGIN, async (data: Record<string, unknown>) => {
       relatedResourceId: data.userId as string,
     });
   } catch (error) {
-    console.error('Failed to create login notification:', error);
+    logger.error({ err: error, type: 'AUTH_LOGIN' }, 'Failed to create notification');
   }
 });
 

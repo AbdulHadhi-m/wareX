@@ -73,5 +73,7 @@ auditLogSchema.index({ createdAt: -1 });
 auditLogSchema.index({ module: 1, createdAt: -1 });
 auditLogSchema.index({ userId: 1, createdAt: -1 });
 auditLogSchema.index({ resourceType: 1, resourceId: 1 });
+auditLogSchema.index({ action: 1, createdAt: -1 });
+auditLogSchema.index({ userId: 1, module: 1, createdAt: -1 });
 
 export const AuditLogModel = mongoose.model<AuditLogDocument>('AuditLog', auditLogSchema);

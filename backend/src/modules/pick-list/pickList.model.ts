@@ -77,5 +77,6 @@ pickListSchema.index({ status: 1, createdAt: -1 });
 pickListSchema.index({ workerId: 1, status: 1 });
 pickListSchema.index({ createdAt: -1 });
 pickListSchema.index({ deviceIds: 1 });
+pickListSchema.index({ status: 1, priority: 1, createdAt: -1 });
 
 export const PickListModel = mongoose.model<PickListDocument>('PickList', pickListSchema);

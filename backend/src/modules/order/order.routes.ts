@@ -10,6 +10,7 @@ import {
   orderQuerySchema,
 } from './order.validation';
 import { authenticate, authorize } from '../auth/auth.middleware';
+import { logger } from '../../shared/logger/logger';
 import { eventEmitter, Events } from '../../shared/events/event-emitter';
 
 const orderRepository = new OrderRepository();
@@ -20,7 +21,7 @@ eventEmitter.on(Events.PICK_LIST_COMPLETED, async ({ pickListId }: { pickListId:
   try {
     await orderService.onPickListCompleted(pickListId);
   } catch (error) {
-    console.error(`Failed to update order on pick list ${pickListId} completion:`, error);
+    logger.error({ err: error, pickListId }, 'Failed to update order on pick list completion');
   }
 });
 
@@ -28,7 +29,7 @@ eventEmitter.on(Events.PICK_LIST_CANCELLED, async ({ pickListId }: { pickListId:
   try {
     await orderService.onPickListCancelled(pickListId);
   } catch (error) {
-    console.error(`Failed to update order on pick list ${pickListId} cancellation:`, error);
+    logger.error({ err: error, pickListId }, 'Failed to update order on pick list cancellation');
   }
 });
 

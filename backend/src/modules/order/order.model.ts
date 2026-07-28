@@ -78,6 +78,7 @@ orderSchema.set('toJSON', {
 orderSchema.index({ status: 1, createdAt: -1 });
 orderSchema.index({ customerName: 1 });
 orderSchema.index({ pickListId: 1 });
+orderSchema.index({ deviceIds: 1 });
 orderSchema.index({ createdAt: -1 });
 
 export const OrderModel = mongoose.model<OrderDocument>('Order', orderSchema);

@@ -14,6 +14,7 @@ export class MovementHistoryRepository {
   async findByDeviceId(deviceId: string): Promise<IMovementHistory[]> {
     return MovementHistoryModel.find({ deviceId })
       .sort({ createdAt: -1 })
+      .select('-__v')
       .lean();
   }
 

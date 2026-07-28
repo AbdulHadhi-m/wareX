@@ -48,6 +48,7 @@ export class OrderRepository {
   async findLastOrder(session?: mongoose.ClientSession): Promise<IOrder | null> {
     return OrderModel.findOne({})
       .sort({ orderNumber: -1 })
+      .select('orderNumber')
       .session(session || null)
       .lean();
   }
@@ -67,6 +68,7 @@ export class OrderRepository {
     }
 
     return OrderModel.findOne(filter as any)
+      .select('orderNumber status')
       .session(session || null)
       .lean();
   }

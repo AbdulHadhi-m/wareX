@@ -49,6 +49,7 @@ export class PickListRepository {
       deviceIds: deviceId,
       status: { $in: ['Draft', 'Assigned', 'In Progress'] },
     })
+      .select('pickListNumber status')
       .session(session || null)
       .lean();
   }
@@ -56,6 +57,7 @@ export class PickListRepository {
   async findLastPickList(session?: mongoose.ClientSession): Promise<IPickList | null> {
     return PickListModel.findOne({})
       .sort({ pickListNumber: -1 })
+      .select('pickListNumber')
       .session(session || null)
       .lean();
   }

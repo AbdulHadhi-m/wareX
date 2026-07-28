@@ -10,11 +10,14 @@ export async function connect(): Promise<void> {
   mongoose.set('strictQuery', true);
 
   mongoose.connection.on('connected', () => {
-    logger.info('MongoDB connection established');
+    logger.info({
+      database: mongoose.connection.db?.databaseName,
+      host: mongoose.connection.host,
+    }, 'MongoDB connection established');
   });
 
   mongoose.connection.on('error', (err) => {
-    logger.error(err, 'MongoDB connection error');
+    logger.error({ err }, 'MongoDB connection error');
   });
 
   mongoose.connection.on('disconnected', () => {
@@ -31,9 +34,10 @@ export async function connect(): Promise<void> {
     logger.info({
       uri: maskUri(databaseConfig.uri),
       database: mongoose.connection.db?.databaseName,
+      maxPoolSize: databaseConfig.connectionOptions.maxPoolSize,
     }, 'MongoDB connection successful');
   } catch (error) {
-    logger.fatal(error, 'Failed to connect to MongoDB');
+    logger.fatal({ err: error }, 'Failed to connect to MongoDB');
     throw error;
   }
 }
@@ -43,7 +47,7 @@ export async function disconnect(): Promise<void> {
     await mongoose.disconnect();
     logger.info('MongoDB connection closed');
   } catch (error) {
-    logger.error(error, 'Error closing MongoDB connection');
+    logger.error({ err: error }, 'Error closing MongoDB connection');
   }
 }
 

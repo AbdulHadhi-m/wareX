@@ -35,9 +35,8 @@ export class DeviceRepository {
   }
 
   async create(data: Record<string, unknown>): Promise<IDevice> {
-    const device = await DeviceModel.create(data as any);
-    const obj = device.toObject();
-    return obj as unknown as IDevice;
+    const device = await DeviceModel.create(data);
+    return device.toObject() as unknown as IDevice;
   }
 
   async update(id: string, data: Record<string, unknown>): Promise<IDevice | null> {

@@ -2,10 +2,13 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
+import hpp from 'hpp';
 import { appConfig } from './shared/config/app';
-import { requestLogger, errorHandler, notFoundHandler } from './shared/middleware';
+import { requestId, requestLogger, errorHandler, notFoundHandler, standardLimiter, authLimiter } from './shared/middleware';
 import { HttpStatus } from './shared/constants/http-status';
 import { toISOString } from './shared/utils/date';
+import { environment } from './shared/config/environment';
+import { isConnected } from './shared/database/connection';
 import { authRouter } from './modules/auth/auth.routes';
 import { warehouseRouter } from './modules/warehouse/warehouse.routes';
 import { zoneRouter, warehouseZoneRouter } from './modules/zone/zone.routes';
@@ -21,18 +24,37 @@ import { reportRouter } from './modules/report/report.routes';
 
 const app = express();
 
-app.use(helmet());
-app.use(cors());
-app.use(compression());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const startTime = Date.now();
+
+app.use(helmet({
+  contentSecurityPolicy: appConfig.isProduction ? undefined : false,
+  crossOriginEmbedderPolicy: appConfig.isProduction,
+}));
+app.use(cors({
+  origin: environment.CORS_ORIGIN === '*' ? '*' : environment.CORS_ORIGIN.split(','),
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  maxAge: 86400,
+}));
+app.use(compression({ level: 6 }));
+app.use(express.json({ limit: environment.BODY_LIMIT }));
+app.use(express.urlencoded({ extended: true, limit: environment.BODY_LIMIT }));
+app.use(hpp({ whitelist: ['page', 'limit', 'sortBy', 'sortOrder', 'fields', 'search', 'status', 'isRead', 'type', 'priority'] }));
+app.use(requestId);
 app.use(requestLogger);
+app.use(standardLimiter);
+
+app.use(`${appConfig.apiPrefix}/auth`, authLimiter);
 
 app.get(`${appConfig.apiPrefix}/health`, (_req, res) => {
   res.status(HttpStatus.OK).json({
     success: true,
     message: 'wareX API is running',
     environment: appConfig.nodeEnv,
+    version: appConfig.version,
+    uptime: Math.floor((Date.now() - startTime) / 1000),
+    database: isConnected() ? 'connected' : 'disconnected',
     timestamp: toISOString(),
   });
 });
