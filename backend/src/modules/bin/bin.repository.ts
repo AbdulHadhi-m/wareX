@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { BinModel } from './bin.model';
 import { IBin, CreateBinDTO, UpdateBinDTO } from './bin.types';
+import { type MongoQuery } from '../../shared/query';
 
 export class BinRepository {
   private baseFilter() {
@@ -9,6 +10,21 @@ export class BinRepository {
 
   async findAll(): Promise<IBin[]> {
     return BinModel.find(this.baseFilter()).sort({ createdAt: -1 }).lean();
+  }
+
+  async search(query: MongoQuery): Promise<IBin[]> {
+    const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+    const projection = Object.keys(query.projection).length > 0 ? query.projection : undefined;
+    let q = BinModel.find(filter as any).sort(query.sort).skip(query.skip).limit(query.limit);
+    if (projection) {
+      q = q.select(projection);
+    }
+    return q.lean();
+  }
+
+  async countSearch(query: MongoQuery): Promise<number> {
+    const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+    return BinModel.countDocuments(filter as any);
   }
 
   async findById(id: string): Promise<IBin | null> {

@@ -1,5 +1,6 @@
 import { DeviceModel } from './device.model';
 import { IDevice } from './device.types';
+import { type MongoQuery } from '../../shared/query';
 
 export class DeviceRepository {
   private baseFilter() {
@@ -18,16 +19,18 @@ export class DeviceRepository {
     return DeviceModel.findOne({ imei, ...this.baseFilter() }).lean();
   }
 
-  async search(
-    filter: Record<string, unknown>,
-    skip: number,
-    limit: number,
-    sort: Record<string, 1 | -1>,
-  ): Promise<IDevice[]> {
-    return DeviceModel.find(filter as any).sort(sort).skip(skip).limit(limit).lean();
+  async search(query: MongoQuery): Promise<IDevice[]> {
+    const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+    const projection = Object.keys(query.projection).length > 0 ? query.projection : undefined;
+    let q = DeviceModel.find(filter as any).sort(query.sort).skip(query.skip).limit(query.limit);
+    if (projection) {
+      q = q.select(projection);
+    }
+    return q.lean();
   }
 
-  async count(filter: Record<string, unknown>): Promise<number> {
+  async countSearch(query: MongoQuery): Promise<number> {
+    const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
     return DeviceModel.countDocuments(filter as any);
   }
 

@@ -8,6 +8,17 @@ import {
 } from './aisle.types';
 import { NotFoundError } from '../../shared/errors/not-found-error';
 import { ConflictError } from '../../shared/errors/conflict-error';
+import { QueryParser, QueryBuilder } from '../../shared/query';
+import { parsePagination, buildPaginationMeta } from '../../shared/utils/pagination';
+import { type PaginationMeta } from '../../shared/types/api-response';
+
+const aisleQueryConfig = {
+  searchableFields: ['name', 'code'],
+  filterableFields: ['zoneId', 'status'],
+  sortableFields: ['createdAt', 'updatedAt', 'name', 'status', 'code'],
+  defaultSort: { field: 'createdAt', order: 'desc' as const },
+  baseFilter: { isDeleted: { $ne: true } },
+};
 
 export class AisleService {
   constructor(
@@ -41,6 +52,24 @@ export class AisleService {
   async findAll(): Promise<AisleResponse[]> {
     const aisles = await this.aisleRepository.findAll();
     return aisles.map((a) => this.toAisleResponse(a));
+  }
+
+  async search(
+    queryParams: Record<string, unknown>,
+  ): Promise<{ data: AisleResponse[]; meta: PaginationMeta }> {
+    const parsed = QueryParser.parse(queryParams, aisleQueryConfig);
+    const mongoQuery = QueryBuilder.build(parsed, aisleQueryConfig);
+    const pagination = parsePagination({ page: parsed.page, limit: parsed.limit });
+
+    const [aisles, total] = await Promise.all([
+      this.aisleRepository.search(mongoQuery),
+      this.aisleRepository.countSearch(mongoQuery),
+    ]);
+
+    return {
+      data: aisles.map((a) => this.toAisleResponse(a)),
+      meta: buildPaginationMeta(total, pagination),
+    };
   }
 
   async findById(id: string): Promise<AisleResponse> {

@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { WarehouseModel } from './warehouse.model';
 import { IWarehouse, CreateWarehouseDTO, UpdateWarehouseDTO } from './warehouse.types';
+import { type MongoQuery } from '../../shared/query';
 
 export class WarehouseRepository {
   private baseFilter() {
@@ -9,6 +10,21 @@ export class WarehouseRepository {
 
   async findAll(): Promise<IWarehouse[]> {
     return WarehouseModel.find(this.baseFilter()).sort({ createdAt: -1 }).lean();
+  }
+
+  async search(query: MongoQuery): Promise<IWarehouse[]> {
+    const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+    const projection = Object.keys(query.projection).length > 0 ? query.projection : undefined;
+    let q = WarehouseModel.find(filter as any).sort(query.sort).skip(query.skip).limit(query.limit);
+    if (projection) {
+      q = q.select(projection);
+    }
+    return q.lean();
+  }
+
+  async countSearch(query: MongoQuery): Promise<number> {
+    const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+    return WarehouseModel.countDocuments(filter as any);
   }
 
   async findById(id: string): Promise<IWarehouse | null> {

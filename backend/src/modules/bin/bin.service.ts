@@ -8,6 +8,17 @@ import {
 } from './bin.types';
 import { NotFoundError } from '../../shared/errors/not-found-error';
 import { ConflictError } from '../../shared/errors/conflict-error';
+import { QueryParser, QueryBuilder } from '../../shared/query';
+import { parsePagination, buildPaginationMeta } from '../../shared/utils/pagination';
+import { type PaginationMeta } from '../../shared/types/api-response';
+
+const binQueryConfig = {
+  searchableFields: ['name', 'code'],
+  filterableFields: ['aisleId', 'status'],
+  sortableFields: ['createdAt', 'updatedAt', 'name', 'status', 'code'],
+  defaultSort: { field: 'createdAt', order: 'desc' as const },
+  baseFilter: { isDeleted: { $ne: true } },
+};
 
 export class BinService {
   constructor(
@@ -41,6 +52,24 @@ export class BinService {
   async findAll(): Promise<BinResponse[]> {
     const bins = await this.binRepository.findAll();
     return bins.map((b) => this.toBinResponse(b));
+  }
+
+  async search(
+    queryParams: Record<string, unknown>,
+  ): Promise<{ data: BinResponse[]; meta: PaginationMeta }> {
+    const parsed = QueryParser.parse(queryParams, binQueryConfig);
+    const mongoQuery = QueryBuilder.build(parsed, binQueryConfig);
+    const pagination = parsePagination({ page: parsed.page, limit: parsed.limit });
+
+    const [bins, total] = await Promise.all([
+      this.binRepository.search(mongoQuery),
+      this.binRepository.countSearch(mongoQuery),
+    ]);
+
+    return {
+      data: bins.map((b) => this.toBinResponse(b)),
+      meta: buildPaginationMeta(total, pagination),
+    };
   }
 
   async findById(id: string): Promise<BinResponse> {

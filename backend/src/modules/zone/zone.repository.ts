@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { ZoneModel } from './zone.model';
 import { IZone, CreateZoneDTO, UpdateZoneDTO } from './zone.types';
+import { type MongoQuery } from '../../shared/query';
 
 export class ZoneRepository {
   private baseFilter() {
@@ -9,6 +10,21 @@ export class ZoneRepository {
 
   async findAll(): Promise<IZone[]> {
     return ZoneModel.find(this.baseFilter()).sort({ createdAt: -1 }).lean();
+  }
+
+  async search(query: MongoQuery): Promise<IZone[]> {
+    const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+    const projection = Object.keys(query.projection).length > 0 ? query.projection : undefined;
+    let q = ZoneModel.find(filter as any).sort(query.sort).skip(query.skip).limit(query.limit);
+    if (projection) {
+      q = q.select(projection);
+    }
+    return q.lean();
+  }
+
+  async countSearch(query: MongoQuery): Promise<number> {
+    const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+    return ZoneModel.countDocuments(filter as any);
   }
 
   async findById(id: string): Promise<IZone | null> {

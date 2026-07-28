@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import { DeviceService } from './device.service';
 import { asyncHandler } from '../../shared/middleware/async-handler';
 import { sendCreated, sendSuccess, sendNoContent } from '../../shared/utils/api-response';
-import { parsePagination } from '../../shared/utils/pagination';
-import { DeviceStatus, DeviceCondition } from './device.types';
 import { auditService } from '../audit-log/auditLog.service';
 
 export class DeviceController {
@@ -28,25 +26,7 @@ export class DeviceController {
   });
 
   findAll = asyncHandler(async (req: Request, res: Response) => {
-    const { page, limit } = parsePagination(req.query);
-
-    const result = await this.deviceService.search({
-      deviceName: req.query.deviceName as string | undefined,
-      brand: req.query.brand as string | undefined,
-      model: req.query.model as string | undefined,
-      category: req.query.category as string | undefined,
-      status: req.query.status as DeviceStatus | undefined,
-      condition: req.query.condition as DeviceCondition | undefined,
-      binId: req.query.binId as string | undefined,
-      aisleId: req.query.aisleId as string | undefined,
-      zoneId: req.query.zoneId as string | undefined,
-      warehouseId: req.query.warehouseId as string | undefined,
-      page,
-      limit,
-      sortBy: (req.query.sortBy as string) || 'createdAt',
-      sortOrder: (req.query.sortOrder as 'asc' | 'desc') || 'desc',
-    });
-
+    const result = await this.deviceService.search(req.query as Record<string, unknown>);
     sendSuccess(res, result.data, 200, result.meta);
   });
 

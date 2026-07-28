@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { InventoryService } from './inventory.service';
 import { asyncHandler } from '../../shared/middleware/async-handler';
 import { sendCreated, sendSuccess } from '../../shared/utils/api-response';
-import { parsePagination } from '../../shared/utils/pagination';
+import { parsePagination, buildPaginationMeta } from '../../shared/utils/pagination';
 import { auditService } from '../audit-log/auditLog.service';
 
 export class InventoryController {
@@ -46,14 +46,8 @@ export class InventoryController {
       String(req.params.binId),
       { page, limit },
     );
-    sendSuccess(res, result.data, 200, {
-      page: result.page,
-      limit: result.limit,
-      total: result.total,
-      totalPages: Math.ceil(result.total / result.limit),
-      hasNext: result.page < Math.ceil(result.total / result.limit),
-      hasPrevious: result.page > 1,
-    });
+    const meta = buildPaginationMeta(result.total, { page: result.page, limit: result.limit, skip: (result.page - 1) * result.limit });
+    sendSuccess(res, result.data, 200, meta);
   });
 
   getByWarehouse = asyncHandler(async (req: Request, res: Response) => {
@@ -62,14 +56,8 @@ export class InventoryController {
       String(req.params.warehouseId),
       { page, limit },
     );
-    sendSuccess(res, result.data, 200, {
-      page: result.page,
-      limit: result.limit,
-      total: result.total,
-      totalPages: Math.ceil(result.total / result.limit),
-      hasNext: result.page < Math.ceil(result.total / result.limit),
-      hasPrevious: result.page > 1,
-    });
+    const meta = buildPaginationMeta(result.total, { page: result.page, limit: result.limit, skip: (result.page - 1) * result.limit });
+    sendSuccess(res, result.data, 200, meta);
   });
 
   getByZone = asyncHandler(async (req: Request, res: Response) => {
@@ -78,14 +66,8 @@ export class InventoryController {
       String(req.params.zoneId),
       { page, limit },
     );
-    sendSuccess(res, result.data, 200, {
-      page: result.page,
-      limit: result.limit,
-      total: result.total,
-      totalPages: Math.ceil(result.total / result.limit),
-      hasNext: result.page < Math.ceil(result.total / result.limit),
-      hasPrevious: result.page > 1,
-    });
+    const meta = buildPaginationMeta(result.total, { page: result.page, limit: result.limit, skip: (result.page - 1) * result.limit });
+    sendSuccess(res, result.data, 200, meta);
   });
 
   getByAisle = asyncHandler(async (req: Request, res: Response) => {
@@ -94,14 +76,8 @@ export class InventoryController {
       String(req.params.aisleId),
       { page, limit },
     );
-    sendSuccess(res, result.data, 200, {
-      page: result.page,
-      limit: result.limit,
-      total: result.total,
-      totalPages: Math.ceil(result.total / result.limit),
-      hasNext: result.page < Math.ceil(result.total / result.limit),
-      hasPrevious: result.page > 1,
-    });
+    const meta = buildPaginationMeta(result.total, { page: result.page, limit: result.limit, skip: (result.page - 1) * result.limit });
+    sendSuccess(res, result.data, 200, meta);
   });
 
   getAll = asyncHandler(async (req: Request, res: Response) => {
@@ -112,25 +88,13 @@ export class InventoryController {
         String(req.query.status),
         { page, limit },
       );
-      sendSuccess(res, result.data, 200, {
-        page: result.page,
-        limit: result.limit,
-        total: result.total,
-        totalPages: Math.ceil(result.total / result.limit),
-        hasNext: result.page < Math.ceil(result.total / result.limit),
-        hasPrevious: result.page > 1,
-      });
+      const meta = buildPaginationMeta(result.total, { page: result.page, limit: result.limit, skip: (result.page - 1) * result.limit });
+      sendSuccess(res, result.data, 200, meta);
       return;
     }
 
     const result = await this.inventoryService.getAll({ page, limit });
-    sendSuccess(res, result.data, 200, {
-      page: result.page,
-      limit: result.limit,
-      total: result.total,
-      totalPages: Math.ceil(result.total / result.limit),
-      hasNext: result.page < Math.ceil(result.total / result.limit),
-      hasPrevious: result.page > 1,
-    });
+    const meta = buildPaginationMeta(result.total, { page: result.page, limit: result.limit, skip: (result.page - 1) * result.limit });
+    sendSuccess(res, result.data, 200, meta);
   });
 }

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { OrderModel } from './order.model';
-import { IOrder, OrderSearchParams } from './order.types';
+import { IOrder } from './order.types';
+import { type MongoQuery } from '../../shared/query';
 
 export class OrderRepository {
   async findById(id: string): Promise<IOrder | null> {
@@ -15,21 +16,17 @@ export class OrderRepository {
     return OrderModel.findOne({ pickListId }).lean();
   }
 
-  async search(
-    filter: Record<string, unknown>,
-    skip: number,
-    limit: number,
-    sort: Record<string, 1 | -1>,
-  ): Promise<IOrder[]> {
-    return OrderModel.find(filter as any)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .lean();
+  async search(query: MongoQuery): Promise<IOrder[]> {
+    const projection = Object.keys(query.projection).length > 0 ? query.projection : undefined;
+    let q = OrderModel.find(query.filter as any).sort(query.sort).skip(query.skip).limit(query.limit);
+    if (projection) {
+      q = q.select(projection);
+    }
+    return q.lean();
   }
 
-  async count(filter: Record<string, unknown>): Promise<number> {
-    return OrderModel.countDocuments(filter as any);
+  async countSearch(query: MongoQuery): Promise<number> {
+    return OrderModel.countDocuments(query.filter as any);
   }
 
   async create(
@@ -74,17 +71,4 @@ export class OrderRepository {
       .lean();
   }
 
-  buildFilter(params: OrderSearchParams): Record<string, unknown> {
-    const filter: Record<string, unknown> = {};
-
-    if (params.status) {
-      filter.status = params.status;
-    }
-
-    if (params.customerName) {
-      filter.customerName = { $regex: params.customerName, $options: 'i' };
-    }
-
-    return filter;
-  }
 }

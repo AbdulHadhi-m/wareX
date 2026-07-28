@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { AisleModel } from './aisle.model';
 import { IAisle, CreateAisleDTO, UpdateAisleDTO } from './aisle.types';
+import { type MongoQuery } from '../../shared/query';
 
 export class AisleRepository {
   private baseFilter() {
@@ -9,6 +10,21 @@ export class AisleRepository {
 
   async findAll(): Promise<IAisle[]> {
     return AisleModel.find(this.baseFilter()).sort({ createdAt: -1 }).lean();
+  }
+
+  async search(query: MongoQuery): Promise<IAisle[]> {
+    const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+    const projection = Object.keys(query.projection).length > 0 ? query.projection : undefined;
+    let q = AisleModel.find(filter as any).sort(query.sort).skip(query.skip).limit(query.limit);
+    if (projection) {
+      q = q.select(projection);
+    }
+    return q.lean();
+  }
+
+  async countSearch(query: MongoQuery): Promise<number> {
+    const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+    return AisleModel.countDocuments(filter as any);
   }
 
   async findById(id: string): Promise<IAisle | null> {

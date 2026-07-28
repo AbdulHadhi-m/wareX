@@ -25,9 +25,9 @@ export class AisleController {
     sendCreated(res, result);
   });
 
-  findAll = asyncHandler(async (_req: Request, res: Response) => {
-    const result = await this.aisleService.findAll();
-    sendSuccess(res, result);
+  findAll = asyncHandler(async (req: Request, res: Response) => {
+    const result = await this.aisleService.search(req.query as Record<string, unknown>);
+    sendSuccess(res, result.data, 200, result.meta);
   });
 
   findById = asyncHandler(async (req: Request, res: Response) => {

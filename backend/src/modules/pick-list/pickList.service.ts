@@ -4,18 +4,26 @@ import {
   CreatePickListDTO,
   AssignPickListDTO,
   PickListResponse,
-  PickListSearchParams,
   IPickList,
 } from './pickList.types';
 import { NotFoundError } from '../../shared/errors/not-found-error';
 import { ConflictError } from '../../shared/errors/conflict-error';
 import { ValidationError } from '../../shared/errors/validation-error';
 import { AuthorizationError } from '../../shared/errors/authorization-error';
+import { QueryParser, QueryBuilder } from '../../shared/query';
 import { parsePagination, buildPaginationMeta } from '../../shared/utils/pagination';
 import { type PaginationMeta } from '../../shared/types/api-response';
 import { UserModel } from '../auth/auth.model';
 import { DeviceModel } from '../device/device.model';
 import { eventEmitter, Events } from '../../shared/events/event-emitter';
+
+const pickListQueryConfig = {
+  searchableFields: ['pickListNumber'],
+  filterableFields: ['status', 'workerId', 'priority'],
+  dateRangeFields: ['createdAt'],
+  sortableFields: ['createdAt', 'updatedAt', 'pickListNumber', 'status', 'priority'],
+  defaultSort: { field: 'createdAt', order: 'desc' as const },
+};
 
 export class PickListService {
   constructor(
@@ -105,25 +113,21 @@ export class PickListService {
   }
 
   async search(
-    params: PickListSearchParams,
+    queryParams: Record<string, unknown>,
     userRole?: string,
     userId?: string,
   ): Promise<{ data: PickListResponse[]; meta: PaginationMeta }> {
-    const filter = this.pickListRepository.buildFilter(params);
-
     if (userRole === 'Worker' && userId) {
-      filter.workerId = userId;
+      queryParams.workerId = userId;
     }
 
-    const pagination = parsePagination({ page: params.page, limit: params.limit });
-
-    const sort: Record<string, 1 | -1> = {
-      [params.sortBy]: params.sortOrder === 'asc' ? 1 : -1,
-    };
+    const parsed = QueryParser.parse(queryParams, pickListQueryConfig);
+    const mongoQuery = QueryBuilder.build(parsed, pickListQueryConfig);
+    const pagination = parsePagination({ page: parsed.page, limit: parsed.limit });
 
     const [pickLists, total] = await Promise.all([
-      this.pickListRepository.search(filter, pagination.skip, pagination.limit, sort),
-      this.pickListRepository.count(filter),
+      this.pickListRepository.search(mongoQuery),
+      this.pickListRepository.countSearch(mongoQuery),
     ]);
 
     return {
@@ -154,13 +158,14 @@ export class PickListService {
 
     const pagination = parsePagination(pageInput);
 
-    const filter: Record<string, unknown> = { workerId };
-
-    const sort: Record<string, 1 | -1> = { createdAt: -1 };
+    const mongoQuery = QueryBuilder.build(
+      { search: undefined, filters: { workerId }, dateRange: undefined, sort: { field: 'createdAt', order: 'desc' }, page: pagination.page, limit: pagination.limit, skip: pagination.skip, fields: undefined },
+      pickListQueryConfig,
+    );
 
     const [pickLists, total] = await Promise.all([
-      this.pickListRepository.search(filter, pagination.skip, pagination.limit, sort),
-      this.pickListRepository.count(filter),
+      this.pickListRepository.search(mongoQuery),
+      this.pickListRepository.countSearch(mongoQuery),
     ]);
 
     return {

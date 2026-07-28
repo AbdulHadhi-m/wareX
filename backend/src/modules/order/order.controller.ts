@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import { OrderService } from './order.service';
 import { asyncHandler } from '../../shared/middleware/async-handler';
 import { sendCreated, sendSuccess } from '../../shared/utils/api-response';
-import { parsePagination } from '../../shared/utils/pagination';
-import { OrderStatus } from './order.types';
 import { auditService } from '../audit-log/auditLog.service';
 
 export class OrderController {
@@ -28,17 +26,7 @@ export class OrderController {
   });
 
   findAll = asyncHandler(async (req: Request, res: Response) => {
-    const { page, limit } = parsePagination(req.query);
-
-    const result = await this.orderService.search({
-      status: req.query.status as OrderStatus | undefined,
-      customerName: req.query.customerName as string | undefined,
-      page,
-      limit,
-      sortBy: (req.query.sortBy as string) || 'createdAt',
-      sortOrder: (req.query.sortOrder as 'asc' | 'desc') || 'desc',
-    });
-
+    const result = await this.orderService.search(req.query as Record<string, unknown>);
     sendSuccess(res, result.data, 200, result.meta);
   });
 

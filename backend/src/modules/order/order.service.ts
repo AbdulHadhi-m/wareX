@@ -4,18 +4,26 @@ import {
   CreateOrderDTO,
   UpdateOrderDTO,
   OrderResponse,
-  OrderSearchParams,
   IOrder,
 } from './order.types';
 import { NotFoundError } from '../../shared/errors/not-found-error';
 import { ConflictError } from '../../shared/errors/conflict-error';
 import { ValidationError } from '../../shared/errors/validation-error';
+import { QueryParser, QueryBuilder } from '../../shared/query';
 import { parsePagination, buildPaginationMeta } from '../../shared/utils/pagination';
 import { type PaginationMeta } from '../../shared/types/api-response';
 import { eventEmitter, Events } from '../../shared/events/event-emitter';
 import { DeviceModel } from '../device/device.model';
 import { PickListModel } from '../pick-list/pickList.model';
 import { OrderModel } from './order.model';
+
+const orderQueryConfig = {
+  searchableFields: ['orderNumber', 'customerName'],
+  filterableFields: ['status', 'priority'],
+  dateRangeFields: ['createdAt'],
+  sortableFields: ['createdAt', 'updatedAt', 'orderNumber', 'customerName', 'status', 'priority'],
+  defaultSort: { field: 'createdAt', order: 'desc' as const },
+};
 
 export class OrderService {
   constructor(
@@ -77,18 +85,15 @@ export class OrderService {
   }
 
   async search(
-    params: OrderSearchParams,
+    queryParams: Record<string, unknown>,
   ): Promise<{ data: OrderResponse[]; meta: PaginationMeta }> {
-    const filter = this.orderRepository.buildFilter(params);
-    const pagination = parsePagination({ page: params.page, limit: params.limit });
-
-    const sort: Record<string, 1 | -1> = {
-      [params.sortBy]: params.sortOrder === 'asc' ? 1 : -1,
-    };
+    const parsed = QueryParser.parse(queryParams, orderQueryConfig);
+    const mongoQuery = QueryBuilder.build(parsed, orderQueryConfig);
+    const pagination = parsePagination({ page: parsed.page, limit: parsed.limit });
 
     const [orders, total] = await Promise.all([
-      this.orderRepository.search(filter, pagination.skip, pagination.limit, sort),
-      this.orderRepository.count(filter),
+      this.orderRepository.search(mongoQuery),
+      this.orderRepository.countSearch(mongoQuery),
     ]);
 
     return {

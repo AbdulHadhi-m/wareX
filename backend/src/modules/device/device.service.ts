@@ -8,12 +8,20 @@ import {
   UpdateDeviceDTO,
   DeviceResponse,
   IDevice,
-  DeviceSearchParams,
 } from './device.types';
 import { NotFoundError } from '../../shared/errors/not-found-error';
 import { ConflictError } from '../../shared/errors/conflict-error';
+import { QueryParser, QueryBuilder } from '../../shared/query';
 import { parsePagination, buildPaginationMeta } from '../../shared/utils/pagination';
 import { type PaginationMeta } from '../../shared/types/api-response';
+
+const deviceQueryConfig = {
+  searchableFields: ['deviceName', 'brand', 'model', 'category', 'sku', 'serialNumber', 'imei'],
+  filterableFields: ['status', 'condition', 'brand', 'category', 'binId', 'aisleId', 'zoneId', 'warehouseId'],
+  sortableFields: ['createdAt', 'updatedAt', 'deviceName', 'brand', 'model', 'status', 'serialNumber'],
+  defaultSort: { field: 'createdAt', order: 'desc' as const },
+  baseFilter: { isDeleted: { $ne: true } },
+};
 
 export class DeviceService {
   constructor(
@@ -75,17 +83,16 @@ export class DeviceService {
     return this.toDeviceResponse(device);
   }
 
-  async search(params: DeviceSearchParams): Promise<{ data: DeviceResponse[]; meta: PaginationMeta }> {
-    const filter: Record<string, unknown> = { ...this.buildFilter(params) };
-    const pagination = parsePagination({ page: params.page, limit: params.limit });
-
-    const sort: Record<string, 1 | -1> = {
-      [params.sortBy]: params.sortOrder === 'asc' ? 1 : -1,
-    };
+  async search(
+    queryParams: Record<string, unknown>,
+  ): Promise<{ data: DeviceResponse[]; meta: PaginationMeta }> {
+    const parsed = QueryParser.parse(queryParams, deviceQueryConfig);
+    const mongoQuery = QueryBuilder.build(parsed, deviceQueryConfig);
+    const pagination = parsePagination({ page: parsed.page, limit: parsed.limit });
 
     const [devices, total] = await Promise.all([
-      this.deviceRepository.search(filter as any, pagination.skip, pagination.limit, sort),
-      this.deviceRepository.count(filter as any),
+      this.deviceRepository.search(mongoQuery),
+      this.deviceRepository.countSearch(mongoQuery),
     ]);
 
     return {
@@ -180,52 +187,6 @@ export class DeviceService {
     }
 
     await this.deviceRepository.softDelete(id, userId);
-  }
-
-  private buildFilter(params: DeviceSearchParams): Record<string, unknown> {
-    const filter: Record<string, unknown> = { isDeleted: { $ne: true } };
-
-    if (params.deviceName) {
-      filter.deviceName = { $regex: params.deviceName, $options: 'i' };
-    }
-
-    if (params.brand) {
-      filter.brand = { $regex: params.brand, $options: 'i' };
-    }
-
-    if (params.model) {
-      filter.model = { $regex: params.model, $options: 'i' };
-    }
-
-    if (params.category) {
-      filter.category = params.category;
-    }
-
-    if (params.status) {
-      filter.status = params.status;
-    }
-
-    if (params.condition) {
-      filter.condition = params.condition;
-    }
-
-    if (params.binId) {
-      filter.binId = params.binId;
-    }
-
-    if (params.aisleId) {
-      filter.aisleId = params.aisleId;
-    }
-
-    if (params.zoneId) {
-      filter.zoneId = params.zoneId;
-    }
-
-    if (params.warehouseId) {
-      filter.warehouseId = params.warehouseId;
-    }
-
-    return filter;
   }
 
   private toDeviceResponse(device: IDevice): DeviceResponse {

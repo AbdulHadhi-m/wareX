@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { PickListModel } from './pickList.model';
-import { IPickList, PickListSearchParams } from './pickList.types';
+import { IPickList } from './pickList.types';
+import { type MongoQuery } from '../../shared/query';
 
 export class PickListRepository {
   async findById(id: string): Promise<IPickList | null> {
@@ -11,21 +12,17 @@ export class PickListRepository {
     return PickListModel.findOne({ pickListNumber: number }).lean();
   }
 
-  async search(
-    filter: Record<string, unknown>,
-    skip: number,
-    limit: number,
-    sort: Record<string, 1 | -1>,
-  ): Promise<IPickList[]> {
-    return PickListModel.find(filter as any)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .lean();
+  async search(query: MongoQuery): Promise<IPickList[]> {
+    const projection = Object.keys(query.projection).length > 0 ? query.projection : undefined;
+    let q = PickListModel.find(query.filter as any).sort(query.sort).skip(query.skip).limit(query.limit);
+    if (projection) {
+      q = q.select(projection);
+    }
+    return q.lean();
   }
 
-  async count(filter: Record<string, unknown>): Promise<number> {
-    return PickListModel.countDocuments(filter as any);
+  async countSearch(query: MongoQuery): Promise<number> {
+    return PickListModel.countDocuments(query.filter as any);
   }
 
   async create(
@@ -63,31 +60,4 @@ export class PickListRepository {
       .lean();
   }
 
-  buildFilter(params: PickListSearchParams): Record<string, unknown> {
-    const filter: Record<string, unknown> = {};
-
-    if (params.status) {
-      filter.status = params.status;
-    }
-
-    if (params.workerId) {
-      filter.workerId = params.workerId;
-    }
-
-    if (params.startDate || params.endDate) {
-      const createdAt: Record<string, unknown> = {};
-
-      if (params.startDate) {
-        createdAt.$gte = new Date(params.startDate);
-      }
-
-      if (params.endDate) {
-        createdAt.$lte = new Date(params.endDate);
-      }
-
-      filter.createdAt = createdAt;
-    }
-
-    return filter;
-  }
 }
