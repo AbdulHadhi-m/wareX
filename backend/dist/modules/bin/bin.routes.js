@@ -1,0 +1,28 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.aisleBinRouter = exports.binRouter = void 0;
+const express_1 = require("express");
+const bin_controller_1 = require("./bin.controller");
+const bin_service_1 = require("./bin.service");
+const bin_repository_1 = require("./bin.repository");
+const aisle_repository_1 = require("../aisle/aisle.repository");
+const validate_1 = require("../../shared/validation/validate");
+const bin_validation_1 = require("./bin.validation");
+const auth_middleware_1 = require("../auth/auth.middleware");
+const binRepository = new bin_repository_1.BinRepository();
+const aisleRepository = new aisle_repository_1.AisleRepository();
+const service = new bin_service_1.BinService(binRepository, aisleRepository);
+const controller = new bin_controller_1.BinController(service);
+const binRouter = (0, express_1.Router)();
+exports.binRouter = binRouter;
+binRouter.use(auth_middleware_1.authenticate);
+binRouter.post('/', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(bin_validation_1.createBinSchema), controller.create);
+binRouter.get('/', controller.findAll);
+binRouter.get('/:id', (0, validate_1.validate)(bin_validation_1.binIdSchema, validate_1.ValidationSource.PARAMS), controller.findById);
+binRouter.patch('/:id', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(bin_validation_1.binIdSchema, validate_1.ValidationSource.PARAMS), (0, validate_1.validate)(bin_validation_1.updateBinSchema), controller.update);
+binRouter.delete('/:id', (0, auth_middleware_1.authorize)('Manager'), controller.delete);
+const aisleBinRouter = (0, express_1.Router)();
+exports.aisleBinRouter = aisleBinRouter;
+aisleBinRouter.use(auth_middleware_1.authenticate);
+aisleBinRouter.get('/:aisleId/bins', (0, validate_1.validate)(bin_validation_1.aisleIdParamSchema, validate_1.ValidationSource.PARAMS), controller.findByAisle);
+//# sourceMappingURL=bin.routes.js.map

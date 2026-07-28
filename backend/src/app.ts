@@ -10,6 +10,7 @@ import { authRouter } from './modules/auth/auth.routes';
 import { warehouseRouter } from './modules/warehouse/warehouse.routes';
 import { zoneRouter, warehouseZoneRouter } from './modules/zone/zone.routes';
 import { aisleRouter, zoneAisleRouter } from './modules/aisle/aisle.routes';
+import { binRouter, aisleBinRouter } from './modules/bin/bin.routes';
 
 const app = express();
 
@@ -35,6 +36,8 @@ app.use(`${appConfig.apiPrefix}/warehouses`, warehouseZoneRouter);
 app.use(`${appConfig.apiPrefix}/zones`, zoneRouter);
 app.use(`${appConfig.apiPrefix}/zones`, zoneAisleRouter);
 app.use(`${appConfig.apiPrefix}/aisles`, aisleRouter);
+app.use(`${appConfig.apiPrefix}/aisles`, aisleBinRouter);
+app.use(`${appConfig.apiPrefix}/bins`, binRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
