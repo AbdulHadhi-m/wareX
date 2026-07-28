@@ -1,0 +1,28 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.zoneAisleRouter = exports.aisleRouter = void 0;
+const express_1 = require("express");
+const aisle_controller_1 = require("./aisle.controller");
+const aisle_service_1 = require("./aisle.service");
+const aisle_repository_1 = require("./aisle.repository");
+const zone_repository_1 = require("../zone/zone.repository");
+const validate_1 = require("../../shared/validation/validate");
+const aisle_validation_1 = require("./aisle.validation");
+const auth_middleware_1 = require("../auth/auth.middleware");
+const aisleRepository = new aisle_repository_1.AisleRepository();
+const zoneRepository = new zone_repository_1.ZoneRepository();
+const service = new aisle_service_1.AisleService(aisleRepository, zoneRepository);
+const controller = new aisle_controller_1.AisleController(service);
+const aisleRouter = (0, express_1.Router)();
+exports.aisleRouter = aisleRouter;
+aisleRouter.use(auth_middleware_1.authenticate);
+aisleRouter.post('/', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(aisle_validation_1.createAisleSchema), controller.create);
+aisleRouter.get('/', controller.findAll);
+aisleRouter.get('/:id', (0, validate_1.validate)(aisle_validation_1.aisleIdSchema, validate_1.ValidationSource.PARAMS), controller.findById);
+aisleRouter.patch('/:id', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(aisle_validation_1.aisleIdSchema, validate_1.ValidationSource.PARAMS), (0, validate_1.validate)(aisle_validation_1.updateAisleSchema), controller.update);
+aisleRouter.delete('/:id', (0, auth_middleware_1.authorize)('Manager'), controller.delete);
+const zoneAisleRouter = (0, express_1.Router)();
+exports.zoneAisleRouter = zoneAisleRouter;
+zoneAisleRouter.use(auth_middleware_1.authenticate);
+zoneAisleRouter.get('/:zoneId/aisles', (0, validate_1.validate)(aisle_validation_1.zoneIdParamSchema, validate_1.ValidationSource.PARAMS), controller.findByZone);
+//# sourceMappingURL=aisle.routes.js.map
