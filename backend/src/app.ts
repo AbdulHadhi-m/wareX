@@ -16,6 +16,7 @@ import { inventoryRouter } from './modules/inventory/inventory.routes';
 import { pickListRouter } from './modules/pick-list/pickList.routes';
 import { orderRouter } from './modules/order/order.routes';
 import { auditLogRouter } from './modules/audit-log/auditLog.routes';
+import { notificationRouter } from './modules/notification/notification.routes';
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use(`${appConfig.apiPrefix}/inventory`, inventoryRouter);
 app.use(`${appConfig.apiPrefix}/pick-lists`, pickListRouter);
 app.use(`${appConfig.apiPrefix}/orders`, orderRouter);
 app.use(`${appConfig.apiPrefix}/audit-logs`, auditLogRouter);
+app.use(`${appConfig.apiPrefix}/notifications`, notificationRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

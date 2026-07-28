@@ -12,6 +12,7 @@ import {
 import { environment } from '../../shared/config/environment';
 import { AuthenticationError } from '../../shared/errors/authentication-error';
 import { ConflictError } from '../../shared/errors/conflict-error';
+import { eventEmitter, Events } from '../../shared/events/event-emitter';
 
 const SALT_ROUNDS = 12;
 
@@ -53,6 +54,12 @@ export class AuthService {
 
     const token = this.generateToken(user);
     const userResponse = this.toUserResponse(user);
+
+    eventEmitter.emit(Events.AUTH_LOGIN, {
+      userId: user._id.toString(),
+      email: user.email,
+      name: user.name,
+    });
 
     return { token, user: userResponse };
   }

@@ -12,6 +12,7 @@ import { ConflictError } from '../../shared/errors/conflict-error';
 import { ValidationError } from '../../shared/errors/validation-error';
 import { parsePagination, buildPaginationMeta } from '../../shared/utils/pagination';
 import { type PaginationMeta } from '../../shared/types/api-response';
+import { eventEmitter, Events } from '../../shared/events/event-emitter';
 import { DeviceModel } from '../device/device.model';
 import { PickListModel } from '../pick-list/pickList.model';
 import { OrderModel } from './order.model';
@@ -63,6 +64,13 @@ export class OrderService {
       notes: dto.notes ?? null,
       createdBy: userId,
       updatedBy: userId,
+    });
+
+    eventEmitter.emit(Events.ORDER_CREATED, {
+      orderId: order._id.toString(),
+      orderNumber: order.orderNumber,
+      customerName: order.customerName,
+      createdBy: userId,
     });
 
     return this.toOrderResponse(order);
@@ -212,6 +220,12 @@ export class OrderService {
       throw new NotFoundError('Order not found after update');
     }
 
+    eventEmitter.emit(Events.ORDER_CANCELLED, {
+      orderId: id,
+      orderNumber: order.orderNumber,
+      createdBy: order.createdBy,
+    });
+
     return this.toOrderResponse(updated);
   }
 
@@ -321,6 +335,12 @@ export class OrderService {
     if (!updated) {
       throw new NotFoundError('Order not found after update');
     }
+
+    eventEmitter.emit(Events.ORDER_FULFILLED, {
+      orderId: id,
+      orderNumber: order.orderNumber,
+      createdBy: order.createdBy,
+    });
 
     return this.toOrderResponse(updated);
   }

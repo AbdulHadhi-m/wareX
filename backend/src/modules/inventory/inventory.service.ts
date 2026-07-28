@@ -12,6 +12,7 @@ import { NotFoundError } from '../../shared/errors/not-found-error';
 import { ConflictError } from '../../shared/errors/conflict-error';
 import { ValidationError } from '../../shared/errors/validation-error';
 import { parsePagination } from '../../shared/utils/pagination';
+import { eventEmitter, Events } from '../../shared/events/event-emitter';
 import { DeviceModel } from '../device/device.model';
 import { BinModel } from '../bin/bin.model';
 import { AisleModel } from '../aisle/aisle.model';
@@ -142,6 +143,14 @@ export class InventoryService {
       );
 
       await session.commitTransaction();
+
+      eventEmitter.emit(Events.DEVICE_MOVED, {
+        deviceId: device._id.toString(),
+        deviceName: device.deviceName,
+        serialNumber: device.serialNumber,
+        fromBin: fromBin.name,
+        toBin: toBin.name,
+      });
 
       return this.toMovementHistoryResponse(history);
     } catch (error) {

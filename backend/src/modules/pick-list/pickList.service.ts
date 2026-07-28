@@ -198,6 +198,13 @@ export class PickListService {
       throw new NotFoundError('Pick list not found after update');
     }
 
+    eventEmitter.emit(Events.PICK_LIST_ASSIGNED, {
+      pickListId: id,
+      pickListNumber: pickList.pickListNumber,
+      workerId: dto.workerId,
+      createdBy: pickList.createdBy,
+    });
+
     return this.toPickListResponse(updated);
   }
 
@@ -225,6 +232,14 @@ export class PickListService {
     if (!updated) {
       throw new NotFoundError('Pick list not found after update');
     }
+
+    eventEmitter.emit(Events.PICK_LIST_STARTED, {
+      pickListId: id,
+      pickListNumber: pickList.pickListNumber,
+      workerId: userId,
+      workerName: '',
+      createdBy: pickList.createdBy,
+    });
 
     return this.toPickListResponse(updated);
   }
@@ -273,7 +288,10 @@ export class PickListService {
 
       eventEmitter.emit(Events.PICK_LIST_COMPLETED, {
         pickListId: id,
+        pickListNumber: pickList.pickListNumber,
         deviceIds: pickList.deviceIds,
+        createdBy: pickList.createdBy,
+        completedBy: userId,
       });
 
       return this.toPickListResponse(updated);
@@ -324,7 +342,9 @@ export class PickListService {
 
       eventEmitter.emit(Events.PICK_LIST_CANCELLED, {
         pickListId: id,
+        pickListNumber: pickList.pickListNumber,
         deviceIds: pickList.deviceIds,
+        createdBy: pickList.createdBy,
       });
 
       return this.toPickListResponse(updated);
