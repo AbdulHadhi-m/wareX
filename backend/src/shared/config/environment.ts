@@ -10,6 +10,8 @@ const environmentSchema = z.object({
   MONGODB_URI: z.string().url(),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   LOG_FILE_PATH: z.string().default('logs'),
+  JWT_SECRET: z.string().min(1, 'JWT secret is required'),
+  JWT_EXPIRES_IN: z.string().default('7d'),
 });
 
 const parsed = environmentSchema.safeParse(process.env);

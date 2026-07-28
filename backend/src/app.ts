@@ -6,6 +6,7 @@ import { appConfig } from './shared/config/app';
 import { requestLogger, errorHandler, notFoundHandler } from './shared/middleware';
 import { HttpStatus } from './shared/constants/http-status';
 import { toISOString } from './shared/utils/date';
+import { authRouter } from './modules/auth/auth.routes';
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.get(`${appConfig.apiPrefix}/health`, (_req, res) => {
     timestamp: toISOString(),
   });
 });
+
+app.use(`${appConfig.apiPrefix}/auth`, authRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
