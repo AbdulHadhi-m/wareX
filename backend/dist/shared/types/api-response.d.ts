@@ -16,6 +16,11 @@ export interface PaginationMeta {
     totalPages: number;
     hasNext: boolean;
     hasPrevious: boolean;
+    currentPage: number;
+    pageSize: number;
+    totalRecords: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
 }
 export interface PaginationParams {
     page: number;

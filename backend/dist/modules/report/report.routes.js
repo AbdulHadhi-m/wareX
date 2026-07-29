@@ -1,0 +1,21 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.reportRouter = void 0;
+const express_1 = require("express");
+const report_controller_1 = require("./report.controller");
+const report_service_1 = require("./report.service");
+const report_repository_1 = require("./report.repository");
+const auth_middleware_1 = require("../auth/auth.middleware");
+const reportRepository = new report_repository_1.ReportRepository();
+const reportService = new report_service_1.ReportService(reportRepository);
+const controller = new report_controller_1.ReportController(reportService);
+const router = (0, express_1.Router)();
+exports.reportRouter = router;
+router.use(auth_middleware_1.authenticate);
+router.get('/dashboard', (0, auth_middleware_1.authorize)('Manager', 'Worker'), controller.getDashboard);
+router.get('/reports/inventory', (0, auth_middleware_1.authorize)('Manager'), controller.getInventoryReport);
+router.get('/reports/warehouse-utilization', (0, auth_middleware_1.authorize)('Manager'), controller.getWarehouseUtilizationReport);
+router.get('/reports/device-status', (0, auth_middleware_1.authorize)('Manager'), controller.getDeviceStatusReport);
+router.get('/reports/pick-list-performance', (0, auth_middleware_1.authorize)('Manager'), controller.getPickListPerformanceReport);
+router.get('/reports/order-status', (0, auth_middleware_1.authorize)('Manager'), controller.getOrderStatusReport);
+//# sourceMappingURL=report.routes.js.map

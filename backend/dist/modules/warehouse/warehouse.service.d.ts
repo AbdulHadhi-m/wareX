@@ -1,10 +1,15 @@
 import { WarehouseRepository } from './warehouse.repository';
 import { CreateWarehouseDTO, UpdateWarehouseDTO, WarehouseResponse } from './warehouse.types';
+import { type PaginationMeta } from '../../shared/types/api-response';
 export declare class WarehouseService {
     private readonly repository;
     constructor(repository: WarehouseRepository);
     create(dto: CreateWarehouseDTO, userId: string): Promise<WarehouseResponse>;
     findAll(): Promise<WarehouseResponse[]>;
+    search(queryParams: Record<string, unknown>): Promise<{
+        data: WarehouseResponse[];
+        meta: PaginationMeta;
+    }>;
     findById(id: string): Promise<WarehouseResponse>;
     update(id: string, dto: UpdateWarehouseDTO, userId: string): Promise<WarehouseResponse>;
     delete(id: string, userId: string): Promise<void>;

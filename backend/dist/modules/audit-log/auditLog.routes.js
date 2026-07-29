@@ -1,0 +1,20 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.auditLogRouter = void 0;
+const express_1 = require("express");
+const auditLog_controller_1 = require("./auditLog.controller");
+const auditLog_service_1 = require("./auditLog.service");
+const auditLog_repository_1 = require("./auditLog.repository");
+const validate_1 = require("../../shared/validation/validate");
+const auditLog_validation_1 = require("./auditLog.validation");
+const auth_middleware_1 = require("../auth/auth.middleware");
+const auditLogRepository = new auditLog_repository_1.AuditLogRepository();
+const auditLogService = new auditLog_service_1.AuditLogService(auditLogRepository);
+const controller = new auditLog_controller_1.AuditLogController(auditLogService);
+const router = (0, express_1.Router)();
+exports.auditLogRouter = router;
+router.use(auth_middleware_1.authenticate);
+router.use((0, auth_middleware_1.authorize)('Manager'));
+router.get('/', (0, validate_1.validate)(auditLog_validation_1.auditLogQuerySchema, validate_1.ValidationSource.QUERY), controller.findAll);
+router.get('/:id', controller.findById);
+//# sourceMappingURL=auditLog.routes.js.map

@@ -7,14 +7,15 @@ const standardLimiter = rateLimit({
   max: environment.RATE_LIMIT_MAX,
   standardHeaders: true,
   legacyHeaders: false,
-  message: {
-    success: false,
-    error: {
-      name: 'RateLimitError',
-      message: 'Too many requests. Please try again later.',
-    },
+  handler: (_req, res) => {
+    res.status(HttpStatus.TOO_MANY_REQUESTS).json({
+      success: false,
+      error: {
+        name: 'RateLimitError',
+        message: 'Too many requests. Please try again later.',
+      },
+    });
   },
-  statusCode: HttpStatus.TOO_MANY_REQUESTS,
 });
 
 const authLimiter = rateLimit({
@@ -22,14 +23,15 @@ const authLimiter = rateLimit({
   max: environment.RATE_LIMIT_AUTH_MAX,
   standardHeaders: true,
   legacyHeaders: false,
-  message: {
-    success: false,
-    error: {
-      name: 'RateLimitError',
-      message: 'Too many authentication attempts. Please try again later.',
-    },
+  handler: (_req, res) => {
+    res.status(HttpStatus.TOO_MANY_REQUESTS).json({
+      success: false,
+      error: {
+        name: 'RateLimitError',
+        message: 'Too many authentication attempts. Please try again later.',
+      },
+    });
   },
-  statusCode: HttpStatus.TOO_MANY_REQUESTS,
 });
 
 export { standardLimiter, authLimiter };

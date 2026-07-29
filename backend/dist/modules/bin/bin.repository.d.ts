@@ -1,7 +1,10 @@
 import { IBin, CreateBinDTO, UpdateBinDTO } from './bin.types';
+import { type MongoQuery } from '../../shared/query';
 export declare class BinRepository {
     private baseFilter;
     findAll(): Promise<IBin[]>;
+    search(query: MongoQuery): Promise<IBin[]>;
+    countSearch(query: MongoQuery): Promise<number>;
     findById(id: string): Promise<IBin | null>;
     findByAisleId(aisleId: string): Promise<IBin[]>;
     findByCodeInAisle(code: string, aisleId: string): Promise<IBin | null>;

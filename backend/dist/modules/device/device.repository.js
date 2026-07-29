@@ -15,16 +15,22 @@ class DeviceRepository {
     async findByImei(imei) {
         return device_model_1.DeviceModel.findOne({ imei, ...this.baseFilter() }).lean();
     }
-    async search(filter, skip, limit, sort) {
-        return device_model_1.DeviceModel.find(filter).sort(sort).skip(skip).limit(limit).lean();
+    async search(query) {
+        const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+        const projection = Object.keys(query.projection).length > 0 ? query.projection : undefined;
+        let q = device_model_1.DeviceModel.find(filter).sort(query.sort).skip(query.skip).limit(query.limit);
+        if (projection) {
+            q = q.select(projection);
+        }
+        return q.lean();
     }
-    async count(filter) {
+    async countSearch(query) {
+        const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
         return device_model_1.DeviceModel.countDocuments(filter);
     }
     async create(data) {
         const device = await device_model_1.DeviceModel.create(data);
-        const obj = device.toObject();
-        return obj;
+        return device.toObject();
     }
     async update(id, data) {
         return device_model_1.DeviceModel.findByIdAndUpdate(id, { $set: data }, { new: true, runValidators: true })
