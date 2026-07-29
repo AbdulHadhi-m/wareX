@@ -14,7 +14,7 @@ const controller = new auditLog_controller_1.AuditLogController(auditLogService)
 const router = (0, express_1.Router)();
 exports.auditLogRouter = router;
 router.use(auth_middleware_1.authenticate);
-router.use((0, auth_middleware_1.authorize)('Manager'));
+router.use((0, auth_middleware_1.authorize)('audit-log.read'));
 router.get('/', (0, validate_1.validate)(auditLog_validation_1.auditLogQuerySchema, validate_1.ValidationSource.QUERY), controller.findAll);
 router.get('/:id', controller.findById);
 //# sourceMappingURL=auditLog.routes.js.map

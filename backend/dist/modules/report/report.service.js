@@ -9,10 +9,10 @@ class ReportService {
     async getDashboard(userId) {
         const facilities = this.reportRepository.countFacilities();
         const inventorySummary = this.reportRepository.inventoryStatusSummary();
-        const devicesPerWarehouse = this.reportRepository.devicesPerEntity('$warehouseId', 'warehouses');
-        const devicesPerZone = this.reportRepository.devicesPerEntity('$zoneId', 'zones');
-        const devicesPerAisle = this.reportRepository.devicesPerEntity('$aisleId', 'aisles');
-        const devicesPerBin = this.reportRepository.devicesPerEntity('$binId', 'bins');
+        const devicesPerWarehouse = this.reportRepository.devicesPerEntity('warehouseId', 'warehouses');
+        const devicesPerZone = this.reportRepository.devicesPerEntity('zoneId', 'zones');
+        const devicesPerAisle = this.reportRepository.devicesPerEntity('aisleId', 'aisles');
+        const devicesPerBin = this.reportRepository.devicesPerEntity('binId', 'bins');
         const orderSummary = this.reportRepository.orderStatusSummary();
         const pickListSummary = this.reportRepository.pickListStatusSummary();
         const notificationSummary = this.reportRepository.notificationSummary(userId);

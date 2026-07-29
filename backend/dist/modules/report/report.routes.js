@@ -12,10 +12,10 @@ const controller = new report_controller_1.ReportController(reportService);
 const router = (0, express_1.Router)();
 exports.reportRouter = router;
 router.use(auth_middleware_1.authenticate);
-router.get('/dashboard', (0, auth_middleware_1.authorize)('Manager', 'Worker'), controller.getDashboard);
-router.get('/reports/inventory', (0, auth_middleware_1.authorize)('Manager'), controller.getInventoryReport);
-router.get('/reports/warehouse-utilization', (0, auth_middleware_1.authorize)('Manager'), controller.getWarehouseUtilizationReport);
-router.get('/reports/device-status', (0, auth_middleware_1.authorize)('Manager'), controller.getDeviceStatusReport);
-router.get('/reports/pick-list-performance', (0, auth_middleware_1.authorize)('Manager'), controller.getPickListPerformanceReport);
-router.get('/reports/order-status', (0, auth_middleware_1.authorize)('Manager'), controller.getOrderStatusReport);
+router.get('/dashboard', (0, auth_middleware_1.authorize)('report.view-dashboard'), controller.getDashboard);
+router.get('/reports/inventory', (0, auth_middleware_1.authorize)('report.view-inventory'), controller.getInventoryReport);
+router.get('/reports/warehouse-utilization', (0, auth_middleware_1.authorize)('report.view-warehouse-utilization'), controller.getWarehouseUtilizationReport);
+router.get('/reports/device-status', (0, auth_middleware_1.authorize)('report.view-device-status'), controller.getDeviceStatusReport);
+router.get('/reports/pick-list-performance', (0, auth_middleware_1.authorize)('report.view-pick-list-performance'), controller.getPickListPerformanceReport);
+router.get('/reports/order-status', (0, auth_middleware_1.authorize)('report.view-order-status'), controller.getOrderStatusReport);
 //# sourceMappingURL=report.routes.js.map

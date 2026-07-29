@@ -12,5 +12,8 @@ export declare const environment: {
     RATE_LIMIT_MAX: number;
     RATE_LIMIT_AUTH_MAX: number;
     BODY_LIMIT: string;
+    SUPER_ADMIN_EMAIL: string;
+    SUPER_ADMIN_PASSWORD: string;
+    SUPER_ADMIN_NAME: string;
 };
 //# sourceMappingURL=environment.d.ts.map

@@ -10,8 +10,6 @@ const http_status_1 = require("../constants/http-status");
 const standardLimiter = (0, express_rate_limit_1.default)({
     windowMs: environment_1.environment.RATE_LIMIT_WINDOW_MS,
     max: environment_1.environment.RATE_LIMIT_MAX,
-    standardHeaders: true,
-    legacyHeaders: false,
     handler: (_req, res) => {
         res.status(http_status_1.HttpStatus.TOO_MANY_REQUESTS).json({
             success: false,
@@ -26,8 +24,6 @@ exports.standardLimiter = standardLimiter;
 const authLimiter = (0, express_rate_limit_1.default)({
     windowMs: environment_1.environment.RATE_LIMIT_WINDOW_MS,
     max: environment_1.environment.RATE_LIMIT_AUTH_MAX,
-    standardHeaders: true,
-    legacyHeaders: false,
     handler: (_req, res) => {
         res.status(http_status_1.HttpStatus.TOO_MANY_REQUESTS).json({
             success: false,
