@@ -27,10 +27,10 @@ const controller = new DeviceController(service);
 const router = Router();
 router.use(authenticate);
 
-router.post('/', authorize('Manager'), validate(createDeviceSchema), controller.create);
+router.post('/', authorize('device.create'), validate(createDeviceSchema), controller.create);
 router.get('/', controller.findAll);
 router.get('/:id', validate(deviceIdSchema, ValidationSource.PARAMS), controller.findById);
-router.patch('/:id', authorize('Manager'), validate(deviceIdSchema, ValidationSource.PARAMS), validate(updateDeviceSchema), controller.update);
-router.delete('/:id', authorize('Manager'), controller.delete);
+router.patch('/:id', authorize('device.update'), validate(deviceIdSchema, ValidationSource.PARAMS), validate(updateDeviceSchema), controller.update);
+router.delete('/:id', authorize('device.delete'), controller.delete);
 
 export { router as deviceRouter };

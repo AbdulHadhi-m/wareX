@@ -11,12 +11,12 @@ const controller = new ReportController(reportService);
 const router = Router();
 router.use(authenticate);
 
-router.get('/dashboard', authorize('Manager', 'Worker'), controller.getDashboard);
+router.get('/dashboard', authorize('report.view-dashboard'), controller.getDashboard);
 
-router.get('/reports/inventory', authorize('Manager'), controller.getInventoryReport);
-router.get('/reports/warehouse-utilization', authorize('Manager'), controller.getWarehouseUtilizationReport);
-router.get('/reports/device-status', authorize('Manager'), controller.getDeviceStatusReport);
-router.get('/reports/pick-list-performance', authorize('Manager'), controller.getPickListPerformanceReport);
-router.get('/reports/order-status', authorize('Manager'), controller.getOrderStatusReport);
+router.get('/reports/inventory', authorize('report.view-inventory'), controller.getInventoryReport);
+router.get('/reports/warehouse-utilization', authorize('report.view-warehouse-utilization'), controller.getWarehouseUtilizationReport);
+router.get('/reports/device-status', authorize('report.view-device-status'), controller.getDeviceStatusReport);
+router.get('/reports/pick-list-performance', authorize('report.view-pick-list-performance'), controller.getPickListPerformanceReport);
+router.get('/reports/order-status', authorize('report.view-order-status'), controller.getOrderStatusReport);
 
 export { router as reportRouter };

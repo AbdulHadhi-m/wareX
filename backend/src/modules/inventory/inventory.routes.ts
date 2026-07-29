@@ -20,7 +20,7 @@ const controller = new InventoryController(service);
 const router = Router();
 router.use(authenticate);
 
-router.post('/move', authorize('Manager'), validate(moveDeviceSchema), controller.move);
+router.post('/move', authorize('inventory.move'), validate(moveDeviceSchema), controller.move);
 
 router.get(
   '/device/:deviceId',

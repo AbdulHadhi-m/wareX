@@ -1,11 +1,9 @@
-export type UserRole = 'SuperAdmin' | 'Manager' | 'Worker';
-
 export interface IUser {
   _id: string;
   name: string;
   email: string;
   password: string;
-  role: UserRole;
+  roleId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,7 +13,7 @@ export interface IUserDocument {
   name: string;
   email: string;
   password?: string;
-  role: UserRole;
+  roleId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,7 +22,7 @@ export interface RegisterDTO {
   name: string;
   email: string;
   password: string;
-  role: UserRole;
+  roleId: string;
 }
 
 export interface LoginDTO {
@@ -41,11 +39,10 @@ export interface UserResponse {
   id: string;
   name: string;
   email: string;
-  role: UserRole;
+  role: string;
   createdAt: string;
 }
 
 export interface JwtPayload {
   userId: string;
-  role: UserRole;
 }

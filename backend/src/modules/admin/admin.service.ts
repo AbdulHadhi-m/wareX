@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 import { AdminRepository } from './admin.repository';
 import { ConflictError } from '../../shared/errors/conflict-error';
 import { NotFoundError } from '../../shared/errors/not-found-error';
@@ -35,6 +36,10 @@ export class AdminService {
     const exists = await this.repository.findByEmail(dto.email);
     if (exists) throw new ConflictError('A user with this email already exists');
 
+    const RoleModel = mongoose.model('Role');
+    const role = await RoleModel.findById(dto.roleId).lean();
+    if (!role) throw new NotFoundError('Role not found');
+
     const hashedPassword = await bcrypt.hash(dto.password, SALT_ROUNDS);
 
     const user = await this.repository.create({ ...dto, password: hashedPassword });
@@ -48,6 +53,12 @@ export class AdminService {
     if (dto.email && dto.email !== existing.email) {
       const emailExists = await this.repository.findByEmail(dto.email);
       if (emailExists) throw new ConflictError('A user with this email already exists');
+    }
+
+    if (dto.roleId) {
+      const RoleModel = mongoose.model('Role');
+      const role = await RoleModel.findById(dto.roleId).lean();
+      if (!role) throw new NotFoundError('Role not found');
     }
 
     const updateData: UpdateUserData & { password?: string } = { ...dto };
@@ -68,11 +79,13 @@ export class AdminService {
   }
 
   private toResponse(user: Record<string, any>): AdminUserResponse {
+    const roleObj = user.roleId as { name?: string; _id?: string } | undefined;
     return {
       id: (user._id as string).toString(),
       name: user.name as string,
       email: user.email as string,
-      role: user.role as AdminUserResponse['role'],
+      role: roleObj?.name ?? 'Unknown',
+      roleId: (roleObj?._id ?? user.roleId ?? '').toString(),
       createdAt: (user.createdAt as Date).toISOString(),
       updatedAt: (user.updatedAt as Date).toISOString(),
     };

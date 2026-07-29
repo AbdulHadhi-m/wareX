@@ -12,12 +12,11 @@ const controller = new AdminController(service);
 
 const router = Router();
 router.use(authenticate);
-router.use(authorize('SuperAdmin'));
 
-router.get('/', validate(userListQuerySchema), controller.list);
-router.get('/:id', controller.getById);
-router.post('/', validate(createUserSchema), controller.create);
-router.patch('/:id', validate(updateUserSchema), controller.update);
-router.delete('/:id', controller.delete);
+router.get('/', authorize('admin.user.read'), validate(userListQuerySchema), controller.list);
+router.get('/:id', authorize('admin.user.read'), controller.getById);
+router.post('/', authorize('admin.user.create'), validate(createUserSchema), controller.create);
+router.patch('/:id', authorize('admin.user.update'), validate(updateUserSchema), controller.update);
+router.delete('/:id', authorize('admin.user.delete'), controller.delete);
 
 export { router as adminRouter };

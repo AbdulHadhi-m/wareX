@@ -1,14 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import { AuthRepository } from './auth.repository';
-import {
-  RegisterDTO,
-  LoginDTO,
-  AuthResponse,
-  UserResponse,
-  JwtPayload,
-  IUser,
-} from './auth.types';
+import { RegisterDTO, LoginDTO, AuthResponse, UserResponse, JwtPayload, IUser } from './auth.types';
 import { environment } from '../../shared/config/environment';
 import { AuthenticationError } from '../../shared/errors/authentication-error';
 import { ConflictError } from '../../shared/errors/conflict-error';
@@ -26,6 +20,13 @@ export class AuthService {
       throw new ConflictError('A user with this email already exists');
     }
 
+    const RoleModel = mongoose.model('Role');
+    const role = await RoleModel.findById(dto.roleId).lean();
+
+    if (!role) {
+      throw new AuthenticationError('Invalid role');
+    }
+
     const hashedPassword = await bcrypt.hash(dto.password, SALT_ROUNDS);
 
     const user = await this.repository.create({
@@ -34,7 +35,7 @@ export class AuthService {
     });
 
     const token = this.generateToken(user);
-    const userResponse = this.toUserResponse(user);
+    const userResponse = await this.toUserResponse(user);
 
     return { token, user: userResponse };
   }
@@ -53,7 +54,7 @@ export class AuthService {
     }
 
     const token = this.generateToken(user);
-    const userResponse = this.toUserResponse(user);
+    const userResponse = await this.toUserResponse(user);
 
     eventEmitter.emit(Events.AUTH_LOGIN, {
       userId: user._id.toString(),
@@ -77,7 +78,6 @@ export class AuthService {
   private generateToken(user: IUser): string {
     const payload: JwtPayload = {
       userId: user._id.toString(),
-      role: user.role,
     };
 
     return jwt.sign(payload, environment.JWT_SECRET, {
@@ -85,12 +85,15 @@ export class AuthService {
     } as jwt.SignOptions);
   }
 
-  private toUserResponse(user: IUser): UserResponse {
+  private async toUserResponse(user: IUser): Promise<UserResponse> {
+    const RoleModel = mongoose.model('Role');
+    const roleDoc = await RoleModel.findById(user.roleId).lean() as { name: string } | null;
+
     return {
       id: user._id.toString(),
       name: user.name,
       email: user.email,
-      role: user.role,
+      role: roleDoc?.name ?? 'Unknown',
       createdAt: new Date(user.createdAt).toISOString(),
     };
   }

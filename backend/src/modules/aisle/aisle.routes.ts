@@ -20,11 +20,11 @@ const controller = new AisleController(service);
 const aisleRouter = Router();
 aisleRouter.use(authenticate);
 
-aisleRouter.post('/', authorize('Manager'), validate(createAisleSchema), controller.create);
+aisleRouter.post('/', authorize('aisle.create'), validate(createAisleSchema), controller.create);
 aisleRouter.get('/', controller.findAll);
 aisleRouter.get('/:id', validate(aisleIdSchema, ValidationSource.PARAMS), controller.findById);
-aisleRouter.patch('/:id', authorize('Manager'), validate(aisleIdSchema, ValidationSource.PARAMS), validate(updateAisleSchema), controller.update);
-aisleRouter.delete('/:id', authorize('Manager'), controller.delete);
+aisleRouter.patch('/:id', authorize('aisle.update'), validate(aisleIdSchema, ValidationSource.PARAMS), validate(updateAisleSchema), controller.update);
+aisleRouter.delete('/:id', authorize('aisle.delete'), controller.delete);
 
 const zoneAisleRouter = Router();
 zoneAisleRouter.use(authenticate);

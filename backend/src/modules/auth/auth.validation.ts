@@ -11,10 +11,9 @@ export const registerSchema = z.object({
   password: z
     .string({ required_error: 'Password is required' })
     .min(8, 'Password must be at least 8 characters'),
-  role: z.enum(['Manager', 'Worker'], {
-    required_error: 'Role is required',
-    invalid_type_error: 'Role must be either Manager or Worker',
-  }),
+  roleId: z
+    .string({ required_error: 'Role is required' })
+    .min(1, 'Role is required'),
 });
 
 export const loginSchema = z.object({

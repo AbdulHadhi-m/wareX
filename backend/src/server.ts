@@ -1,36 +1,15 @@
-import bcrypt from 'bcrypt';
 import { app } from './app';
 import { environment } from './shared/config/environment';
 import { appConfig } from './shared/config/app';
 import { logger } from './shared/logger/logger';
 import { connect, disconnect } from './shared/database/connection';
-import { UserModel } from './modules/auth/auth.model';
-
-async function seed(): Promise<void> {
-  const userCount = await UserModel.countDocuments();
-  if (userCount > 0) return;
-
-  logger.info('No users found — creating default Super Admin');
-
-  const hashedPassword = await bcrypt.hash(environment.SUPER_ADMIN_PASSWORD, 12);
-
-  await UserModel.create({
-    name: environment.SUPER_ADMIN_NAME,
-    email: environment.SUPER_ADMIN_EMAIL.toLowerCase(),
-    password: hashedPassword,
-    role: 'SuperAdmin',
-  });
-
-  logger.info({
-    email: environment.SUPER_ADMIN_EMAIL,
-  }, 'Default Super Admin created');
-}
+import { seedAll } from './seed';
 
 async function start(): Promise<void> {
   try {
     const startTime = Date.now();
     await connect();
-    await seed();
+    await seedAll();
 
     const server = app.listen(environment.PORT, () => {
       const elapsed = Date.now() - startTime;

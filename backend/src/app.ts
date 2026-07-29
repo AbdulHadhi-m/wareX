@@ -22,6 +22,8 @@ import { auditLogRouter } from './modules/audit-log/auditLog.routes';
 import { notificationRouter } from './modules/notification/notification.routes';
 import { reportRouter } from './modules/report/report.routes';
 import { adminRouter } from './modules/admin/admin.routes';
+import { permissionRouter } from './modules/permission/permission.routes';
+import { roleRouter } from './modules/role/role.routes';
 
 const app = express();
 
@@ -76,6 +78,8 @@ app.use(`${appConfig.apiPrefix}/audit-logs`, auditLogRouter);
 app.use(`${appConfig.apiPrefix}/notifications`, notificationRouter);
 app.use(`${appConfig.apiPrefix}/`, reportRouter);
 app.use(`${appConfig.apiPrefix}/admin/users`, adminRouter);
+app.use(`${appConfig.apiPrefix}/permissions`, permissionRouter);
+app.use(`${appConfig.apiPrefix}/roles`, roleRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

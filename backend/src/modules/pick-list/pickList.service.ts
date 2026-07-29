@@ -38,10 +38,16 @@ export class PickListService {
 
       if (dto.workerId) {
         const worker = await UserModel.findById(dto.workerId)
+          .populate('roleId')
           .session(session)
           .lean();
 
-        if (!worker || worker.role !== 'Worker') {
+        if (!worker || !worker.roleId) {
+          throw new NotFoundError('Worker not found');
+        }
+
+        const workerRole = worker.roleId as unknown as { name: string };
+        if (workerRole.name !== 'Worker') {
           throw new NotFoundError('Worker not found');
         }
       }
@@ -150,9 +156,14 @@ export class PickListService {
     workerId: string,
     pageInput: { page?: number; limit?: number },
   ): Promise<{ data: PickListResponse[]; meta: PaginationMeta }> {
-    const worker = await UserModel.findById(workerId).lean();
+    const worker = await UserModel.findById(workerId).populate('roleId').lean();
 
-    if (!worker || worker.role !== 'Worker') {
+    if (!worker || !worker.roleId) {
+      throw new NotFoundError('Worker not found');
+    }
+
+    const workerRole = worker.roleId as unknown as { name: string };
+    if (workerRole.name !== 'Worker') {
       throw new NotFoundError('Worker not found');
     }
 
@@ -185,9 +196,14 @@ export class PickListService {
       throw new ValidationError('Cannot assign a completed or cancelled pick list');
     }
 
-    const worker = await UserModel.findById(dto.workerId).lean();
+    const worker = await UserModel.findById(dto.workerId).populate('roleId').lean();
 
-    if (!worker || worker.role !== 'Worker') {
+    if (!worker || !worker.roleId) {
+      throw new NotFoundError('Worker not found');
+    }
+
+    const workerRole = worker.roleId as unknown as { name: string };
+    if (workerRole.name !== 'Worker') {
       throw new NotFoundError('Worker not found');
     }
 

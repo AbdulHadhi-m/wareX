@@ -1,51 +1,49 @@
 import mongoose, { Schema } from 'mongoose';
-import { IUser } from './auth.types';
+import { IPermission } from './permission.types';
 
-export type UserDocument = mongoose.Document & IUser;
+export type PermissionDocument = mongoose.Document & IPermission;
 
-const userSchema = new Schema<UserDocument>(
+const permissionSchema = new Schema<PermissionDocument>(
   {
     name: {
       type: String,
       required: true,
       trim: true,
-      minlength: 1,
       maxlength: 100,
     },
-    email: {
+    code: {
       type: String,
       required: true,
       unique: true,
       trim: true,
-      lowercase: true,
       index: true,
     },
-    password: {
+    module: {
       type: String,
       required: true,
-      select: false,
-    },
-    roleId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Role',
-      required: true,
+      trim: true,
       index: true,
-    } as any,
+    },
+    description: {
+      type: String,
+      default: '',
+      trim: true,
+      maxlength: 500,
+    },
   },
   {
     timestamps: true,
-    collection: 'users',
+    collection: 'permissions',
   },
 );
 
-userSchema.set('toJSON', {
+permissionSchema.set('toJSON', {
   transform(_doc: Record<string, any>, ret: Record<string, any>) {
     ret.id = ret._id.toString();
     delete ret._id;
     delete ret.__v;
-    delete ret.password;
     return ret;
   },
 });
 
-export const UserModel = mongoose.model<UserDocument>('User', userSchema);
+export const PermissionModel = mongoose.model<PermissionDocument>('Permission', permissionSchema);

@@ -13,8 +13,7 @@ export class AdminController {
     const sortBy = req.query.sortBy ? String(req.query.sortBy) : undefined;
     const sortOrderParam = String(req.query.sortOrder || '');
     const sortOrder = sortOrderParam === 'asc' || sortOrderParam === 'desc' ? sortOrderParam : undefined;
-    const roleParam = String(req.query.role || '');
-    const role = roleParam === 'SuperAdmin' || roleParam === 'Manager' || roleParam === 'Worker' ? roleParam : undefined;
+    const roleId = req.query.roleId ? String(req.query.roleId) : undefined;
 
     const result = await this.adminService.list({
       search,
@@ -22,7 +21,7 @@ export class AdminController {
       limit,
       sortBy,
       sortOrder,
-      role,
+      roleId,
     });
     sendSuccess(res, result.data, 200, result.meta);
   });
