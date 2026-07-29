@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const conflict_error_1 = require("../../shared/errors/conflict-error");
 const not_found_error_1 = require("../../shared/errors/not-found-error");
 const pagination_1 = require("../../shared/utils/pagination");
@@ -35,6 +36,10 @@ class AdminService {
         const exists = await this.repository.findByEmail(dto.email);
         if (exists)
             throw new conflict_error_1.ConflictError('A user with this email already exists');
+        const RoleModel = mongoose_1.default.model('Role');
+        const role = await RoleModel.findById(dto.roleId).lean();
+        if (!role)
+            throw new not_found_error_1.NotFoundError('Role not found');
         const hashedPassword = await bcrypt_1.default.hash(dto.password, SALT_ROUNDS);
         const user = await this.repository.create({ ...dto, password: hashedPassword });
         return this.toResponse(user);
@@ -47,6 +52,12 @@ class AdminService {
             const emailExists = await this.repository.findByEmail(dto.email);
             if (emailExists)
                 throw new conflict_error_1.ConflictError('A user with this email already exists');
+        }
+        if (dto.roleId) {
+            const RoleModel = mongoose_1.default.model('Role');
+            const role = await RoleModel.findById(dto.roleId).lean();
+            if (!role)
+                throw new not_found_error_1.NotFoundError('Role not found');
         }
         const updateData = { ...dto };
         if (dto.password) {
@@ -64,11 +75,13 @@ class AdminService {
         await this.repository.delete(id);
     }
     toResponse(user) {
+        const roleObj = user.roleId;
         return {
             id: user._id.toString(),
             name: user.name,
             email: user.email,
-            role: user.role,
+            role: roleObj?.name ?? 'Unknown',
+            roleId: (roleObj?._id ?? user.roleId ?? '').toString(),
             createdAt: user.createdAt.toISOString(),
             updatedAt: user.updatedAt.toISOString(),
         };

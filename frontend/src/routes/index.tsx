@@ -43,6 +43,18 @@ const EditZonePage = lazy(() =>
 const ZoneDetailsPage = lazy(() =>
   import('@/features/zone').then((m) => ({ default: m.ZoneDetailsPage })),
 );
+const AisleListPage = lazy(() =>
+  import('@/features/aisle').then((m) => ({ default: m.AisleListPage })),
+);
+const CreateAislePage = lazy(() =>
+  import('@/features/aisle').then((m) => ({ default: m.CreateAislePage })),
+);
+const EditAislePage = lazy(() =>
+  import('@/features/aisle').then((m) => ({ default: m.EditAislePage })),
+);
+const AisleDetailsPage = lazy(() =>
+  import('@/features/aisle').then((m) => ({ default: m.AisleDetailsPage })),
+);
 const BinListPage = lazy(() =>
   import('@/features/bin').then((m) => ({ default: m.BinListPage })),
 );
@@ -135,6 +147,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
+    errorElement: <NotFoundPage />,
     children: [
       { index: true, element: <HeroPage /> },
       {
@@ -168,12 +181,13 @@ export const router = createBrowserRouter([
           },
           {
             path: 'aisles',
-            element: (
-              <ComingSoonPage
-                title="Aisles"
-                description="Configure aisles within warehouse zones."
-              />
-            ),
+            element: <SuspenseWrapper />,
+            children: [
+              { index: true, element: <AisleListPage /> },
+              { path: 'new', element: <CreateAislePage /> },
+              { path: ':id', element: <AisleDetailsPage /> },
+              { path: ':id/edit', element: <EditAislePage /> },
+            ],
           },
           {
             path: 'bins',
@@ -316,6 +330,18 @@ export const router = createBrowserRouter([
           { index: true, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
         ],
       },
+      { path: 'warehouses/*', element: <Navigate to="/dashboard/warehouses" replace /> },
+      { path: 'zones/*', element: <Navigate to="/dashboard/zones" replace /> },
+      { path: 'aisles/*', element: <Navigate to="/dashboard/aisles" replace /> },
+      { path: 'bins/*', element: <Navigate to="/dashboard/bins" replace /> },
+      { path: 'devices/*', element: <Navigate to="/dashboard/devices" replace /> },
+      { path: 'inventory/*', element: <Navigate to="/dashboard/inventory" replace /> },
+      { path: 'orders/*', element: <Navigate to="/dashboard/orders" replace /> },
+      { path: 'reports/*', element: <Navigate to="/dashboard/reports" replace /> },
+      { path: 'settings/*', element: <Navigate to="/dashboard/settings" replace /> },
+      { path: 'users/*', element: <Navigate to="/dashboard/admin/users" replace /> },
+      { path: 'audit-logs/*', element: <Navigate to="/dashboard/admin/audit-logs" replace /> },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
 ]);

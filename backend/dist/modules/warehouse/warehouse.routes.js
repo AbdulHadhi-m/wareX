@@ -14,9 +14,9 @@ const repository = new warehouse_repository_1.WarehouseRepository();
 const service = new warehouse_service_1.WarehouseService(repository);
 const controller = new warehouse_controller_1.WarehouseController(service);
 router.use(auth_middleware_1.authenticate);
-router.post('/', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(warehouse_validation_1.createWarehouseSchema), controller.create);
+router.post('/', (0, auth_middleware_1.authorize)('warehouse.create'), (0, validate_1.validate)(warehouse_validation_1.createWarehouseSchema), controller.create);
 router.get('/', controller.findAll);
 router.get('/:id', controller.findById);
-router.patch('/:id', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(warehouse_validation_1.warehouseIdSchema, validate_1.ValidationSource.PARAMS), (0, validate_1.validate)(warehouse_validation_1.updateWarehouseSchema), controller.update);
-router.delete('/:id', (0, auth_middleware_1.authorize)('Manager'), controller.delete);
+router.patch('/:id', (0, auth_middleware_1.authorize)('warehouse.update'), (0, validate_1.validate)(warehouse_validation_1.warehouseIdSchema, validate_1.ValidationSource.PARAMS), (0, validate_1.validate)(warehouse_validation_1.updateWarehouseSchema), controller.update);
+router.delete('/:id', (0, auth_middleware_1.authorize)('warehouse.delete'), controller.delete);
 //# sourceMappingURL=warehouse.routes.js.map

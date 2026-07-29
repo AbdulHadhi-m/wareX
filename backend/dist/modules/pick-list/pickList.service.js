@@ -32,9 +32,14 @@ class PickListService {
             session.startTransaction();
             if (dto.workerId) {
                 const worker = await auth_model_1.UserModel.findById(dto.workerId)
+                    .populate('roleId')
                     .session(session)
                     .lean();
-                if (!worker || worker.role !== 'Worker') {
+                if (!worker || !worker.roleId) {
+                    throw new not_found_error_1.NotFoundError('Worker not found');
+                }
+                const workerRole = worker.roleId;
+                if (workerRole.name !== 'Worker') {
                     throw new not_found_error_1.NotFoundError('Worker not found');
                 }
             }
@@ -107,8 +112,12 @@ class PickListService {
         return this.toPickListResponse(pickList);
     }
     async getByWorker(workerId, pageInput) {
-        const worker = await auth_model_1.UserModel.findById(workerId).lean();
-        if (!worker || worker.role !== 'Worker') {
+        const worker = await auth_model_1.UserModel.findById(workerId).populate('roleId').lean();
+        if (!worker || !worker.roleId) {
+            throw new not_found_error_1.NotFoundError('Worker not found');
+        }
+        const workerRole = worker.roleId;
+        if (workerRole.name !== 'Worker') {
             throw new not_found_error_1.NotFoundError('Worker not found');
         }
         const pagination = (0, pagination_1.parsePagination)(pageInput);
@@ -130,8 +139,12 @@ class PickListService {
         if (pickList.status === 'Completed' || pickList.status === 'Cancelled') {
             throw new validation_error_1.ValidationError('Cannot assign a completed or cancelled pick list');
         }
-        const worker = await auth_model_1.UserModel.findById(dto.workerId).lean();
-        if (!worker || worker.role !== 'Worker') {
+        const worker = await auth_model_1.UserModel.findById(dto.workerId).populate('roleId').lean();
+        if (!worker || !worker.roleId) {
+            throw new not_found_error_1.NotFoundError('Worker not found');
+        }
+        const workerRole = worker.roleId;
+        if (workerRole.name !== 'Worker') {
             throw new not_found_error_1.NotFoundError('Worker not found');
         }
         const nextStatus = pickList.status === 'Draft' ? 'Assigned' : pickList.status;

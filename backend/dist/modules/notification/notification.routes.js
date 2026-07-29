@@ -1,7 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.notificationRouter = void 0;
 const express_1 = require("express");
+const mongoose_1 = __importDefault(require("mongoose"));
 const notification_controller_1 = require("./notification.controller");
 const notification_service_1 = require("./notification.service");
 const notification_repository_1 = require("./notification.repository");
@@ -132,7 +136,13 @@ event_emitter_1.eventEmitter.on(event_emitter_1.Events.PICK_LIST_CANCELLED, asyn
 });
 event_emitter_1.eventEmitter.on(event_emitter_1.Events.DEVICE_MOVED, async (data) => {
     try {
-        const managerIds = await auth_model_1.UserModel.find({ role: 'Manager' }).select('_id').lean();
+        const RoleModel = mongoose_1.default.model('Role');
+        const managerRole = await RoleModel.findOne({ name: 'Manager' }).select('_id').lean();
+        if (!managerRole) {
+            logger_1.logger.warn('Manager role not found — skipping device moved notification');
+            return;
+        }
+        const managerIds = await auth_model_1.UserModel.find({ roleId: managerRole._id.toString() }).select('_id').lean();
         const recipientIds = managerIds.map((m) => m._id.toString());
         for (const recipientId of recipientIds) {
             await notificationService.create({
@@ -169,7 +179,7 @@ event_emitter_1.eventEmitter.on(event_emitter_1.Events.AUTH_LOGIN, async (data) 
 const router = (0, express_1.Router)();
 exports.notificationRouter = router;
 router.use(auth_middleware_1.authenticate);
-router.post('/', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(notification_validation_1.createNotificationSchema), controller.create);
+router.post('/', (0, auth_middleware_1.authorize)('notification.create'), (0, validate_1.validate)(notification_validation_1.createNotificationSchema), controller.create);
 router.get('/unread-count', controller.unreadCount);
 router.patch('/read-all', controller.markAllAsRead);
 router.get('/', (0, validate_1.validate)(notification_validation_1.notificationQuerySchema, validate_1.ValidationSource.QUERY), controller.findAll);

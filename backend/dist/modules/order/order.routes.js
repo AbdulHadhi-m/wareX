@@ -33,11 +33,11 @@ event_emitter_1.eventEmitter.on(event_emitter_1.Events.PICK_LIST_CANCELLED, asyn
 const router = (0, express_1.Router)();
 exports.orderRouter = router;
 router.use(auth_middleware_1.authenticate);
-router.post('/', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(order_validation_1.createOrderSchema), controller.create);
-router.get('/', (0, auth_middleware_1.authorize)('Manager', 'Worker'), (0, validate_1.validate)(order_validation_1.orderQuerySchema, validate_1.ValidationSource.QUERY), controller.findAll);
-router.get('/:id', (0, auth_middleware_1.authorize)('Manager', 'Worker'), (0, validate_1.validate)(order_validation_1.orderIdParamSchema, validate_1.ValidationSource.PARAMS), controller.findById);
-router.patch('/:id', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(order_validation_1.orderIdParamSchema, validate_1.ValidationSource.PARAMS), (0, validate_1.validate)(order_validation_1.updateOrderSchema), controller.update);
-router.patch('/:id/cancel', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(order_validation_1.orderIdParamSchema, validate_1.ValidationSource.PARAMS), controller.cancel);
-router.post('/:id/generate-pick-list', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(order_validation_1.orderIdParamSchema, validate_1.ValidationSource.PARAMS), controller.generatePickList);
-router.patch('/:id/fulfill', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(order_validation_1.orderIdParamSchema, validate_1.ValidationSource.PARAMS), controller.fulfill);
+router.post('/', (0, auth_middleware_1.authorize)('order.create'), (0, validate_1.validate)(order_validation_1.createOrderSchema), controller.create);
+router.get('/', (0, auth_middleware_1.authorize)('order.read', 'pick-list.read'), (0, validate_1.validate)(order_validation_1.orderQuerySchema, validate_1.ValidationSource.QUERY), controller.findAll);
+router.get('/:id', (0, auth_middleware_1.authorize)('order.read', 'pick-list.read'), (0, validate_1.validate)(order_validation_1.orderIdParamSchema, validate_1.ValidationSource.PARAMS), controller.findById);
+router.patch('/:id', (0, auth_middleware_1.authorize)('order.update'), (0, validate_1.validate)(order_validation_1.orderIdParamSchema, validate_1.ValidationSource.PARAMS), (0, validate_1.validate)(order_validation_1.updateOrderSchema), controller.update);
+router.patch('/:id/cancel', (0, auth_middleware_1.authorize)('order.cancel'), (0, validate_1.validate)(order_validation_1.orderIdParamSchema, validate_1.ValidationSource.PARAMS), controller.cancel);
+router.post('/:id/generate-pick-list', (0, auth_middleware_1.authorize)('order.generate-pick-list'), (0, validate_1.validate)(order_validation_1.orderIdParamSchema, validate_1.ValidationSource.PARAMS), controller.generatePickList);
+router.patch('/:id/fulfill', (0, auth_middleware_1.authorize)('order.fulfill'), (0, validate_1.validate)(order_validation_1.orderIdParamSchema, validate_1.ValidationSource.PARAMS), controller.fulfill);
 //# sourceMappingURL=order.routes.js.map

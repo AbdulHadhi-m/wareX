@@ -1,9 +1,9 @@
-import type { UserRole } from '../auth/auth.types';
 export interface AdminUserResponse {
     id: string;
     name: string;
     email: string;
-    role: UserRole;
+    role: string;
+    roleId: string;
     createdAt: string;
     updatedAt: string;
 }
@@ -11,13 +11,13 @@ export interface UpdateUserData {
     name?: string;
     email?: string;
     password?: string;
-    role?: UserRole;
+    roleId?: string;
 }
 export interface CreateUserData {
     name: string;
     email: string;
     password: string;
-    role: UserRole;
+    roleId: string;
 }
 export interface UserListParams {
     search?: string;
@@ -25,6 +25,6 @@ export interface UserListParams {
     limit?: number;
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
-    role?: UserRole;
+    roleId?: string;
 }
 //# sourceMappingURL=admin.types.d.ts.map

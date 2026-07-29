@@ -56,10 +56,11 @@ const userSchema = new mongoose_1.Schema({
         required: true,
         select: false,
     },
-    role: {
-        type: String,
-        enum: ['SuperAdmin', 'Manager', 'Worker'],
+    roleId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'Role',
         required: true,
+        index: true,
     },
 }, {
     timestamps: true,
