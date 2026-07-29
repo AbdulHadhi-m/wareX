@@ -16,12 +16,13 @@ import { StatusBadge } from '@/components/common/status-badge';
 import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/common/empty-state';
 import { ErrorState } from '@/components/common/error-state';
-import type { PickList, PickListPriority } from '../types';
+import { useAuth } from '@/features/auth';
+import type { Order, OrderPriority } from '../types';
 
-const columnHelper = createColumnHelper<PickList>();
+const columnHelper = createColumnHelper<Order>();
 
 const priorityVariantMap: Record<
-  PickListPriority,
+  OrderPriority,
   'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning'
 > = {
   Low: 'secondary',
@@ -30,8 +31,8 @@ const priorityVariantMap: Record<
   Urgent: 'destructive',
 };
 
-interface PickListTableProps {
-  data: PickList[];
+interface OrderTableProps {
+  data: Order[];
   isLoading: boolean;
   isError: boolean;
   error: Error | null;
@@ -47,9 +48,13 @@ interface PickListTableProps {
   onStatusFilterChange: (value: string) => void;
   priorityFilter: string;
   onPriorityFilterChange: (value: string) => void;
+  dateFrom: string;
+  onDateFromChange: (value: string) => void;
+  dateTo: string;
+  onDateToChange: (value: string) => void;
 }
 
-export function PickListTable({
+export function OrderTable({
   data,
   isLoading,
   isError,
@@ -66,28 +71,32 @@ export function PickListTable({
   onStatusFilterChange,
   priorityFilter,
   onPriorityFilterChange,
-}: PickListTableProps) {
+  dateFrom,
+  onDateFromChange,
+  dateTo,
+  onDateToChange,
+}: OrderTableProps) {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const columns = useMemo(
     () => [
-      columnHelper.accessor('pickListNumber', {
-        header: 'Pick List #',
+      columnHelper.accessor('orderNumber', {
+        header: 'Order Number',
         cell: (info) => (
           <button
-            onClick={() => navigate(`/pick-lists/${info.row.original.id}`)}
+            onClick={() => navigate(`/orders/${info.row.original.id}`)}
             className="font-medium text-foreground hover:text-primary transition-colors"
           >
             {info.getValue()}
           </button>
         ),
       }),
-      columnHelper.accessor('workerId', {
-        header: 'Assigned Worker',
-        cell: (info) => info.getValue() ?? '-',
+      columnHelper.accessor('customerName', {
+        header: 'Customer Name',
       }),
       columnHelper.accessor('deviceIds', {
-        header: 'Device Count',
+        header: 'Total Items',
         cell: (info) => info.getValue().length,
       }),
       columnHelper.accessor('priority', {
@@ -102,6 +111,25 @@ export function PickListTable({
         header: 'Status',
         cell: (info) => <StatusBadge status={info.getValue()} />,
       }),
+      columnHelper.accessor('pickListId', {
+        header: 'Assigned Pick List',
+        cell: (info) =>
+          info.getValue() ? (
+            <Button
+              variant="link"
+              size="sm"
+              className="px-0"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/pick-lists/${info.getValue()}`);
+              }}
+            >
+              {info.getValue()!.slice(-6)}
+            </Button>
+          ) : (
+            <span className="text-muted-foreground">-</span>
+          ),
+      }),
       columnHelper.accessor('createdAt', {
         header: 'Created At',
         cell: (info) => new Date(info.getValue()).toLocaleDateString(),
@@ -114,7 +142,7 @@ export function PickListTable({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(`/pick-lists/${info.row.original.id}`)}
+              onClick={() => navigate(`/orders/${info.row.original.id}`)}
             >
               <Eye className="size-4" />
             </Button>
@@ -140,7 +168,7 @@ export function PickListTable({
   if (isError) {
     return (
       <ErrorState
-        title="Failed to load pick lists"
+        title="Failed to load orders"
         message={error?.message ?? 'An error occurred'}
         onRetry={onRefresh}
       />
@@ -152,11 +180,11 @@ export function PickListTable({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2 flex-1 flex-wrap">
           <SearchInput
-            placeholder="Search pick lists..."
+            placeholder="Search orders..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             onClear={() => onSearchChange('')}
-            className="w-full sm:w-56"
+            className="w-full sm:w-48"
           />
           <select
             value={statusFilter}
@@ -165,9 +193,10 @@ export function PickListTable({
           >
             <option value="">All Statuses</option>
             <option value="Draft">Draft</option>
-            <option value="Assigned">Assigned</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
+            <option value="Pending">Pending</option>
+            <option value="Picking">Picking</option>
+            <option value="Ready">Ready</option>
+            <option value="Fulfilled">Fulfilled</option>
             <option value="Cancelled">Cancelled</option>
           </select>
           <select
@@ -181,6 +210,20 @@ export function PickListTable({
             <option value="High">High</option>
             <option value="Urgent">Urgent</option>
           </select>
+          <input
+            type="date"
+            value={dateFrom}
+            onChange={(e) => onDateFromChange(e.target.value)}
+            className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            title="From date"
+          />
+          <input
+            type="date"
+            value={dateTo}
+            onChange={(e) => onDateToChange(e.target.value)}
+            className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            title="To date"
+          />
         </div>
         <Button variant="outline" size="icon" onClick={onRefresh}>
           <RefreshCw className="size-4" />
@@ -192,15 +235,15 @@ export function PickListTable({
         isLoading={isLoading}
         emptyState={
           <EmptyState
-            title="No pick lists found"
+            title="No orders found"
             description={
-              search || statusFilter || priorityFilter
+              search || statusFilter || priorityFilter || dateFrom || dateTo
                 ? 'Try a different search term or filter.'
-                : 'Get started by creating your first pick list.'
+                : 'Get started by creating your first order.'
             }
             action={
-              !search && !statusFilter && !priorityFilter
-                ? { label: 'Create Pick List', onClick: () => navigate('/pick-lists/new') }
+              user?.role === 'Manager' && !search && !statusFilter && !priorityFilter
+                ? { label: 'Create Order', onClick: () => navigate('/orders/new') }
                 : undefined
             }
           />

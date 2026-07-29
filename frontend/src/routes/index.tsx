@@ -33,6 +33,12 @@ import {
   MoveDevicePage,
   DeviceHistoryPage,
 } from '@/features/inventory';
+import {
+  OrderListPage,
+  CreateOrderPage,
+  EditOrderPage,
+  OrderDetailsPage,
+} from '@/features/order';
 
 export const router = createBrowserRouter([
   {
@@ -111,12 +117,12 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.ORDERS,
-        element: (
-          <ComingSoonPage
-            title="Orders"
-            description="Manage customer orders and fulfillment."
-          />
-        ),
+        children: [
+          { index: true, element: <OrderListPage /> },
+          { path: 'new', element: <CreateOrderPage /> },
+          { path: ':id', element: <OrderDetailsPage /> },
+          { path: ':id/edit', element: <EditOrderPage /> },
+        ],
       },
       {
         path: ROUTES.NOTIFICATIONS,

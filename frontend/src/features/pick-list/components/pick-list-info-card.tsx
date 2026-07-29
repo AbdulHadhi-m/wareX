@@ -6,7 +6,6 @@ import {
   XCircle,
   Loader2,
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -49,7 +48,6 @@ function InfoRow({ label, value }: { label: string; value?: string | null }) {
 }
 
 export function PickListInfoCard({ pickList }: PickListInfoCardProps) {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const isManager = user?.role === 'Manager';
   const isAssignedWorker = user?.id === pickList.workerId;
