@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { X, LayoutDashboard, Warehouse, Layers, GitBranch, Box, Cpu, Package, ClipboardList, ShoppingCart, Bell, BarChart3, Settings } from 'lucide-react';
+import { X, LayoutDashboard, Warehouse, Layers, GitBranch, Box, Cpu, Package, ClipboardList, ShoppingCart, Bell, BarChart3, Settings, Shield, ScrollText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/constants';
 import { AppLogo } from '@/components/common/app-logo';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/features/auth';
 
 const navItems = [
   { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: LayoutDashboard },
@@ -21,12 +23,20 @@ const navItems = [
   { label: 'Settings', path: ROUTES.SETTINGS, icon: Settings },
 ];
 
+const adminNavItems = [
+  { label: 'Users', path: '/admin/users', icon: Shield },
+  { label: 'Audit Logs', path: '/admin/audit-logs', icon: ScrollText },
+];
+
 interface MobileNavProps {
   open: boolean;
   onClose: () => void;
 }
 
 export function MobileNav({ open, onClose }: MobileNavProps) {
+  const { user } = useAuth();
+  const isSuperAdmin = user?.role === 'SuperAdmin';
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -77,6 +87,32 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
               {item.label}
             </NavLink>
           ))}
+          {isSuperAdmin && (
+            <>
+              <Separator className="my-2" />
+              <span className="px-3 text-xs font-semibold uppercase tracking-wider text-sidebar-muted-foreground">
+                Administration
+              </span>
+              {adminNavItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={onClose}
+                  className={({ isActive }) =>
+                    cn(
+                      'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                      isActive
+                        ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                        : 'text-sidebar-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                    )
+                  }
+                >
+                  <item.icon className="size-5 shrink-0" />
+                  {item.label}
+                </NavLink>
+              ))}
+            </>
+          )}
         </nav>
 
         <div className="p-4 border-t border-sidebar-border">

@@ -1,7 +1,10 @@
 import { IZone, CreateZoneDTO, UpdateZoneDTO } from './zone.types';
+import { type MongoQuery } from '../../shared/query';
 export declare class ZoneRepository {
     private baseFilter;
     findAll(): Promise<IZone[]>;
+    search(query: MongoQuery): Promise<IZone[]>;
+    countSearch(query: MongoQuery): Promise<number>;
     findById(id: string): Promise<IZone | null>;
     findByWarehouseId(warehouseId: string): Promise<IZone[]>;
     findByCodeInWarehouse(code: string, warehouseId: string): Promise<IZone | null>;

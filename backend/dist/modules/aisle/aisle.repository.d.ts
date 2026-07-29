@@ -1,7 +1,10 @@
 import { IAisle, CreateAisleDTO, UpdateAisleDTO } from './aisle.types';
+import { type MongoQuery } from '../../shared/query';
 export declare class AisleRepository {
     private baseFilter;
     findAll(): Promise<IAisle[]>;
+    search(query: MongoQuery): Promise<IAisle[]>;
+    countSearch(query: MongoQuery): Promise<number>;
     findById(id: string): Promise<IAisle | null>;
     findByZoneId(zoneId: string): Promise<IAisle[]>;
     findByCodeInZone(code: string, zoneId: string): Promise<IAisle | null>;

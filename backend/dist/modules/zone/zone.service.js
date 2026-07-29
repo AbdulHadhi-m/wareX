@@ -3,6 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ZoneService = void 0;
 const not_found_error_1 = require("../../shared/errors/not-found-error");
 const conflict_error_1 = require("../../shared/errors/conflict-error");
+const query_1 = require("../../shared/query");
+const pagination_1 = require("../../shared/utils/pagination");
+const zoneQueryConfig = {
+    searchableFields: ['name', 'code'],
+    filterableFields: ['warehouseId', 'status'],
+    sortableFields: ['createdAt', 'updatedAt', 'name', 'status', 'code'],
+    defaultSort: { field: 'createdAt', order: 'desc' },
+    baseFilter: { isDeleted: { $ne: true } },
+};
 class ZoneService {
     zoneRepository;
     warehouseRepository;
@@ -30,6 +39,19 @@ class ZoneService {
     async findAll() {
         const zones = await this.zoneRepository.findAll();
         return zones.map((z) => this.toZoneResponse(z));
+    }
+    async search(queryParams) {
+        const parsed = query_1.QueryParser.parse(queryParams, zoneQueryConfig);
+        const mongoQuery = query_1.QueryBuilder.build(parsed, zoneQueryConfig);
+        const pagination = (0, pagination_1.parsePagination)({ page: parsed.page, limit: parsed.limit });
+        const [zones, total] = await Promise.all([
+            this.zoneRepository.search(mongoQuery),
+            this.zoneRepository.countSearch(mongoQuery),
+        ]);
+        return {
+            data: zones.map((z) => this.toZoneResponse(z)),
+            meta: (0, pagination_1.buildPaginationMeta)(total, pagination),
+        };
     }
     async findById(id) {
         const zone = await this.zoneRepository.findById(id);

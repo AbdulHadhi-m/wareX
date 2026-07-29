@@ -32,6 +32,8 @@ export const QUERY_KEYS = {
   ORDERS: ['orders'] as const,
   NOTIFICATIONS: ['notifications'] as const,
   REPORTS: ['reports'] as const,
+  ADMIN_USERS: ['admin-users'] as const,
+  AUDIT_LOGS: ['audit-logs'] as const,
   DASHBOARD: {
     SUMMARY: ['dashboard', 'summary'] as const,
     DEVICE_STATUS: ['dashboard', 'device-status'] as const,

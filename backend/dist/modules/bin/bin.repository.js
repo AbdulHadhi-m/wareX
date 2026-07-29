@@ -10,6 +10,19 @@ class BinRepository {
     async findAll() {
         return bin_model_1.BinModel.find(this.baseFilter()).sort({ createdAt: -1 }).lean();
     }
+    async search(query) {
+        const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+        const projection = Object.keys(query.projection).length > 0 ? query.projection : undefined;
+        let q = bin_model_1.BinModel.find(filter).sort(query.sort).skip(query.skip).limit(query.limit);
+        if (projection) {
+            q = q.select(projection);
+        }
+        return q.lean();
+    }
+    async countSearch(query) {
+        const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+        return bin_model_1.BinModel.countDocuments(filter);
+    }
     async findById(id) {
         return bin_model_1.BinModel.findById(id).where('isDeleted').ne(true).lean();
     }

@@ -17,6 +17,9 @@ const environmentSchema = z.object({
   RATE_LIMIT_MAX: z.coerce.number().positive().default(100),
   RATE_LIMIT_AUTH_MAX: z.coerce.number().positive().default(10),
   BODY_LIMIT: z.string().default('1mb'),
+  SUPER_ADMIN_EMAIL: z.string().email().default('superadmin@warex.com'),
+  SUPER_ADMIN_PASSWORD: z.string().min(8).default('superadmin123'),
+  SUPER_ADMIN_NAME: z.string().min(1).default('Super Admin'),
 });
 
 const parsed = environmentSchema.safeParse(process.env);

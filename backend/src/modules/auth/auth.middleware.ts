@@ -43,6 +43,11 @@ export function authenticate(req: Request, _res: Response, next: NextFunction): 
 
 export function authorize(...roles: UserRole[]) {
   return (req: Request, _res: Response, next: NextFunction): void => {
+    if (req.userRole === 'SuperAdmin') {
+      next();
+      return;
+    }
+
     if (!req.userRole || !roles.includes(req.userRole as UserRole)) {
       next(new AuthorizationError('Insufficient permissions'));
       return;

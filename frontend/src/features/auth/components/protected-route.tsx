@@ -24,7 +24,7 @@ export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
     return <Navigate to="/auth/login" replace />;
   }
 
-  if (roles && user && !roles.includes(user.role)) {
+  if (roles && user && user.role !== 'SuperAdmin' && !roles.includes(user.role)) {
     return <Navigate to="/" replace />;
   }
 

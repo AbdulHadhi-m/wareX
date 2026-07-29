@@ -110,6 +110,19 @@ const PickListReportsPage = lazy(() =>
   import('@/features/reports').then((m) => ({ default: m.PickListReportsPage })),
 );
 
+const AdminUserListPage = lazy(() =>
+  import('@/features/admin').then((m) => ({ default: m.UserListPage })),
+);
+const AdminCreateUserPage = lazy(() =>
+  import('@/features/admin').then((m) => ({ default: m.CreateUserPage })),
+);
+const AdminEditUserPage = lazy(() =>
+  import('@/features/admin').then((m) => ({ default: m.EditUserPage })),
+);
+const AdminUserDetailsPage = lazy(() =>
+  import('@/features/admin').then((m) => ({ default: m.UserDetailsPage })),
+);
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -229,6 +242,39 @@ export const router = createBrowserRouter([
             />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'admin/users',
+        element: (
+          <ProtectedRoute roles={['SuperAdmin']}>
+            <SuspenseWrapper />
+          </ProtectedRoute>
+        ),
+        children: [
+          { index: true, element: <AdminUserListPage /> },
+          { path: 'new', element: <AdminCreateUserPage /> },
+          { path: ':id', element: <AdminUserDetailsPage /> },
+          { path: ':id/edit', element: <AdminEditUserPage /> },
+        ],
+      },
+      {
+        path: 'admin/audit-logs',
+        element: (
+          <ProtectedRoute roles={['SuperAdmin']}>
+            <SuspenseWrapper />
+          </ProtectedRoute>
+        ),
+        children: [
+          {
+            index: true,
+            element: (
+              <ComingSoonPage
+                title="Audit Logs"
+                description="View system-wide audit logs for all user actions."
+              />
+            ),
+          },
+        ],
       },
       {
         path: 'access-denied',

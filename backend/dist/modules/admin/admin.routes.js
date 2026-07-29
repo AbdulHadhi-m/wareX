@@ -1,0 +1,23 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.adminRouter = void 0;
+const express_1 = require("express");
+const admin_controller_1 = require("./admin.controller");
+const admin_service_1 = require("./admin.service");
+const admin_repository_1 = require("./admin.repository");
+const validate_1 = require("../../shared/validation/validate");
+const admin_validation_1 = require("./admin.validation");
+const auth_middleware_1 = require("../auth/auth.middleware");
+const repository = new admin_repository_1.AdminRepository();
+const service = new admin_service_1.AdminService(repository);
+const controller = new admin_controller_1.AdminController(service);
+const router = (0, express_1.Router)();
+exports.adminRouter = router;
+router.use(auth_middleware_1.authenticate);
+router.use((0, auth_middleware_1.authorize)('SuperAdmin'));
+router.get('/', (0, validate_1.validate)(admin_validation_1.userListQuerySchema), controller.list);
+router.get('/:id', controller.getById);
+router.post('/', (0, validate_1.validate)(admin_validation_1.createUserSchema), controller.create);
+router.patch('/:id', (0, validate_1.validate)(admin_validation_1.updateUserSchema), controller.update);
+router.delete('/:id', controller.delete);
+//# sourceMappingURL=admin.routes.js.map

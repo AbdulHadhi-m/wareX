@@ -145,8 +145,6 @@ deviceSchema.set('toJSON', {
         return ret;
     },
 });
-deviceSchema.index({ serialNumber: 1 }, { unique: true });
-deviceSchema.index({ imei: 1 }, { sparse: true, unique: true });
 deviceSchema.index({ binId: 1, isDeleted: 1 });
 deviceSchema.index({ aisleId: 1, isDeleted: 1 });
 deviceSchema.index({ zoneId: 1, isDeleted: 1 });
@@ -154,6 +152,8 @@ deviceSchema.index({ warehouseId: 1, isDeleted: 1 });
 deviceSchema.index({ status: 1, isDeleted: 1 });
 deviceSchema.index({ brand: 1, isDeleted: 1 });
 deviceSchema.index({ category: 1, isDeleted: 1 });
+deviceSchema.index({ sku: 1 });
+deviceSchema.index({ warehouseId: 1, status: 1, isDeleted: 1 });
 deviceSchema.index({ deviceName: 'text', brand: 'text', model: 'text', serialNumber: 'text' });
 exports.DeviceModel = mongoose_1.default.model('Device', deviceSchema);
 //# sourceMappingURL=device.model.js.map

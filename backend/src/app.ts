@@ -21,6 +21,7 @@ import { orderRouter } from './modules/order/order.routes';
 import { auditLogRouter } from './modules/audit-log/auditLog.routes';
 import { notificationRouter } from './modules/notification/notification.routes';
 import { reportRouter } from './modules/report/report.routes';
+import { adminRouter } from './modules/admin/admin.routes';
 
 const app = express();
 
@@ -74,6 +75,7 @@ app.use(`${appConfig.apiPrefix}/orders`, orderRouter);
 app.use(`${appConfig.apiPrefix}/audit-logs`, auditLogRouter);
 app.use(`${appConfig.apiPrefix}/notifications`, notificationRouter);
 app.use(`${appConfig.apiPrefix}/`, reportRouter);
+app.use(`${appConfig.apiPrefix}/admin/users`, adminRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

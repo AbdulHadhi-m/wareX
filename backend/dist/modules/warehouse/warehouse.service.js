@@ -3,6 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WarehouseService = void 0;
 const not_found_error_1 = require("../../shared/errors/not-found-error");
 const conflict_error_1 = require("../../shared/errors/conflict-error");
+const query_1 = require("../../shared/query");
+const pagination_1 = require("../../shared/utils/pagination");
+const warehouseQueryConfig = {
+    searchableFields: ['name', 'code', 'city'],
+    filterableFields: ['status', 'country', 'city'],
+    sortableFields: ['createdAt', 'updatedAt', 'name', 'status', 'code'],
+    defaultSort: { field: 'createdAt', order: 'desc' },
+    baseFilter: { isDeleted: { $ne: true } },
+};
 class WarehouseService {
     repository;
     constructor(repository) {
@@ -24,6 +33,19 @@ class WarehouseService {
     async findAll() {
         const warehouses = await this.repository.findAll();
         return warehouses.map((w) => this.toWarehouseResponse(w));
+    }
+    async search(queryParams) {
+        const parsed = query_1.QueryParser.parse(queryParams, warehouseQueryConfig);
+        const mongoQuery = query_1.QueryBuilder.build(parsed, warehouseQueryConfig);
+        const pagination = (0, pagination_1.parsePagination)({ page: parsed.page, limit: parsed.limit });
+        const [warehouses, total] = await Promise.all([
+            this.repository.search(mongoQuery),
+            this.repository.countSearch(mongoQuery),
+        ]);
+        return {
+            data: warehouses.map((w) => this.toWarehouseResponse(w)),
+            meta: (0, pagination_1.buildPaginationMeta)(total, pagination),
+        };
     }
     async findById(id) {
         const warehouse = await this.repository.findById(id);

@@ -12,7 +12,7 @@ const controller = new AuditLogController(auditLogService);
 
 const router = Router();
 router.use(authenticate);
-router.use(authorize('Manager'));
+router.use(authorize('Manager', 'SuperAdmin'));
 
 router.get('/', validate(auditLogQuerySchema, ValidationSource.QUERY), controller.findAll);
 

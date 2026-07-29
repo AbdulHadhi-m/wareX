@@ -3,7 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeviceService = void 0;
 const not_found_error_1 = require("../../shared/errors/not-found-error");
 const conflict_error_1 = require("../../shared/errors/conflict-error");
+const query_1 = require("../../shared/query");
 const pagination_1 = require("../../shared/utils/pagination");
+const deviceQueryConfig = {
+    searchableFields: ['deviceName', 'brand', 'model', 'category', 'sku', 'serialNumber', 'imei'],
+    filterableFields: ['status', 'condition', 'brand', 'category', 'binId', 'aisleId', 'zoneId', 'warehouseId'],
+    sortableFields: ['createdAt', 'updatedAt', 'deviceName', 'brand', 'model', 'status', 'serialNumber'],
+    defaultSort: { field: 'createdAt', order: 'desc' },
+    baseFilter: { isDeleted: { $ne: true } },
+};
 class DeviceService {
     deviceRepository;
     binRepository;
@@ -54,15 +62,13 @@ class DeviceService {
         });
         return this.toDeviceResponse(device);
     }
-    async search(params) {
-        const filter = { ...this.buildFilter(params) };
-        const pagination = (0, pagination_1.parsePagination)({ page: params.page, limit: params.limit });
-        const sort = {
-            [params.sortBy]: params.sortOrder === 'asc' ? 1 : -1,
-        };
+    async search(queryParams) {
+        const parsed = query_1.QueryParser.parse(queryParams, deviceQueryConfig);
+        const mongoQuery = query_1.QueryBuilder.build(parsed, deviceQueryConfig);
+        const pagination = (0, pagination_1.parsePagination)({ page: parsed.page, limit: parsed.limit });
         const [devices, total] = await Promise.all([
-            this.deviceRepository.search(filter, pagination.skip, pagination.limit, sort),
-            this.deviceRepository.count(filter),
+            this.deviceRepository.search(mongoQuery),
+            this.deviceRepository.countSearch(mongoQuery),
         ]);
         return {
             data: devices.map((d) => this.toDeviceResponse(d)),
@@ -131,40 +137,6 @@ class DeviceService {
             throw new not_found_error_1.NotFoundError('Device not found');
         }
         await this.deviceRepository.softDelete(id, userId);
-    }
-    buildFilter(params) {
-        const filter = { isDeleted: { $ne: true } };
-        if (params.deviceName) {
-            filter.deviceName = { $regex: params.deviceName, $options: 'i' };
-        }
-        if (params.brand) {
-            filter.brand = { $regex: params.brand, $options: 'i' };
-        }
-        if (params.model) {
-            filter.model = { $regex: params.model, $options: 'i' };
-        }
-        if (params.category) {
-            filter.category = params.category;
-        }
-        if (params.status) {
-            filter.status = params.status;
-        }
-        if (params.condition) {
-            filter.condition = params.condition;
-        }
-        if (params.binId) {
-            filter.binId = params.binId;
-        }
-        if (params.aisleId) {
-            filter.aisleId = params.aisleId;
-        }
-        if (params.zoneId) {
-            filter.zoneId = params.zoneId;
-        }
-        if (params.warehouseId) {
-            filter.warehouseId = params.warehouseId;
-        }
-        return filter;
     }
     toDeviceResponse(device) {
         return {
