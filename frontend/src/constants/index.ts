@@ -17,6 +17,8 @@ export const ROUTES = {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
   },
+  NOT_FOUND: '/404',
+  ACCESS_DENIED: '/access-denied',
 } as const;
 
 export const QUERY_KEYS = {

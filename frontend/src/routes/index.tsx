@@ -1,55 +1,114 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { DashboardLayout, AuthLayout, PublicLayout } from '@/components/layouts';
 import { ROUTES } from '@/constants';
 import { ComingSoonPage } from '@/features/placeholder/pages/coming-soon-page';
 import { ProtectedRoute, GuestRoute, LoginPage } from '@/features/auth';
-import { DashboardPage } from '@/features/dashboard';
-import {
-  WarehouseListPage,
-  CreateWarehousePage,
-  EditWarehousePage,
-  WarehouseDetailsPage,
-} from '@/features/warehouse';
-import {
-  ZoneListPage,
-  CreateZonePage,
-  EditZonePage,
-  ZoneDetailsPage,
-} from '@/features/zone';
-import {
-  BinListPage,
-  CreateBinPage,
-  EditBinPage,
-  BinDetailsPage,
-} from '@/features/bin';
-import {
-  DeviceListPage,
-  CreateDevicePage,
-  EditDevicePage,
-  DeviceDetailsPage,
-} from '@/features/device';
-import {
-  InventoryDashboardPage,
-  MoveDevicePage,
-  DeviceHistoryPage,
-} from '@/features/inventory';
-import {
-  OrderListPage,
-  CreateOrderPage,
-  EditOrderPage,
-  OrderDetailsPage,
-} from '@/features/order';
-import {
-  NotificationListPage,
-  NotificationDetailsPage,
-} from '@/features/notification';
-import {
-  ReportsDashboardPage,
-  DeviceReportsPage,
-  InventoryReportsPage,
-  OrderReportsPage,
-  PickListReportsPage,
-} from '@/features/reports';
+import { NotFoundPage } from '@/components/common/not-found-page';
+import { AccessDeniedPage } from '@/components/common/access-denied-page';
+import { LoadingSpinner } from '@/components/common/loading-spinner';
+
+function SuspenseWrapper() {
+  return (
+    <Suspense fallback={<LoadingSpinner className="min-h-[60vh]" />}>
+      <Outlet />
+    </Suspense>
+  );
+}
+
+const DashboardPage = lazy(() =>
+  import('@/features/dashboard').then((m) => ({ default: m.DashboardPage })),
+);
+const WarehouseListPage = lazy(() =>
+  import('@/features/warehouse').then((m) => ({ default: m.WarehouseListPage })),
+);
+const CreateWarehousePage = lazy(() =>
+  import('@/features/warehouse').then((m) => ({ default: m.CreateWarehousePage })),
+);
+const EditWarehousePage = lazy(() =>
+  import('@/features/warehouse').then((m) => ({ default: m.EditWarehousePage })),
+);
+const WarehouseDetailsPage = lazy(() =>
+  import('@/features/warehouse').then((m) => ({ default: m.WarehouseDetailsPage })),
+);
+const ZoneListPage = lazy(() =>
+  import('@/features/zone').then((m) => ({ default: m.ZoneListPage })),
+);
+const CreateZonePage = lazy(() =>
+  import('@/features/zone').then((m) => ({ default: m.CreateZonePage })),
+);
+const EditZonePage = lazy(() =>
+  import('@/features/zone').then((m) => ({ default: m.EditZonePage })),
+);
+const ZoneDetailsPage = lazy(() =>
+  import('@/features/zone').then((m) => ({ default: m.ZoneDetailsPage })),
+);
+const BinListPage = lazy(() =>
+  import('@/features/bin').then((m) => ({ default: m.BinListPage })),
+);
+const CreateBinPage = lazy(() =>
+  import('@/features/bin').then((m) => ({ default: m.CreateBinPage })),
+);
+const EditBinPage = lazy(() =>
+  import('@/features/bin').then((m) => ({ default: m.EditBinPage })),
+);
+const BinDetailsPage = lazy(() =>
+  import('@/features/bin').then((m) => ({ default: m.BinDetailsPage })),
+);
+const DeviceListPage = lazy(() =>
+  import('@/features/device').then((m) => ({ default: m.DeviceListPage })),
+);
+const CreateDevicePage = lazy(() =>
+  import('@/features/device').then((m) => ({ default: m.CreateDevicePage })),
+);
+const EditDevicePage = lazy(() =>
+  import('@/features/device').then((m) => ({ default: m.EditDevicePage })),
+);
+const DeviceDetailsPage = lazy(() =>
+  import('@/features/device').then((m) => ({ default: m.DeviceDetailsPage })),
+);
+const InventoryDashboardPage = lazy(() =>
+  import('@/features/inventory').then((m) => ({ default: m.InventoryDashboardPage })),
+);
+const MoveDevicePage = lazy(() =>
+  import('@/features/inventory').then((m) => ({ default: m.MoveDevicePage })),
+);
+const DeviceHistoryPage = lazy(() =>
+  import('@/features/inventory').then((m) => ({ default: m.DeviceHistoryPage })),
+);
+const OrderListPage = lazy(() =>
+  import('@/features/order').then((m) => ({ default: m.OrderListPage })),
+);
+const CreateOrderPage = lazy(() =>
+  import('@/features/order').then((m) => ({ default: m.CreateOrderPage })),
+);
+const EditOrderPage = lazy(() =>
+  import('@/features/order').then((m) => ({ default: m.EditOrderPage })),
+);
+const OrderDetailsPage = lazy(() =>
+  import('@/features/order').then((m) => ({ default: m.OrderDetailsPage })),
+);
+const NotificationListPage = lazy(() =>
+  import('@/features/notification').then((m) => ({ default: m.NotificationListPage })),
+);
+const NotificationDetailsPage = lazy(() =>
+  import('@/features/notification').then((m) => ({ default: m.NotificationDetailsPage })),
+);
+const ReportsDashboardPage = lazy(() =>
+  import('@/features/reports').then((m) => ({ default: m.ReportsDashboardPage })),
+);
+const DeviceReportsPage = lazy(() =>
+  import('@/features/reports').then((m) => ({ default: m.DeviceReportsPage })),
+);
+const InventoryReportsPage = lazy(() =>
+  import('@/features/reports').then((m) => ({ default: m.InventoryReportsPage })),
+);
+const OrderReportsPage = lazy(() =>
+  import('@/features/reports').then((m) => ({ default: m.OrderReportsPage })),
+);
+const PickListReportsPage = lazy(() =>
+  import('@/features/reports').then((m) => ({ default: m.PickListReportsPage })),
+);
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +125,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.WAREHOUSES,
+        element: <SuspenseWrapper />,
         children: [
           { index: true, element: <WarehouseListPage /> },
           { path: 'new', element: <CreateWarehousePage /> },
@@ -75,6 +135,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.ZONES,
+        element: <SuspenseWrapper />,
         children: [
           { index: true, element: <ZoneListPage /> },
           { path: 'new', element: <CreateZonePage /> },
@@ -93,6 +154,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.BINS,
+        element: <SuspenseWrapper />,
         children: [
           { index: true, element: <BinListPage /> },
           { path: 'new', element: <CreateBinPage /> },
@@ -102,6 +164,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.DEVICES,
+        element: <SuspenseWrapper />,
         children: [
           { index: true, element: <DeviceListPage /> },
           { path: 'new', element: <CreateDevicePage /> },
@@ -111,6 +174,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.INVENTORY,
+        element: <SuspenseWrapper />,
         children: [
           { index: true, element: <InventoryDashboardPage /> },
           { path: 'move/:deviceId', element: <MoveDevicePage /> },
@@ -128,6 +192,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.ORDERS,
+        element: <SuspenseWrapper />,
         children: [
           { index: true, element: <OrderListPage /> },
           { path: 'new', element: <CreateOrderPage /> },
@@ -137,6 +202,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.NOTIFICATIONS,
+        element: <SuspenseWrapper />,
         children: [
           { index: true, element: <NotificationListPage /> },
           { path: ':id', element: <NotificationDetailsPage /> },
@@ -144,6 +210,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.REPORTS,
+        element: <SuspenseWrapper />,
         children: [
           { index: true, element: <ReportsDashboardPage /> },
           { path: 'devices', element: <DeviceReportsPage /> },
@@ -162,6 +229,14 @@ export const router = createBrowserRouter([
             />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'access-denied',
+        element: <AccessDeniedPage />,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
       },
     ],
   },
