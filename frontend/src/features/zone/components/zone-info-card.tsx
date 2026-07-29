@@ -47,7 +47,7 @@ export function ZoneInfoCard({ zone, onDelete, isDeleting }: ZoneInfoCardProps) 
               <div className="flex justify-between gap-4 py-2">
                 <span className="text-sm text-muted-foreground">Warehouse</span>
                 <button
-                  onClick={() => navigate(`/warehouses/${zone.warehouseId}`)}
+                  onClick={() => navigate(`/dashboard/warehouses/${zone.warehouseId}`)}
                   className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                 >
                   {warehouse ? `${warehouse.name} (${warehouse.code})` : zone.warehouseId}
@@ -72,7 +72,7 @@ export function ZoneInfoCard({ zone, onDelete, isDeleting }: ZoneInfoCardProps) 
                 <Button
                   className="w-full gap-2"
                   variant="outline"
-                  onClick={() => navigate(`/zones/${zone.id}/edit`)}
+                  onClick={() => navigate(`/dashboard/zones/${zone.id}/edit`)}
                 >
                   <Pencil className="size-4" />
                   Edit Zone

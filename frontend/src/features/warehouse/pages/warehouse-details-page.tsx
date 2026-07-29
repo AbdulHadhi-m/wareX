@@ -44,7 +44,7 @@ export function WarehouseDetailsPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Warehouses', href: '/warehouses' },
+          { label: 'Warehouses', href: '/dashboard/warehouses' },
           { label: warehouse.name },
         ]}
       />

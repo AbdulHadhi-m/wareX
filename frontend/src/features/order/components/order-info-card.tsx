@@ -102,7 +102,7 @@ export function OrderInfoCard({ order }: OrderInfoCardProps) {
                 <div className="flex justify-between gap-4 py-2 sm:col-span-2">
                   <span className="text-sm text-muted-foreground">Pick List</span>
                   <button
-                    onClick={() => navigate(`/pick-lists/${order.pickListId}`)}
+                    onClick={() => navigate(`/dashboard/pick-lists/${order.pickListId}`)}
                     className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                   >
                     View Pick List #{order.pickListId.slice(-6)}
@@ -128,7 +128,7 @@ export function OrderInfoCard({ order }: OrderInfoCardProps) {
               <Button
                 className="w-full gap-2"
                 variant="outline"
-                onClick={() => navigate(`/orders/${order.id}/edit`)}
+                onClick={() => navigate(`/dashboard/orders/${order.id}/edit`)}
               >
                 <Pencil className="size-4" />
                 Edit Order

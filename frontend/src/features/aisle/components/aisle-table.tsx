@@ -88,7 +88,7 @@ export function AisleTable({
         header: 'Name',
         cell: (info) => (
           <button
-            onClick={() => navigate(`/aisles/${info.row.original.id}`)}
+            onClick={() => navigate(`/dashboard/aisles/${info.row.original.id}`)}
             className="font-medium text-foreground hover:text-primary transition-colors"
           >
             {info.getValue()}
@@ -130,7 +130,7 @@ export function AisleTable({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(`/aisles/${info.row.original.id}`)}
+              onClick={() => navigate(`/dashboard/aisles/${info.row.original.id}`)}
             >
               <Eye className="size-4" />
             </Button>
@@ -139,7 +139,7 @@ export function AisleTable({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => navigate(`/aisles/${info.row.original.id}/edit`)}
+                  onClick={() => navigate(`/dashboard/aisles/${info.row.original.id}/edit`)}
                 >
                   <Pencil className="size-4" />
                 </Button>
@@ -245,7 +245,7 @@ export function AisleTable({
             }
             action={
               isManager && !search && !warehouseFilter && !zoneFilter
-                ? { label: 'Create Aisle', onClick: () => navigate('/aisles/new') }
+                ? { label: 'Create Aisle', onClick: () => navigate('/dashboard/aisles/new') }
                 : undefined
             }
           />

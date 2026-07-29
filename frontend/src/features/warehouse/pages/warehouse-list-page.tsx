@@ -42,7 +42,7 @@ export function WarehouseListPage() {
         description="Manage warehouse locations and facilities."
         actions={
           isManager && (
-            <Button onClick={() => navigate('/warehouses/new')} className="gap-2">
+            <Button onClick={() => navigate('/dashboard/warehouses/new')} className="gap-2">
               <Plus className="size-4" />
               Create Warehouse
             </Button>

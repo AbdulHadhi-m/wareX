@@ -41,8 +41,8 @@ export function EditOrderPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Orders', href: '/orders' },
-          { label: order.orderNumber, href: `/orders/${order.id}` },
+          { label: 'Orders', href: '/dashboard/orders' },
+          { label: order.orderNumber, href: `/dashboard/orders/${order.id}` },
           { label: 'Edit' },
         ]}
       />

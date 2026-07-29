@@ -41,8 +41,8 @@ export function EditBinPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Bins', href: '/bins' },
-          { label: bin.name, href: `/bins/${bin.id}` },
+          { label: 'Bins', href: '/dashboard/bins' },
+          { label: bin.name, href: `/dashboard/bins/${bin.id}` },
           { label: 'Edit' },
         ]}
       />

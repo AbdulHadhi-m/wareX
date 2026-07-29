@@ -49,9 +49,10 @@ export class ReportRepository {
     groupField: string,
     lookupCollection: string,
   ): Promise<Record<string, unknown>[]> {
+    const cleanField = groupField.startsWith('$') ? groupField.slice(1) : groupField;
     return DeviceModel.aggregate<Record<string, unknown>>([
-      { $match: { isDeleted: { $ne: true } } },
-      { $group: { _id: `$${groupField}`, deviceCount: { $sum: 1 } } },
+      { $match: { isDeleted: { $ne: true }, [cleanField]: { $exists: true, $ne: null } } },
+      { $group: { _id: `$${cleanField}`, deviceCount: { $sum: 1 } } },
       {
         $lookup: {
           from: lookupCollection,
@@ -61,7 +62,19 @@ export class ReportRepository {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ['$_id', { $toObjectId: '$$entityId' }] },
+                    {
+                      $eq: [
+                        '$_id',
+                        {
+                          $convert: {
+                            input: '$$entityId',
+                            to: 'objectId',
+                            onError: null,
+                            onNull: null,
+                          },
+                        },
+                      ],
+                    },
                     { $ne: ['$isDeleted', true] },
                   ],
                 },

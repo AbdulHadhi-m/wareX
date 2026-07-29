@@ -1,0 +1,22 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.roleRouter = void 0;
+const express_1 = require("express");
+const role_controller_1 = require("./role.controller");
+const role_service_1 = require("./role.service");
+const role_repository_1 = require("./role.repository");
+const validate_1 = require("../../shared/validation/validate");
+const role_validation_1 = require("./role.validation");
+const auth_middleware_1 = require("../auth/auth.middleware");
+const repository = new role_repository_1.RoleRepository();
+const service = new role_service_1.RoleService(repository);
+const controller = new role_controller_1.RoleController(service);
+const router = (0, express_1.Router)();
+exports.roleRouter = router;
+router.use(auth_middleware_1.authenticate);
+router.get('/', (0, auth_middleware_1.authorize)('role.read'), controller.findAll);
+router.get('/:id', (0, auth_middleware_1.authorize)('role.read'), controller.findById);
+router.post('/', (0, auth_middleware_1.authorize)('role.create'), (0, validate_1.validate)(role_validation_1.createRoleSchema), controller.create);
+router.patch('/:id', (0, auth_middleware_1.authorize)('role.update'), (0, validate_1.validate)(role_validation_1.updateRoleSchema), controller.update);
+router.delete('/:id', (0, auth_middleware_1.authorize)('role.delete'), controller.delete);
+//# sourceMappingURL=role.routes.js.map

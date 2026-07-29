@@ -14,7 +14,7 @@ export function CreateWarehousePage() {
 
   return (
     <PageContainer>
-      <Breadcrumb items={[{ label: 'Warehouses', href: '/warehouses' }, { label: 'Create Warehouse' }]} />
+      <Breadcrumb items={[{ label: 'Warehouses', href: '/dashboard/warehouses' }, { label: 'Create Warehouse' }]} />
       <PageHeader
         title="Create Warehouse"
         description="Add a new warehouse to the system."

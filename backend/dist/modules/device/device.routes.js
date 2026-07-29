@@ -22,9 +22,9 @@ const controller = new device_controller_1.DeviceController(service);
 const router = (0, express_1.Router)();
 exports.deviceRouter = router;
 router.use(auth_middleware_1.authenticate);
-router.post('/', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(device_validation_1.createDeviceSchema), controller.create);
+router.post('/', (0, auth_middleware_1.authorize)('device.create'), (0, validate_1.validate)(device_validation_1.createDeviceSchema), controller.create);
 router.get('/', controller.findAll);
 router.get('/:id', (0, validate_1.validate)(device_validation_1.deviceIdSchema, validate_1.ValidationSource.PARAMS), controller.findById);
-router.patch('/:id', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(device_validation_1.deviceIdSchema, validate_1.ValidationSource.PARAMS), (0, validate_1.validate)(device_validation_1.updateDeviceSchema), controller.update);
-router.delete('/:id', (0, auth_middleware_1.authorize)('Manager'), controller.delete);
+router.patch('/:id', (0, auth_middleware_1.authorize)('device.update'), (0, validate_1.validate)(device_validation_1.deviceIdSchema, validate_1.ValidationSource.PARAMS), (0, validate_1.validate)(device_validation_1.updateDeviceSchema), controller.update);
+router.delete('/:id', (0, auth_middleware_1.authorize)('device.delete'), controller.delete);
 //# sourceMappingURL=device.routes.js.map

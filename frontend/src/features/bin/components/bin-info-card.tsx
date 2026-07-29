@@ -57,7 +57,7 @@ export function BinInfoCard({ bin, onDelete, isDeleting }: BinInfoCardProps) {
                 <div className="flex justify-between gap-4 py-2">
                   <span className="text-sm text-muted-foreground">Aisle</span>
                   <button
-                    onClick={() => navigate(`/aisles/${aisle.id}`)}
+                    onClick={() => navigate(`/dashboard/aisles/${aisle.id}`)}
                     className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                   >
                     {aisle.name} ({aisle.code})
@@ -69,7 +69,7 @@ export function BinInfoCard({ bin, onDelete, isDeleting }: BinInfoCardProps) {
                 <div className="flex justify-between gap-4 py-2">
                   <span className="text-sm text-muted-foreground">Zone</span>
                   <button
-                    onClick={() => navigate(`/zones/${zone.id}`)}
+                    onClick={() => navigate(`/dashboard/zones/${zone.id}`)}
                     className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                   >
                     {zone.name} ({zone.code})
@@ -81,7 +81,7 @@ export function BinInfoCard({ bin, onDelete, isDeleting }: BinInfoCardProps) {
                 <div className="flex justify-between gap-4 py-2">
                   <span className="text-sm text-muted-foreground">Warehouse</span>
                   <button
-                    onClick={() => navigate(`/warehouses/${warehouse.id}`)}
+                    onClick={() => navigate(`/dashboard/warehouses/${warehouse.id}`)}
                     className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                   >
                     {warehouse.name} ({warehouse.code})
@@ -113,7 +113,7 @@ export function BinInfoCard({ bin, onDelete, isDeleting }: BinInfoCardProps) {
                 <Button
                   className="w-full gap-2"
                   variant="outline"
-                  onClick={() => navigate(`/bins/${bin.id}/edit`)}
+                  onClick={() => navigate(`/dashboard/bins/${bin.id}/edit`)}
                 >
                   <Pencil className="size-4" />
                   Edit Bin

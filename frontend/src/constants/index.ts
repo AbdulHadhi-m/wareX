@@ -1,24 +1,24 @@
 export const API_PREFIX = '/api/v1';
 
 export const ROUTES = {
-  DASHBOARD: '/',
-  WAREHOUSES: '/warehouses',
-  ZONES: '/zones',
-  AISLES: '/aisles',
-  BINS: '/bins',
-  DEVICES: '/devices',
-  INVENTORY: '/inventory',
-  PICK_LISTS: '/pick-lists',
-  ORDERS: '/orders',
-  NOTIFICATIONS: '/notifications',
-  REPORTS: '/reports',
-  SETTINGS: '/settings',
+  DASHBOARD: '/dashboard',
+  WAREHOUSES: '/dashboard/warehouses',
+  ZONES: '/dashboard/zones',
+  AISLES: '/dashboard/aisles',
+  BINS: '/dashboard/bins',
+  DEVICES: '/dashboard/devices',
+  INVENTORY: '/dashboard/inventory',
+  PICK_LISTS: '/dashboard/pick-lists',
+  ORDERS: '/dashboard/orders',
+  NOTIFICATIONS: '/dashboard/notifications',
+  REPORTS: '/dashboard/reports',
+  SETTINGS: '/dashboard/settings',
   AUTH: {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
   },
   NOT_FOUND: '/404',
-  ACCESS_DENIED: '/access-denied',
+  ACCESS_DENIED: '/dashboard/access-denied',
 } as const;
 
 export const QUERY_KEYS = {
@@ -32,6 +32,8 @@ export const QUERY_KEYS = {
   ORDERS: ['orders'] as const,
   NOTIFICATIONS: ['notifications'] as const,
   REPORTS: ['reports'] as const,
+  ADMIN_USERS: ['admin-users'] as const,
+  AUDIT_LOGS: ['audit-logs'] as const,
   DASHBOARD: {
     SUMMARY: ['dashboard', 'summary'] as const,
     DEVICE_STATUS: ['dashboard', 'device-status'] as const,

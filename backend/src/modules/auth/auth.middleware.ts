@@ -1,9 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
+import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import { environment } from '../../shared/config/environment';
 import { AuthenticationError } from '../../shared/errors/authentication-error';
 import { AuthorizationError } from '../../shared/errors/authorization-error';
-import { JwtPayload, UserRole } from './auth.types';
+import { JwtPayload } from './auth.types';
+import { UserModel } from './auth.model';
+import { getCachedPermissions, setCachedPermissions } from '../../shared/cache/permission-cache';
 
 export function authenticate(req: Request, _res: Response, next: NextFunction): void {
   try {
@@ -18,7 +21,6 @@ export function authenticate(req: Request, _res: Response, next: NextFunction): 
     const decoded = jwt.verify(token, environment.JWT_SECRET) as JwtPayload;
 
     req.userId = decoded.userId;
-    req.userRole = decoded.role;
 
     next();
   } catch (error) {
@@ -41,13 +43,70 @@ export function authenticate(req: Request, _res: Response, next: NextFunction): 
   }
 }
 
-export function authorize(...roles: UserRole[]) {
-  return (req: Request, _res: Response, next: NextFunction): void => {
-    if (!req.userRole || !roles.includes(req.userRole as UserRole)) {
-      next(new AuthorizationError('Insufficient permissions'));
-      return;
-    }
+export function authorize(...permissions: string[]) {
+  return async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
+    try {
+      if (!req.userId) {
+        throw new AuthenticationError('Not authenticated');
+      }
 
-    next();
+      const user = await UserModel.findById(req.userId).populate('roleId').lean();
+
+      if (!user) {
+        throw new AuthenticationError('User not found');
+      }
+
+      const role = user.roleId as unknown as {
+        _id: string;
+        name: string;
+        isSuperAdmin: boolean;
+        permissions: Array<{ _id: string; code: string }>;
+      };
+
+      if (!role) {
+        throw new AuthorizationError('User role not assigned');
+      }
+
+      req.userRole = role.name;
+
+      if (role.isSuperAdmin) {
+        next();
+        return;
+      }
+
+      const roleId = role._id.toString();
+      let permissionCodes = getCachedPermissions(roleId);
+
+      if (!permissionCodes) {
+        const RoleModel = mongoose.model('Role');
+        const populatedRole = await RoleModel.findById(roleId)
+          .populate('permissions')
+          .lean() as unknown as { permissions: Array<{ code: string }> } | null;
+
+        if (!populatedRole) {
+          throw new AuthorizationError('Role not found');
+        }
+
+        permissionCodes = new Set(
+          (populatedRole.permissions || []).map((p: any) => p.code),
+        );
+
+        setCachedPermissions(roleId, permissionCodes);
+      }
+
+      const hasPermission = permissions.some((p) => permissionCodes!.has(p));
+
+      if (!hasPermission) {
+        throw new AuthorizationError('Insufficient permissions');
+      }
+
+      next();
+    } catch (error) {
+      if (error instanceof AuthenticationError || error instanceof AuthorizationError) {
+        next(error);
+        return;
+      }
+      next(new AuthorizationError('Authorization check failed'));
+    }
   };
 }

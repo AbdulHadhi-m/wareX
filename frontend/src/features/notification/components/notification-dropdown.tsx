@@ -79,7 +79,7 @@ export function NotificationDropdown() {
                   key={notification.id}
                   onClick={() => {
                     setOpen(false);
-                    navigate(`/notifications/${notification.id}`);
+                    navigate(`/dashboard/notifications/${notification.id}`);
                   }}
                   className="flex w-full items-start gap-3 border-b px-4 py-3 text-left hover:bg-accent transition-colors last:border-0"
                 >
@@ -114,7 +114,7 @@ export function NotificationDropdown() {
             <button
               onClick={() => {
                 setOpen(false);
-                navigate('/notifications');
+                navigate('/dashboard/notifications');
               }}
               className="flex w-full items-center justify-center gap-1 text-sm text-primary hover:underline"
             >

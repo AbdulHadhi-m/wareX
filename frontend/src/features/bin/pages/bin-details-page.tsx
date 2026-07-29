@@ -44,7 +44,7 @@ export function BinDetailsPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Bins', href: '/bins' },
+          { label: 'Bins', href: '/dashboard/bins' },
           { label: bin.name },
         ]}
       />

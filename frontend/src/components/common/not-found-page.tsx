@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Home, SearchX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ROUTES } from '@/constants';
 
 export function NotFoundPage() {
   return (
@@ -11,7 +12,7 @@ export function NotFoundPage() {
         <p className="text-muted-foreground">Page not found.</p>
       </div>
       <Button asChild variant="outline">
-        <Link to="/">
+        <Link to={ROUTES.DASHBOARD}>
           <Home className="size-4 mr-2" />
           Go Home
         </Link>

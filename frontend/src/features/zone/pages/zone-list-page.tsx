@@ -46,7 +46,7 @@ export function ZoneListPage() {
         description="Organize warehouse spaces into functional zones."
         actions={
           isManager && (
-            <Button onClick={() => navigate('/zones/new')} className="gap-2">
+            <Button onClick={() => navigate('/dashboard/zones/new')} className="gap-2">
               <Plus className="size-4" />
               Create Zone
             </Button>

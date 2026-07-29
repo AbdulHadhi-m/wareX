@@ -145,8 +145,6 @@ deviceSchema.set('toJSON', {
         return ret;
     },
 });
-deviceSchema.index({ serialNumber: 1 }, { unique: true });
-deviceSchema.index({ imei: 1 }, { sparse: true, unique: true });
 deviceSchema.index({ binId: 1, isDeleted: 1 });
 deviceSchema.index({ aisleId: 1, isDeleted: 1 });
 deviceSchema.index({ zoneId: 1, isDeleted: 1 });

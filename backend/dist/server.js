@@ -5,10 +5,12 @@ const environment_1 = require("./shared/config/environment");
 const app_2 = require("./shared/config/app");
 const logger_1 = require("./shared/logger/logger");
 const connection_1 = require("./shared/database/connection");
+const seed_1 = require("./seed");
 async function start() {
     try {
         const startTime = Date.now();
         await (0, connection_1.connect)();
+        await (0, seed_1.seedAll)();
         const server = app_1.app.listen(environment_1.environment.PORT, () => {
             const elapsed = Date.now() - startTime;
             logger_1.logger.info({

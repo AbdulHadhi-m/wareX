@@ -36,20 +36,20 @@ eventEmitter.on(Events.PICK_LIST_CANCELLED, async ({ pickListId }: { pickListId:
 const router = Router();
 router.use(authenticate);
 
-router.post('/', authorize('Manager'), validate(createOrderSchema), controller.create);
+router.post('/', authorize('order.create'), validate(createOrderSchema), controller.create);
 
-router.get('/', authorize('Manager', 'Worker'), validate(orderQuerySchema, ValidationSource.QUERY), controller.findAll);
+router.get('/', authorize('order.read', 'pick-list.read'), validate(orderQuerySchema, ValidationSource.QUERY), controller.findAll);
 
 router.get(
   '/:id',
-  authorize('Manager', 'Worker'),
+  authorize('order.read', 'pick-list.read'),
   validate(orderIdParamSchema, ValidationSource.PARAMS),
   controller.findById,
 );
 
 router.patch(
   '/:id',
-  authorize('Manager'),
+  authorize('order.update'),
   validate(orderIdParamSchema, ValidationSource.PARAMS),
   validate(updateOrderSchema),
   controller.update,
@@ -57,21 +57,21 @@ router.patch(
 
 router.patch(
   '/:id/cancel',
-  authorize('Manager'),
+  authorize('order.cancel'),
   validate(orderIdParamSchema, ValidationSource.PARAMS),
   controller.cancel,
 );
 
 router.post(
   '/:id/generate-pick-list',
-  authorize('Manager'),
+  authorize('order.generate-pick-list'),
   validate(orderIdParamSchema, ValidationSource.PARAMS),
   controller.generatePickList,
 );
 
 router.patch(
   '/:id/fulfill',
-  authorize('Manager'),
+  authorize('order.fulfill'),
   validate(orderIdParamSchema, ValidationSource.PARAMS),
   controller.fulfill,
 );

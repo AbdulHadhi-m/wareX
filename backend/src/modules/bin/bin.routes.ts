@@ -20,11 +20,11 @@ const controller = new BinController(service);
 const binRouter = Router();
 binRouter.use(authenticate);
 
-binRouter.post('/', authorize('Manager'), validate(createBinSchema), controller.create);
+binRouter.post('/', authorize('bin.create'), validate(createBinSchema), controller.create);
 binRouter.get('/', controller.findAll);
 binRouter.get('/:id', validate(binIdSchema, ValidationSource.PARAMS), controller.findById);
-binRouter.patch('/:id', authorize('Manager'), validate(binIdSchema, ValidationSource.PARAMS), validate(updateBinSchema), controller.update);
-binRouter.delete('/:id', authorize('Manager'), controller.delete);
+binRouter.patch('/:id', authorize('bin.update'), validate(binIdSchema, ValidationSource.PARAMS), validate(updateBinSchema), controller.update);
+binRouter.delete('/:id', authorize('bin.delete'), controller.delete);
 
 const aisleBinRouter = Router();
 aisleBinRouter.use(authenticate);

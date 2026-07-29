@@ -81,7 +81,7 @@ export function NotificationTable({
         header: 'Title',
         cell: (info) => (
           <button
-            onClick={() => navigate(`/notifications/${info.row.original.id}`)}
+            onClick={() => navigate(`/dashboard/notifications/${info.row.original.id}`)}
             className="font-medium text-foreground hover:text-primary transition-colors text-left"
           >
             {info.getValue()}
@@ -115,7 +115,7 @@ export function NotificationTable({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(`/notifications/${info.row.original.id}`)}
+              onClick={() => navigate(`/dashboard/notifications/${info.row.original.id}`)}
             >
               <Eye className="size-4" />
             </Button>

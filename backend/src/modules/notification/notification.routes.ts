@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import mongoose from 'mongoose';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
 import { NotificationRepository } from './notification.repository';
@@ -140,7 +141,15 @@ eventEmitter.on(Events.PICK_LIST_CANCELLED, async (data: Record<string, unknown>
 
 eventEmitter.on(Events.DEVICE_MOVED, async (data: Record<string, unknown>) => {
   try {
-    const managerIds = await UserModel.find({ role: 'Manager' }).select('_id').lean();
+    const RoleModel = mongoose.model('Role');
+    const managerRole = await RoleModel.findOne({ name: 'Manager' }).select('_id').lean() as { _id: mongoose.Types.ObjectId } | null;
+
+    if (!managerRole) {
+      logger.warn('Manager role not found — skipping device moved notification');
+      return;
+    }
+
+    const managerIds = await UserModel.find({ roleId: managerRole._id.toString() }).select('_id').lean();
     const recipientIds = managerIds.map((m) => m._id.toString());
 
     for (const recipientId of recipientIds) {
@@ -165,7 +174,7 @@ eventEmitter.on(Events.AUTH_LOGIN, async (data: Record<string, unknown>) => {
       recipientId: data.userId as string,
       title: 'New Login',
       message: `New login detected on your account.`,
-        type: 'System' as NotificationType,
+      type: 'System' as NotificationType,
       priority: 'Low',
       relatedModule: 'Authentication',
       relatedResourceId: data.userId as string,
@@ -178,7 +187,7 @@ eventEmitter.on(Events.AUTH_LOGIN, async (data: Record<string, unknown>) => {
 const router = Router();
 router.use(authenticate);
 
-router.post('/', authorize('Manager'), validate(createNotificationSchema), controller.create);
+router.post('/', authorize('notification.create'), validate(createNotificationSchema), controller.create);
 
 router.get(
   '/unread-count',

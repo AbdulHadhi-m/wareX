@@ -14,10 +14,10 @@ const controller = new WarehouseController(service);
 
 router.use(authenticate);
 
-router.post('/', authorize('Manager'), validate(createWarehouseSchema), controller.create);
+router.post('/', authorize('warehouse.create'), validate(createWarehouseSchema), controller.create);
 router.get('/', controller.findAll);
 router.get('/:id', controller.findById);
-router.patch('/:id', authorize('Manager'), validate(warehouseIdSchema, ValidationSource.PARAMS), validate(updateWarehouseSchema), controller.update);
-router.delete('/:id', authorize('Manager'), controller.delete);
+router.patch('/:id', authorize('warehouse.update'), validate(warehouseIdSchema, ValidationSource.PARAMS), validate(updateWarehouseSchema), controller.update);
+router.delete('/:id', authorize('warehouse.delete'), controller.delete);
 
 export { router as warehouseRouter };

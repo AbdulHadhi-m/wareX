@@ -15,7 +15,7 @@ export function CreateDevicePage() {
   return (
     <PageContainer>
       <Breadcrumb
-        items={[{ label: 'Devices', href: '/devices' }, { label: 'Register Device' }]}
+        items={[{ label: 'Devices', href: '/dashboard/devices' }, { label: 'Register Device' }]}
       />
       <PageHeader
         title="Register Device"

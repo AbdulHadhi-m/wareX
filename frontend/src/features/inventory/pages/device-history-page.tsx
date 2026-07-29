@@ -59,7 +59,7 @@ export function DeviceHistoryPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Inventory', href: '/inventory' },
+          { label: 'Inventory', href: '/dashboard/inventory' },
           { label: 'Device History' },
         ]}
       />

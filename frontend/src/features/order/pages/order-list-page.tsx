@@ -65,7 +65,7 @@ export function OrderListPage() {
         description="Manage customer orders and fulfillment."
         actions={
           isManager && (
-            <Button onClick={() => navigate('/orders/new')} className="gap-2">
+            <Button onClick={() => navigate('/dashboard/orders/new')} className="gap-2">
               <Plus className="size-4" />
               Create Order
             </Button>

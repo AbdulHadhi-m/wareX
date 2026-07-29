@@ -75,7 +75,7 @@ export function PickListTable({
         header: 'Pick List #',
         cell: (info) => (
           <button
-            onClick={() => navigate(`/pick-lists/${info.row.original.id}`)}
+            onClick={() => navigate(`/dashboard/pick-lists/${info.row.original.id}`)}
             className="font-medium text-foreground hover:text-primary transition-colors"
           >
             {info.getValue()}
@@ -114,7 +114,7 @@ export function PickListTable({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(`/pick-lists/${info.row.original.id}`)}
+              onClick={() => navigate(`/dashboard/pick-lists/${info.row.original.id}`)}
             >
               <Eye className="size-4" />
             </Button>
@@ -200,7 +200,7 @@ export function PickListTable({
             }
             action={
               !search && !statusFilter && !priorityFilter
-                ? { label: 'Create Pick List', onClick: () => navigate('/pick-lists/new') }
+                ? { label: 'Create Pick List', onClick: () => navigate('/dashboard/pick-lists/new') }
                 : undefined
             }
           />
