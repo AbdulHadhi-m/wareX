@@ -3,7 +3,7 @@ import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { DashboardLayout, AuthLayout, PublicLayout } from '@/components/layouts';
 import { ROUTES } from '@/constants';
 import { ComingSoonPage } from '@/features/placeholder/pages/coming-soon-page';
-import { ProtectedRoute, GuestRoute, LoginPage } from '@/features/auth';
+import { ProtectedRoute, GuestRoute, LoginPage, RegisterPage } from '@/features/auth';
 import { NotFoundPage } from '@/components/common/not-found-page';
 import { AccessDeniedPage } from '@/components/common/access-denied-page';
 import { LoadingSpinner } from '@/components/common/loading-spinner';
@@ -258,12 +258,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'register',
-        element: (
-          <ComingSoonPage
-            title="Create Account"
-            description="Registration coming soon."
-          />
-        ),
+        element: <RegisterPage />,
       },
     ],
   },

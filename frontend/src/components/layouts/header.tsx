@@ -1,8 +1,9 @@
-import { Moon, Sun, Menu, User } from 'lucide-react';
+import { Moon, Sun, Menu } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 import { Button } from '@/components/ui/button';
 import { NotificationDropdown } from '@/features/notification';
 import { GlobalSearch } from '@/components/common/global-search';
+import { UserMenu } from '@/features/auth/components/user-menu';
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -32,9 +33,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
 
       <NotificationDropdown />
 
-      <Button variant="ghost" size="icon" title="User menu">
-        <User className="size-5" />
-      </Button>
+      <UserMenu />
     </header>
   );
 }
