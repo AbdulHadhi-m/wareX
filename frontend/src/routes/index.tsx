@@ -10,6 +10,12 @@ import {
   EditWarehousePage,
   WarehouseDetailsPage,
 } from '@/features/warehouse';
+import {
+  ZoneListPage,
+  CreateZonePage,
+  EditZonePage,
+  ZoneDetailsPage,
+} from '@/features/zone';
 
 export const router = createBrowserRouter([
   {
@@ -35,12 +41,12 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.ZONES,
-        element: (
-          <ComingSoonPage
-            title="Zones"
-            description="Organize warehouse spaces into functional zones."
-          />
-        ),
+        children: [
+          { index: true, element: <ZoneListPage /> },
+          { path: 'new', element: <CreateZonePage /> },
+          { path: ':id', element: <ZoneDetailsPage /> },
+          { path: ':id/edit', element: <EditZonePage /> },
+        ],
       },
       {
         path: ROUTES.AISLES,
