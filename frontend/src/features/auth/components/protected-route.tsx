@@ -25,7 +25,7 @@ export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
   }
 
   if (roles && user && user.role !== 'SuperAdmin' && !roles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/access-denied" replace />;
   }
 
   return <>{children}</>;

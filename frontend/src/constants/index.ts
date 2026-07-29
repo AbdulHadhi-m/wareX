@@ -1,7 +1,7 @@
 export const API_PREFIX = '/api/v1';
 
 export const ROUTES = {
-  DASHBOARD: '/',
+  DASHBOARD: '/dashboard',
   WAREHOUSES: '/warehouses',
   ZONES: '/zones',
   AISLES: '/aisles',

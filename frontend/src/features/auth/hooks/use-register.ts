@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants';
 import { authApi } from '../api/auth-api';
 import { authService } from '../services/auth-service';
 import { useAuthStore } from '../store/auth-store';
@@ -27,7 +28,7 @@ export function useRegister() {
       authService.setToken(token);
       setAuth(user, token);
       toast.success(`Account created. Welcome, ${user.name}!`);
-      navigate('/', { replace: true });
+      navigate(ROUTES.DASHBOARD, { replace: true });
     },
 
     onError: (error: unknown) => {

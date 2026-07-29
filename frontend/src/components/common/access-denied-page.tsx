@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Home, ShieldX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ROUTES } from '@/constants';
 
 export function AccessDeniedPage() {
   return (
@@ -11,7 +12,7 @@ export function AccessDeniedPage() {
         <p className="text-muted-foreground">Access denied.</p>
       </div>
       <Button asChild variant="outline">
-        <Link to="/">
+        <Link to={ROUTES.DASHBOARD}>
           <Home className="size-4 mr-2" />
           Go Home
         </Link>

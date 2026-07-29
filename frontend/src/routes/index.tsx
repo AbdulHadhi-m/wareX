@@ -123,9 +123,17 @@ const AdminUserDetailsPage = lazy(() =>
   import('@/features/admin').then((m) => ({ default: m.UserDetailsPage })),
 );
 
+const HeroPage = lazy(() =>
+  import('@/features/hero').then((m) => ({ default: m.HeroPage })),
+);
+
 export const router = createBrowserRouter([
   {
-    path: '/',
+    index: true,
+    element: <HeroPage />,
+  },
+  {
+    path: ROUTES.DASHBOARD,
     element: (
       <ProtectedRoute>
         <DashboardLayout />
@@ -137,7 +145,7 @@ export const router = createBrowserRouter([
         element: <DashboardPage />,
       },
       {
-        path: ROUTES.WAREHOUSES,
+        path: 'warehouses',
         element: <SuspenseWrapper />,
         children: [
           { index: true, element: <WarehouseListPage /> },
@@ -147,7 +155,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: ROUTES.ZONES,
+        path: 'zones',
         element: <SuspenseWrapper />,
         children: [
           { index: true, element: <ZoneListPage /> },
@@ -157,7 +165,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: ROUTES.AISLES,
+        path: 'aisles',
         element: (
           <ComingSoonPage
             title="Aisles"
@@ -166,7 +174,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: ROUTES.BINS,
+        path: 'bins',
         element: <SuspenseWrapper />,
         children: [
           { index: true, element: <BinListPage /> },
@@ -176,7 +184,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: ROUTES.DEVICES,
+        path: 'devices',
         element: <SuspenseWrapper />,
         children: [
           { index: true, element: <DeviceListPage /> },
@@ -186,7 +194,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: ROUTES.INVENTORY,
+        path: 'inventory',
         element: <SuspenseWrapper />,
         children: [
           { index: true, element: <InventoryDashboardPage /> },
@@ -195,7 +203,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: ROUTES.PICK_LISTS,
+        path: 'pick-lists',
         element: (
           <ComingSoonPage
             title="Pick Lists"
@@ -204,7 +212,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: ROUTES.ORDERS,
+        path: 'orders',
         element: <SuspenseWrapper />,
         children: [
           { index: true, element: <OrderListPage /> },
@@ -214,7 +222,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: ROUTES.NOTIFICATIONS,
+        path: 'notifications',
         element: <SuspenseWrapper />,
         children: [
           { index: true, element: <NotificationListPage /> },
@@ -222,7 +230,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: ROUTES.REPORTS,
+        path: 'reports',
         element: <SuspenseWrapper />,
         children: [
           { index: true, element: <ReportsDashboardPage /> },
@@ -233,7 +241,7 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: ROUTES.SETTINGS,
+        path: 'settings',
         element: (
           <ProtectedRoute roles={['Manager']}>
             <ComingSoonPage
@@ -314,7 +322,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/" replace />,
+        element: <Navigate to={ROUTES.DASHBOARD} replace />,
       },
     ],
   },
