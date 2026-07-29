@@ -66,3 +66,58 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.text-shimmer {
+  background: linear-gradient(90deg, currentColor 25%, rgba(255, 255, 255, 0.8) 50%, currentColor 75%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-sweep 4s linear infinite;
+}
+
+@keyframes floating-gentle {
+  0% { transform: translateY(0px) rotate(1deg); }
+  50% { transform: translateY(-20px) rotate(-1deg); }
+  100% { transform: translateY(0px) rotate(1deg); }
+}
+
+@keyframes shimmer-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes logo-glow {
+  0%, 100% { filter: drop-shadow(0 0 0px rgba(0, 97, 148, 0)); }
+  50% { filter: drop-shadow(0 0 8px rgba(0, 97, 148, 0.3)); }
+}
+
+.animate-floating {
+  animation: floating-gentle 6s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer-sweep 3s infinite;
+}
+
+.animate-pulse-slow {
+  animation: subtle-pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-logo-glow {
+  animation: logo-glow 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-floating,
+  .animate-shimmer,
+  .animate-pulse-slow,
+  .animate-logo-glow {
+    animation: none;
+  }
+}
