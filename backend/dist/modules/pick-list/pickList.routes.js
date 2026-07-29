@@ -1,0 +1,25 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.pickListRouter = void 0;
+const express_1 = require("express");
+const pickList_controller_1 = require("./pickList.controller");
+const pickList_service_1 = require("./pickList.service");
+const pickList_repository_1 = require("./pickList.repository");
+const validate_1 = require("../../shared/validation/validate");
+const pickList_validation_1 = require("./pickList.validation");
+const auth_middleware_1 = require("../auth/auth.middleware");
+const pickListRepository = new pickList_repository_1.PickListRepository();
+const service = new pickList_service_1.PickListService(pickListRepository);
+const controller = new pickList_controller_1.PickListController(service);
+const router = (0, express_1.Router)();
+exports.pickListRouter = router;
+router.use(auth_middleware_1.authenticate);
+router.post('/', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(pickList_validation_1.createPickListSchema), controller.create);
+router.get('/', (0, validate_1.validate)(pickList_validation_1.pickListQuerySchema, validate_1.ValidationSource.QUERY), controller.findAll);
+router.get('/worker/:workerId', (0, validate_1.validate)(pickList_validation_1.workerIdParamSchema, validate_1.ValidationSource.PARAMS), controller.getByWorker);
+router.get('/:id', (0, validate_1.validate)(pickList_validation_1.pickListIdParamSchema, validate_1.ValidationSource.PARAMS), controller.findById);
+router.patch('/:id/assign', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(pickList_validation_1.pickListIdParamSchema, validate_1.ValidationSource.PARAMS), (0, validate_1.validate)(pickList_validation_1.assignPickListSchema), controller.assign);
+router.patch('/:id/start', (0, validate_1.validate)(pickList_validation_1.pickListIdParamSchema, validate_1.ValidationSource.PARAMS), controller.start);
+router.patch('/:id/complete', (0, validate_1.validate)(pickList_validation_1.pickListIdParamSchema, validate_1.ValidationSource.PARAMS), controller.complete);
+router.patch('/:id/cancel', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(pickList_validation_1.pickListIdParamSchema, validate_1.ValidationSource.PARAMS), controller.cancel);
+//# sourceMappingURL=pickList.routes.js.map

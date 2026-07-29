@@ -16,7 +16,7 @@ export function CreateOrderPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Orders', href: '/orders' },
+          { label: 'Orders', href: '/dashboard/orders' },
           { label: 'Create Order' },
         ]}
       />

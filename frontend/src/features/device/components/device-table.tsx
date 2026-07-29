@@ -124,7 +124,7 @@ export function DeviceTable({
         header: 'Device Name',
         cell: (info) => (
           <button
-            onClick={() => navigate(`/devices/${info.row.original.id}`)}
+            onClick={() => navigate(`/dashboard/devices/${info.row.original.id}`)}
             className="font-medium text-foreground hover:text-primary transition-colors"
           >
             {info.getValue()}
@@ -187,7 +187,7 @@ export function DeviceTable({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(`/devices/${info.row.original.id}`)}
+              onClick={() => navigate(`/dashboard/devices/${info.row.original.id}`)}
             >
               <Eye className="size-4" />
             </Button>
@@ -196,7 +196,7 @@ export function DeviceTable({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => navigate(`/devices/${info.row.original.id}/edit`)}
+                  onClick={() => navigate(`/dashboard/devices/${info.row.original.id}/edit`)}
                 >
                   <Pencil className="size-4" />
                 </Button>
@@ -272,7 +272,7 @@ export function DeviceTable({
           <select
             value={conditionFilter}
             onChange={(e) => onConditionFilterChange(e.target.value)}
-            className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-backspace focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <option value="">All Conditions</option>
             <option value="New">New</option>
@@ -403,7 +403,7 @@ export function DeviceTable({
               !zoneFilter &&
               !aisleFilter &&
               !binFilter
-                ? { label: 'Register Device', onClick: () => navigate('/devices/new') }
+                ? { label: 'Register Device', onClick: () => navigate('/dashboard/devices/new') }
                 : undefined
             }
           />

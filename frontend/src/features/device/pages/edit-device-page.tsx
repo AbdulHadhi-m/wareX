@@ -41,8 +41,8 @@ export function EditDevicePage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Devices', href: '/devices' },
-          { label: device.deviceName, href: `/devices/${device.id}` },
+          { label: 'Devices', href: '/dashboard/devices' },
+          { label: device.deviceName, href: `/dashboard/devices/${device.id}` },
           { label: 'Edit' },
         ]}
       />

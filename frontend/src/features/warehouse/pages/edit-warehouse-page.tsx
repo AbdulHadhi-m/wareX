@@ -41,8 +41,8 @@ export function EditWarehousePage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Warehouses', href: '/warehouses' },
-          { label: warehouse.name, href: `/warehouses/${warehouse.id}` },
+          { label: 'Warehouses', href: '/dashboard/warehouses' },
+          { label: warehouse.name, href: `/dashboard/warehouses/${warehouse.id}` },
           { label: 'Edit' },
         ]}
       />

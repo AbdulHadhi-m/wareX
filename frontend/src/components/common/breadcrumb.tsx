@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ChevronRight, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ROUTES } from '@/constants';
 
 interface BreadcrumbItem {
   label: string;
@@ -15,7 +16,7 @@ interface BreadcrumbProps {
 export function Breadcrumb({ items, className }: BreadcrumbProps) {
   return (
     <nav className={cn('mb-4 flex items-center gap-1 text-sm text-muted-foreground', className)}>
-      <Link to="/" className="hover:text-foreground transition-colors">
+      <Link to={ROUTES.DASHBOARD} className="hover:text-foreground transition-colors">
         <Home className="size-4" />
       </Link>
       {items.map((item, index) => (

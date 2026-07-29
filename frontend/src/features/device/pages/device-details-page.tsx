@@ -44,7 +44,7 @@ export function DeviceDetailsPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Devices', href: '/devices' },
+          { label: 'Devices', href: '/dashboard/devices' },
           { label: device.deviceName },
         ]}
       />

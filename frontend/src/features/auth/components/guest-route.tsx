@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { LoadingSpinner } from '@/components/common/loading-spinner';
+import { ROUTES } from '@/constants';
 import { useAuth } from '../hooks/use-auth';
 
 interface GuestRouteProps {
@@ -19,7 +20,7 @@ export function GuestRoute({ children }: GuestRouteProps) {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={ROUTES.DASHBOARD} replace />;
   }
 
   return <>{children}</>;

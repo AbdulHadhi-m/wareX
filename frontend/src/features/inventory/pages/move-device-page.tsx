@@ -18,7 +18,7 @@ export function MoveDevicePage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Inventory', href: '/inventory' },
+          { label: 'Inventory', href: '/dashboard/inventory' },
           { label: 'Move Device' },
         ]}
       />

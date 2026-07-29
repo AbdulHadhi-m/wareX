@@ -63,7 +63,7 @@ export function WarehouseTable({
         header: 'Name',
         cell: (info) => (
           <button
-            onClick={() => navigate(`/warehouses/${info.row.original.id}`)}
+            onClick={() => navigate(`/dashboard/warehouses/${info.row.original.id}`)}
             className="font-medium text-foreground hover:text-primary transition-colors"
           >
             {info.getValue()}
@@ -97,7 +97,7 @@ export function WarehouseTable({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(`/warehouses/${info.row.original.id}`)}
+              onClick={() => navigate(`/dashboard/warehouses/${info.row.original.id}`)}
             >
               <Eye className="size-4" />
             </Button>
@@ -106,7 +106,7 @@ export function WarehouseTable({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => navigate(`/warehouses/${info.row.original.id}/edit`)}
+                  onClick={() => navigate(`/dashboard/warehouses/${info.row.original.id}/edit`)}
                 >
                   <Pencil className="size-4" />
                 </Button>
@@ -179,7 +179,7 @@ export function WarehouseTable({
           <EmptyState
             title="No warehouses found"
             description={search ? 'Try a different search term.' : 'Get started by creating your first warehouse.'}
-            action={isManager && !search ? { label: 'Create Warehouse', onClick: () => navigate('/warehouses/new') } : undefined}
+            action={isManager && !search ? { label: 'Create Warehouse', onClick: () => navigate('/dashboard/warehouses/new') } : undefined}
           />
         }
       />

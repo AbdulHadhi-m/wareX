@@ -61,7 +61,7 @@ export function InventoryTable({
         header: 'Device Name',
         cell: (info) => (
           <button
-            onClick={() => navigate(`/devices/${info.row.original.deviceId}`)}
+            onClick={() => navigate(`/dashboard/devices/${info.row.original.deviceId}`)}
             className="font-medium text-foreground hover:text-primary transition-colors"
           >
             {info.getValue()}

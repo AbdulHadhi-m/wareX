@@ -9,7 +9,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const environment_1 = require("../../shared/config/environment");
 const authentication_error_1 = require("../../shared/errors/authentication-error");
 const authorization_error_1 = require("../../shared/errors/authorization-error");
-async function authenticate(req, _res, next) {
+function authenticate(req, _res, next) {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -39,6 +39,10 @@ async function authenticate(req, _res, next) {
 }
 function authorize(...roles) {
     return (req, _res, next) => {
+        if (req.userRole === 'SuperAdmin') {
+            next();
+            return;
+        }
         if (!req.userRole || !roles.includes(req.userRole)) {
             next(new authorization_error_1.AuthorizationError('Insufficient permissions'));
             return;

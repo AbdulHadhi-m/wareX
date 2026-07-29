@@ -15,10 +15,13 @@ function maskUri(uri) {
 async function connect() {
     mongoose_1.default.set('strictQuery', true);
     mongoose_1.default.connection.on('connected', () => {
-        logger_1.logger.info('MongoDB connection established');
+        logger_1.logger.info({
+            database: mongoose_1.default.connection.db?.databaseName,
+            host: mongoose_1.default.connection.host,
+        }, 'MongoDB connection established');
     });
     mongoose_1.default.connection.on('error', (err) => {
-        logger_1.logger.error(err, 'MongoDB connection error');
+        logger_1.logger.error({ err }, 'MongoDB connection error');
     });
     mongoose_1.default.connection.on('disconnected', () => {
         logger_1.logger.warn('MongoDB disconnected');
@@ -31,10 +34,11 @@ async function connect() {
         logger_1.logger.info({
             uri: maskUri(database_1.databaseConfig.uri),
             database: mongoose_1.default.connection.db?.databaseName,
+            maxPoolSize: database_1.databaseConfig.connectionOptions.maxPoolSize,
         }, 'MongoDB connection successful');
     }
     catch (error) {
-        logger_1.logger.fatal(error, 'Failed to connect to MongoDB');
+        logger_1.logger.fatal({ err: error }, 'Failed to connect to MongoDB');
         throw error;
     }
 }
@@ -44,7 +48,7 @@ async function disconnect() {
         logger_1.logger.info('MongoDB connection closed');
     }
     catch (error) {
-        logger_1.logger.error(error, 'Error closing MongoDB connection');
+        logger_1.logger.error({ err: error }, 'Error closing MongoDB connection');
     }
 }
 function isConnected() {

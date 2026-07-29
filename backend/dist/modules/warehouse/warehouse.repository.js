@@ -10,6 +10,19 @@ class WarehouseRepository {
     async findAll() {
         return warehouse_model_1.WarehouseModel.find(this.baseFilter()).sort({ createdAt: -1 }).lean();
     }
+    async search(query) {
+        const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+        const projection = Object.keys(query.projection).length > 0 ? query.projection : undefined;
+        let q = warehouse_model_1.WarehouseModel.find(filter).sort(query.sort).skip(query.skip).limit(query.limit);
+        if (projection) {
+            q = q.select(projection);
+        }
+        return q.lean();
+    }
+    async countSearch(query) {
+        const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+        return warehouse_model_1.WarehouseModel.countDocuments(filter);
+    }
     async findById(id) {
         return warehouse_model_1.WarehouseModel.findById(id).where('isDeleted').ne(true).lean();
     }

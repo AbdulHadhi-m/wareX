@@ -1,0 +1,25 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.inventoryRouter = void 0;
+const express_1 = require("express");
+const inventory_controller_1 = require("./inventory.controller");
+const inventory_service_1 = require("./inventory.service");
+const inventory_repository_1 = require("./inventory.repository");
+const validate_1 = require("../../shared/validation/validate");
+const inventory_validation_1 = require("./inventory.validation");
+const auth_middleware_1 = require("../auth/auth.middleware");
+const movementHistoryRepository = new inventory_repository_1.MovementHistoryRepository();
+const service = new inventory_service_1.InventoryService(movementHistoryRepository);
+const controller = new inventory_controller_1.InventoryController(service);
+const router = (0, express_1.Router)();
+exports.inventoryRouter = router;
+router.use(auth_middleware_1.authenticate);
+router.post('/move', (0, auth_middleware_1.authorize)('Manager'), (0, validate_1.validate)(inventory_validation_1.moveDeviceSchema), controller.move);
+router.get('/device/:deviceId', (0, validate_1.validate)(inventory_validation_1.deviceIdParamSchema, validate_1.ValidationSource.PARAMS), controller.getDeviceLocation);
+router.get('/device/:deviceId/history', (0, validate_1.validate)(inventory_validation_1.deviceIdParamSchema, validate_1.ValidationSource.PARAMS), controller.getDeviceHistory);
+router.get('/bin/:binId', (0, validate_1.validate)(inventory_validation_1.binIdParamSchema, validate_1.ValidationSource.PARAMS), controller.getByBin);
+router.get('/warehouse/:warehouseId', (0, validate_1.validate)(inventory_validation_1.warehouseIdParamSchema, validate_1.ValidationSource.PARAMS), controller.getByWarehouse);
+router.get('/zone/:zoneId', (0, validate_1.validate)(inventory_validation_1.zoneIdParamSchema, validate_1.ValidationSource.PARAMS), controller.getByZone);
+router.get('/aisle/:aisleId', (0, validate_1.validate)(inventory_validation_1.aisleIdParamSchema, validate_1.ValidationSource.PARAMS), controller.getByAisle);
+router.get('/', controller.getAll);
+//# sourceMappingURL=inventory.routes.js.map

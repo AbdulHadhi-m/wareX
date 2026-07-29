@@ -19,7 +19,7 @@ const controller = new PickListController(service);
 const router = Router();
 router.use(authenticate);
 
-router.post('/', authorize('Manager'), validate(createPickListSchema), controller.create);
+router.post('/', authorize('pick-list.create'), validate(createPickListSchema), controller.create);
 
 router.get('/', validate(pickListQuerySchema, ValidationSource.QUERY), controller.findAll);
 
@@ -37,7 +37,7 @@ router.get(
 
 router.patch(
   '/:id/assign',
-  authorize('Manager'),
+  authorize('pick-list.assign'),
   validate(pickListIdParamSchema, ValidationSource.PARAMS),
   validate(assignPickListSchema),
   controller.assign,
@@ -45,19 +45,21 @@ router.patch(
 
 router.patch(
   '/:id/start',
+  authorize('pick-list.start'),
   validate(pickListIdParamSchema, ValidationSource.PARAMS),
   controller.start,
 );
 
 router.patch(
   '/:id/complete',
+  authorize('pick-list.complete'),
   validate(pickListIdParamSchema, ValidationSource.PARAMS),
   controller.complete,
 );
 
 router.patch(
   '/:id/cancel',
-  authorize('Manager'),
+  authorize('pick-list.cancel'),
   validate(pickListIdParamSchema, ValidationSource.PARAMS),
   controller.cancel,
 );

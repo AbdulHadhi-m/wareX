@@ -41,8 +41,8 @@ export function EditZonePage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Zones', href: '/zones' },
-          { label: zone.name, href: `/zones/${zone.id}` },
+          { label: 'Zones', href: '/dashboard/zones' },
+          { label: zone.name, href: `/dashboard/zones/${zone.id}` },
           { label: 'Edit' },
         ]}
       />

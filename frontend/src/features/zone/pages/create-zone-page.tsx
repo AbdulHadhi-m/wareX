@@ -14,7 +14,7 @@ export function CreateZonePage() {
 
   return (
     <PageContainer>
-      <Breadcrumb items={[{ label: 'Zones', href: '/zones' }, { label: 'Create Zone' }]} />
+      <Breadcrumb items={[{ label: 'Zones', href: '/dashboard/zones' }, { label: 'Create Zone' }]} />
       <PageHeader title="Create Zone" description="Add a new zone to a warehouse." />
       <ZoneForm isPending={createMutation.isPending} onSubmit={handleSubmit} />
     </PageContainer>

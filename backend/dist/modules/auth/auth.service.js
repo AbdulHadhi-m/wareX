@@ -9,6 +9,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const environment_1 = require("../../shared/config/environment");
 const authentication_error_1 = require("../../shared/errors/authentication-error");
 const conflict_error_1 = require("../../shared/errors/conflict-error");
+const event_emitter_1 = require("../../shared/events/event-emitter");
 const SALT_ROUNDS = 12;
 class AuthService {
     repository;
@@ -40,6 +41,11 @@ class AuthService {
         }
         const token = this.generateToken(user);
         const userResponse = this.toUserResponse(user);
+        event_emitter_1.eventEmitter.emit(event_emitter_1.Events.AUTH_LOGIN, {
+            userId: user._id.toString(),
+            email: user.email,
+            name: user.name,
+        });
         return { token, user: userResponse };
     }
     async getProfile(userId) {

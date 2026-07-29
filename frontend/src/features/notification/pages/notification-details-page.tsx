@@ -56,7 +56,7 @@ export function NotificationDetailsPage() {
     deleteMutation.mutate(notification!.id, {
       onSuccess: () => {
         setShowDelete(false);
-        navigate('/notifications', { replace: true });
+        navigate('/dashboard/notifications', { replace: true });
       },
     });
   };
@@ -64,8 +64,8 @@ export function NotificationDetailsPage() {
   const resourceUrl = useMemo(() => {
     if (!notification?.relatedModule || !notification?.relatedResourceId) return null;
     const module = notification.relatedModule.toLowerCase();
-    if (module === 'order') return `/orders/${notification.relatedResourceId}`;
-    if (module === 'picklist') return `/pick-lists/${notification.relatedResourceId}`;
+    if (module === 'order') return `/dashboard/orders/${notification.relatedResourceId}`;
+    if (module === 'picklist') return `/dashboard/pick-lists/${notification.relatedResourceId}`;
     if (module === 'inventory') return `/inventory`;
     return null;
   }, [notification?.relatedModule, notification?.relatedResourceId]);
@@ -94,7 +94,7 @@ export function NotificationDetailsPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Notifications', href: '/notifications' },
+          { label: 'Notifications', href: '/dashboard/notifications' },
           { label: notification.title },
         ]}
       />

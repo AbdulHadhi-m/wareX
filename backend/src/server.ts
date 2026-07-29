@@ -3,11 +3,13 @@ import { environment } from './shared/config/environment';
 import { appConfig } from './shared/config/app';
 import { logger } from './shared/logger/logger';
 import { connect, disconnect } from './shared/database/connection';
+import { seedAll } from './seed';
 
 async function start(): Promise<void> {
   try {
     const startTime = Date.now();
     await connect();
+    await seedAll();
 
     const server = app.listen(environment.PORT, () => {
       const elapsed = Date.now() - startTime;

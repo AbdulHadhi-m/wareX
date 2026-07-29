@@ -1,15 +1,13 @@
 import { Outlet } from 'react-router-dom';
-import { AppLogo } from '@/components/common/app-logo';
 
 export function AuthLayout() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4 py-12">
-      <div className="w-full max-w-md space-y-8">
-        <div className="flex justify-center">
-          <AppLogo />
-        </div>
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#F4F6F8] px-4 py-8 font-sans">
+      <div className="w-full max-w-[440px] mx-auto">
         <Outlet />
       </div>
     </div>
   );
 }
+
+

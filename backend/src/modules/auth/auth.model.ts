@@ -25,11 +25,12 @@ const userSchema = new Schema<UserDocument>(
       required: true,
       select: false,
     },
-    role: {
-      type: String,
-      enum: ['Manager', 'Worker'],
+    roleId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Role',
       required: true,
-    },
+      index: true,
+    } as any,
   },
   {
     timestamps: true,

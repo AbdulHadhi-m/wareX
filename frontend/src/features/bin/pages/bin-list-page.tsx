@@ -61,7 +61,7 @@ export function BinListPage() {
         description="Define storage bins for device placement."
         actions={
           isManager && (
-            <Button onClick={() => navigate('/bins/new')} className="gap-2">
+            <Button onClick={() => navigate('/dashboard/bins/new')} className="gap-2">
               <Plus className="size-4" />
               Create Bin
             </Button>

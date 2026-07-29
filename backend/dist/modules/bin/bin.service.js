@@ -3,6 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BinService = void 0;
 const not_found_error_1 = require("../../shared/errors/not-found-error");
 const conflict_error_1 = require("../../shared/errors/conflict-error");
+const query_1 = require("../../shared/query");
+const pagination_1 = require("../../shared/utils/pagination");
+const binQueryConfig = {
+    searchableFields: ['name', 'code'],
+    filterableFields: ['aisleId', 'status'],
+    sortableFields: ['createdAt', 'updatedAt', 'name', 'status', 'code'],
+    defaultSort: { field: 'createdAt', order: 'desc' },
+    baseFilter: { isDeleted: { $ne: true } },
+};
 class BinService {
     binRepository;
     aisleRepository;
@@ -30,6 +39,19 @@ class BinService {
     async findAll() {
         const bins = await this.binRepository.findAll();
         return bins.map((b) => this.toBinResponse(b));
+    }
+    async search(queryParams) {
+        const parsed = query_1.QueryParser.parse(queryParams, binQueryConfig);
+        const mongoQuery = query_1.QueryBuilder.build(parsed, binQueryConfig);
+        const pagination = (0, pagination_1.parsePagination)({ page: parsed.page, limit: parsed.limit });
+        const [bins, total] = await Promise.all([
+            this.binRepository.search(mongoQuery),
+            this.binRepository.countSearch(mongoQuery),
+        ]);
+        return {
+            data: bins.map((b) => this.toBinResponse(b)),
+            meta: (0, pagination_1.buildPaginationMeta)(total, pagination),
+        };
     }
     async findById(id) {
         const bin = await this.binRepository.findById(id);

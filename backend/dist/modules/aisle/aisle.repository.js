@@ -10,6 +10,19 @@ class AisleRepository {
     async findAll() {
         return aisle_model_1.AisleModel.find(this.baseFilter()).sort({ createdAt: -1 }).lean();
     }
+    async search(query) {
+        const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+        const projection = Object.keys(query.projection).length > 0 ? query.projection : undefined;
+        let q = aisle_model_1.AisleModel.find(filter).sort(query.sort).skip(query.skip).limit(query.limit);
+        if (projection) {
+            q = q.select(projection);
+        }
+        return q.lean();
+    }
+    async countSearch(query) {
+        const filter = Object.keys(query.filter).length > 0 ? query.filter : this.baseFilter();
+        return aisle_model_1.AisleModel.countDocuments(filter);
+    }
     async findById(id) {
         return aisle_model_1.AisleModel.findById(id).where('isDeleted').ne(true).lean();
     }

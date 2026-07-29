@@ -20,11 +20,11 @@ const controller = new ZoneController(service);
 const zoneRouter = Router();
 zoneRouter.use(authenticate);
 
-zoneRouter.post('/', authorize('Manager'), validate(createZoneSchema), controller.create);
+zoneRouter.post('/', authorize('zone.create'), validate(createZoneSchema), controller.create);
 zoneRouter.get('/', controller.findAll);
 zoneRouter.get('/:id', validate(zoneIdSchema, ValidationSource.PARAMS), controller.findById);
-zoneRouter.patch('/:id', authorize('Manager'), validate(zoneIdSchema, ValidationSource.PARAMS), validate(updateZoneSchema), controller.update);
-zoneRouter.delete('/:id', authorize('Manager'), controller.delete);
+zoneRouter.patch('/:id', authorize('zone.update'), validate(zoneIdSchema, ValidationSource.PARAMS), validate(updateZoneSchema), controller.update);
+zoneRouter.delete('/:id', authorize('zone.delete'), controller.delete);
 
 const warehouseZoneRouter = Router();
 warehouseZoneRouter.use(authenticate);

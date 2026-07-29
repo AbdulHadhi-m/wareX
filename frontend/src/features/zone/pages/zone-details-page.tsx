@@ -44,7 +44,7 @@ export function ZoneDetailsPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Zones', href: '/zones' },
+          { label: 'Zones', href: '/dashboard/zones' },
           { label: zone.name },
         ]}
       />

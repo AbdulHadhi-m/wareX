@@ -18,6 +18,11 @@ function buildPaginationMeta(total, params) {
         totalPages,
         hasNext: params.page < totalPages,
         hasPrevious: params.page > 1,
+        currentPage: params.page,
+        pageSize: params.limit,
+        totalRecords: total,
+        hasNextPage: params.page < totalPages,
+        hasPreviousPage: params.page > 1,
     };
 }
 //# sourceMappingURL=pagination.js.map

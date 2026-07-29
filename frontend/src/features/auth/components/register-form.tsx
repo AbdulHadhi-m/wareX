@@ -1,0 +1,163 @@
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Link } from 'react-router-dom';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { ROUTES } from '@/constants';
+import { registerSchema, type RegisterFormData } from '../schemas/register-schema';
+import { useRegister } from '../hooks/use-register';
+
+export function RegisterForm() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const registerMutation = useRegister();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: { role: 'Worker' },
+  });
+
+  const isPending = registerMutation.isPending;
+
+  return (
+    <form onSubmit={handleSubmit((data) => registerMutation.mutate(data))} className="space-y-3.5">
+        <div className="space-y-1">
+          <label htmlFor="name" className="block text-xs font-bold text-gray-700">
+            Full Name<span className="text-red-500 ml-0.5">*</span>
+          </label>
+          <input
+            id="name"
+            placeholder="John Doe"
+            autoComplete="name"
+            disabled={isPending}
+            className="w-full h-10 px-3.5 rounded-xl border border-gray-200/90 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+            {...register('name')}
+          />
+          {errors.name && (
+            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.name.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <label htmlFor="email" className="block text-xs font-bold text-gray-700">
+            Email ID<span className="text-red-500 ml-0.5">*</span>
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Enter Email ID"
+            autoComplete="email"
+            disabled={isPending}
+            className="w-full h-10 px-3.5 rounded-xl border border-gray-200/90 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+            {...register('email')}
+          />
+          {errors.email && (
+            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <label htmlFor="password" className="block text-xs font-bold text-gray-700">
+            Password<span className="text-red-500 ml-0.5">*</span>
+          </label>
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="At least 8 characters"
+              autoComplete="new-password"
+              disabled={isPending}
+              className="w-full h-10 px-3.5 pr-10 rounded-xl border border-gray-200/90 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+              {...register('password')}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+            </button>
+          </div>
+          {errors.password && (
+            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.password.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <label htmlFor="confirmPassword" className="block text-xs font-bold text-gray-700">
+            Confirm Password<span className="text-red-500 ml-0.5">*</span>
+          </label>
+          <div className="relative">
+            <input
+              id="confirmPassword"
+              type={showConfirm ? 'text' : 'password'}
+              placeholder="Repeat your password"
+              autoComplete="new-password"
+              disabled={isPending}
+              className="w-full h-10 px-3.5 pr-10 rounded-xl border border-gray-200/90 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+              {...register('confirmPassword')}
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirm((prev) => !prev)}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              tabIndex={-1}
+            >
+              {showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+            </button>
+          </div>
+          {errors.confirmPassword && (
+            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.confirmPassword.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <label htmlFor="role" className="block text-xs font-bold text-gray-700">
+            Role<span className="text-red-500 ml-0.5">*</span>
+          </label>
+          <select
+            id="role"
+            disabled={isPending}
+            className="w-full h-10 px-3.5 rounded-xl border border-gray-200/90 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+            {...register('role')}
+          >
+            <option value="Worker">Worker</option>
+            <option value="Manager">Manager</option>
+          </select>
+          {errors.role && (
+            <p className="text-xs font-medium text-red-500 mt-0.5">{errors.role.message}</p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          disabled={isPending}
+          className="w-full h-11 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition-all shadow-md shadow-emerald-600/20 inline-flex items-center justify-center disabled:opacity-50 mt-2"
+        >
+          {isPending ? (
+            <>
+              <Loader2 className="mr-2 size-4 animate-spin" />
+              Creating account...
+            </>
+          ) : (
+            'Create Account'
+          )}
+        </button>
+
+        <p className="text-center text-xs font-medium text-gray-500 pt-3">
+          Already have an account?{' '}
+          <Link to={ROUTES.AUTH.LOGIN} className="font-bold text-emerald-600 hover:underline">
+            Sign in
+          </Link>
+        </p>
+      </form>
+  );
+}
+
+
+
