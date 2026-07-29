@@ -16,6 +16,12 @@ import {
   EditZonePage,
   ZoneDetailsPage,
 } from '@/features/zone';
+import {
+  BinListPage,
+  CreateBinPage,
+  EditBinPage,
+  BinDetailsPage,
+} from '@/features/bin';
 
 export const router = createBrowserRouter([
   {
@@ -59,12 +65,12 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.BINS,
-        element: (
-          <ComingSoonPage
-            title="Bins"
-            description="Define storage bins for device placement."
-          />
-        ),
+        children: [
+          { index: true, element: <BinListPage /> },
+          { path: 'new', element: <CreateBinPage /> },
+          { path: ':id', element: <BinDetailsPage /> },
+          { path: ':id/edit', element: <EditBinPage /> },
+        ],
       },
       {
         path: ROUTES.DEVICES,
