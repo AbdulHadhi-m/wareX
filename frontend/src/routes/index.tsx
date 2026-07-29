@@ -22,6 +22,12 @@ import {
   EditBinPage,
   BinDetailsPage,
 } from '@/features/bin';
+import {
+  DeviceListPage,
+  CreateDevicePage,
+  EditDevicePage,
+  DeviceDetailsPage,
+} from '@/features/device';
 
 export const router = createBrowserRouter([
   {
@@ -74,12 +80,12 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.DEVICES,
-        element: (
-          <ComingSoonPage
-            title="Devices"
-            description="Track and manage all devices in inventory."
-          />
-        ),
+        children: [
+          { index: true, element: <DeviceListPage /> },
+          { path: 'new', element: <CreateDevicePage /> },
+          { path: ':id', element: <DeviceDetailsPage /> },
+          { path: ':id/edit', element: <EditDevicePage /> },
+        ],
       },
       {
         path: ROUTES.INVENTORY,
