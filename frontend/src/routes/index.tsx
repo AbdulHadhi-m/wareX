@@ -127,202 +127,194 @@ const HeroPage = lazy(() =>
   import('@/features/hero').then((m) => ({ default: m.HeroPage })),
 );
 
+function RootLayout() {
+  return <Outlet />;
+}
+
 export const router = createBrowserRouter([
   {
-    index: true,
-    element: <HeroPage />,
-  },
-  {
-    path: ROUTES.DASHBOARD,
-    element: (
-      <ProtectedRoute>
-        <DashboardLayout />
-      </ProtectedRoute>
-    ),
+    path: '/',
+    element: <RootLayout />,
     children: [
+      { index: true, element: <HeroPage /> },
       {
-        index: true,
-        element: <DashboardPage />,
-      },
-      {
-        path: 'warehouses',
-        element: <SuspenseWrapper />,
-        children: [
-          { index: true, element: <WarehouseListPage /> },
-          { path: 'new', element: <CreateWarehousePage /> },
-          { path: ':id', element: <WarehouseDetailsPage /> },
-          { path: ':id/edit', element: <EditWarehousePage /> },
-        ],
-      },
-      {
-        path: 'zones',
-        element: <SuspenseWrapper />,
-        children: [
-          { index: true, element: <ZoneListPage /> },
-          { path: 'new', element: <CreateZonePage /> },
-          { path: ':id', element: <ZoneDetailsPage /> },
-          { path: ':id/edit', element: <EditZonePage /> },
-        ],
-      },
-      {
-        path: 'aisles',
+        path: 'dashboard',
         element: (
-          <ComingSoonPage
-            title="Aisles"
-            description="Configure aisles within warehouse zones."
-          />
-        ),
-      },
-      {
-        path: 'bins',
-        element: <SuspenseWrapper />,
-        children: [
-          { index: true, element: <BinListPage /> },
-          { path: 'new', element: <CreateBinPage /> },
-          { path: ':id', element: <BinDetailsPage /> },
-          { path: ':id/edit', element: <EditBinPage /> },
-        ],
-      },
-      {
-        path: 'devices',
-        element: <SuspenseWrapper />,
-        children: [
-          { index: true, element: <DeviceListPage /> },
-          { path: 'new', element: <CreateDevicePage /> },
-          { path: ':id', element: <DeviceDetailsPage /> },
-          { path: ':id/edit', element: <EditDevicePage /> },
-        ],
-      },
-      {
-        path: 'inventory',
-        element: <SuspenseWrapper />,
-        children: [
-          { index: true, element: <InventoryDashboardPage /> },
-          { path: 'move/:deviceId', element: <MoveDevicePage /> },
-          { path: 'history/:deviceId', element: <DeviceHistoryPage /> },
-        ],
-      },
-      {
-        path: 'pick-lists',
-        element: (
-          <ComingSoonPage
-            title="Pick Lists"
-            description="Create and manage picking tasks for orders."
-          />
-        ),
-      },
-      {
-        path: 'orders',
-        element: <SuspenseWrapper />,
-        children: [
-          { index: true, element: <OrderListPage /> },
-          { path: 'new', element: <CreateOrderPage /> },
-          { path: ':id', element: <OrderDetailsPage /> },
-          { path: ':id/edit', element: <EditOrderPage /> },
-        ],
-      },
-      {
-        path: 'notifications',
-        element: <SuspenseWrapper />,
-        children: [
-          { index: true, element: <NotificationListPage /> },
-          { path: ':id', element: <NotificationDetailsPage /> },
-        ],
-      },
-      {
-        path: 'reports',
-        element: <SuspenseWrapper />,
-        children: [
-          { index: true, element: <ReportsDashboardPage /> },
-          { path: 'devices', element: <DeviceReportsPage /> },
-          { path: 'inventory', element: <InventoryReportsPage /> },
-          { path: 'orders', element: <OrderReportsPage /> },
-          { path: 'pick-lists', element: <PickListReportsPage /> },
-        ],
-      },
-      {
-        path: 'settings',
-        element: (
-          <ProtectedRoute roles={['Manager']}>
-            <ComingSoonPage
-              title="Settings"
-              description="Configure system preferences and user settings."
-            />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: 'admin/users',
-        element: (
-          <ProtectedRoute roles={['SuperAdmin']}>
-            <SuspenseWrapper />
+          <ProtectedRoute>
+            <DashboardLayout />
           </ProtectedRoute>
         ),
         children: [
-          { index: true, element: <AdminUserListPage /> },
-          { path: 'new', element: <AdminCreateUserPage /> },
-          { path: ':id', element: <AdminUserDetailsPage /> },
-          { path: ':id/edit', element: <AdminEditUserPage /> },
-        ],
-      },
-      {
-        path: 'admin/audit-logs',
-        element: (
-          <ProtectedRoute roles={['SuperAdmin']}>
-            <SuspenseWrapper />
-          </ProtectedRoute>
-        ),
-        children: [
+          { index: true, element: <DashboardPage /> },
           {
-            index: true,
+            path: 'warehouses',
+            element: <SuspenseWrapper />,
+            children: [
+              { index: true, element: <WarehouseListPage /> },
+              { path: 'new', element: <CreateWarehousePage /> },
+              { path: ':id', element: <WarehouseDetailsPage /> },
+              { path: ':id/edit', element: <EditWarehousePage /> },
+            ],
+          },
+          {
+            path: 'zones',
+            element: <SuspenseWrapper />,
+            children: [
+              { index: true, element: <ZoneListPage /> },
+              { path: 'new', element: <CreateZonePage /> },
+              { path: ':id', element: <ZoneDetailsPage /> },
+              { path: ':id/edit', element: <EditZonePage /> },
+            ],
+          },
+          {
+            path: 'aisles',
             element: (
               <ComingSoonPage
-                title="Audit Logs"
-                description="View system-wide audit logs for all user actions."
+                title="Aisles"
+                description="Configure aisles within warehouse zones."
               />
             ),
+          },
+          {
+            path: 'bins',
+            element: <SuspenseWrapper />,
+            children: [
+              { index: true, element: <BinListPage /> },
+              { path: 'new', element: <CreateBinPage /> },
+              { path: ':id', element: <BinDetailsPage /> },
+              { path: ':id/edit', element: <EditBinPage /> },
+            ],
+          },
+          {
+            path: 'devices',
+            element: <SuspenseWrapper />,
+            children: [
+              { index: true, element: <DeviceListPage /> },
+              { path: 'new', element: <CreateDevicePage /> },
+              { path: ':id', element: <DeviceDetailsPage /> },
+              { path: ':id/edit', element: <EditDevicePage /> },
+            ],
+          },
+          {
+            path: 'inventory',
+            element: <SuspenseWrapper />,
+            children: [
+              { index: true, element: <InventoryDashboardPage /> },
+              { path: 'move/:deviceId', element: <MoveDevicePage /> },
+              { path: 'history/:deviceId', element: <DeviceHistoryPage /> },
+            ],
+          },
+          {
+            path: 'pick-lists',
+            element: (
+              <ComingSoonPage
+                title="Pick Lists"
+                description="Create and manage picking tasks for orders."
+              />
+            ),
+          },
+          {
+            path: 'orders',
+            element: <SuspenseWrapper />,
+            children: [
+              { index: true, element: <OrderListPage /> },
+              { path: 'new', element: <CreateOrderPage /> },
+              { path: ':id', element: <OrderDetailsPage /> },
+              { path: ':id/edit', element: <EditOrderPage /> },
+            ],
+          },
+          {
+            path: 'notifications',
+            element: <SuspenseWrapper />,
+            children: [
+              { index: true, element: <NotificationListPage /> },
+              { path: ':id', element: <NotificationDetailsPage /> },
+            ],
+          },
+          {
+            path: 'reports',
+            element: <SuspenseWrapper />,
+            children: [
+              { index: true, element: <ReportsDashboardPage /> },
+              { path: 'devices', element: <DeviceReportsPage /> },
+              { path: 'inventory', element: <InventoryReportsPage /> },
+              { path: 'orders', element: <OrderReportsPage /> },
+              { path: 'pick-lists', element: <PickListReportsPage /> },
+            ],
+          },
+          {
+            path: 'settings',
+            element: (
+              <ProtectedRoute roles={['Manager']}>
+                <ComingSoonPage
+                  title="Settings"
+                  description="Configure system preferences and user settings."
+                />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: 'admin/users',
+            element: (
+              <ProtectedRoute roles={['SuperAdmin']}>
+                <SuspenseWrapper />
+              </ProtectedRoute>
+            ),
+            children: [
+              { index: true, element: <AdminUserListPage /> },
+              { path: 'new', element: <AdminCreateUserPage /> },
+              { path: ':id', element: <AdminUserDetailsPage /> },
+              { path: ':id/edit', element: <AdminEditUserPage /> },
+            ],
+          },
+          {
+            path: 'admin/audit-logs',
+            element: (
+              <ProtectedRoute roles={['SuperAdmin']}>
+                <SuspenseWrapper />
+              </ProtectedRoute>
+            ),
+            children: [
+              {
+                index: true,
+                element: (
+                  <ComingSoonPage
+                    title="Audit Logs"
+                    description="View system-wide audit logs for all user actions."
+                  />
+                ),
+              },
+            ],
+          },
+          {
+            path: 'access-denied',
+            element: <AccessDeniedPage />,
+          },
+          {
+            path: '*',
+            element: <NotFoundPage />,
           },
         ],
       },
       {
-        path: 'access-denied',
-        element: <AccessDeniedPage />,
+        path: 'auth',
+        element: (
+          <GuestRoute>
+            <AuthLayout />
+          </GuestRoute>
+        ),
+        children: [
+          { index: true, element: <Navigate to={ROUTES.AUTH.LOGIN} replace /> },
+          { path: 'login', element: <LoginPage /> },
+          { path: 'register', element: <RegisterPage /> },
+        ],
       },
       {
-        path: '*',
-        element: <NotFoundPage />,
-      },
-    ],
-  },
-  {
-    path: '/auth',
-    element: (
-      <GuestRoute>
-        <AuthLayout />
-      </GuestRoute>
-    ),
-    children: [
-      {
-        index: true,
-        element: <Navigate to={ROUTES.AUTH.LOGIN} replace />,
-      },
-      {
-        path: 'login',
-        element: <LoginPage />,
-      },
-      {
-        path: 'register',
-        element: <RegisterPage />,
-      },
-    ],
-  },
-  {
-    path: '/public',
-    element: <PublicLayout />,
-    children: [
-      {
-        index: true,
-        element: <Navigate to={ROUTES.DASHBOARD} replace />,
+        path: 'public',
+        element: <PublicLayout />,
+        children: [
+          { index: true, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
+        ],
       },
     ],
   },

@@ -15,7 +15,7 @@ export function CreateBinPage() {
   return (
     <PageContainer>
       <Breadcrumb
-        items={[{ label: 'Bins', href: '/bins' }, { label: 'Create Bin' }]}
+        items={[{ label: 'Bins', href: '/dashboard/bins' }, { label: 'Create Bin' }]}
       />
       <PageHeader title="Create Bin" description="Add a new storage bin." />
       <BinForm isPending={createMutation.isPending} onSubmit={handleSubmit} />

@@ -40,8 +40,8 @@ const navigationItems: NavigationItem[] = [
 ];
 
 const adminNavItems: NavigationItem[] = [
-  { label: 'Users', path: '/admin/users', icon: Shield },
-  { label: 'Audit Logs', path: '/admin/audit-logs', icon: ScrollText },
+  { label: 'Users', path: '/dashboard/admin/users', icon: Shield },
+  { label: 'Audit Logs', path: '/dashboard/admin/audit-logs', icon: ScrollText },
 ];
 
 interface SidebarProps {

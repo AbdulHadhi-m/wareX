@@ -15,7 +15,7 @@ export function OrderItemsTable({ deviceIds }: OrderItemsTableProps) {
     queryFn: async () => {
       const results = await Promise.allSettled(
         deviceIds.map((id) =>
-          api.get<ApiResponse<Device>>(`/devices/${id}`).then((r) => r.data.data!),
+          api.get<ApiResponse<Device>>(`/dashboard/devices/${id}`).then((r) => r.data.data!),
         ),
       );
       return results

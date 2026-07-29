@@ -21,7 +21,7 @@ export class AuthService {
     }
 
     const RoleModel = mongoose.model('Role');
-    const role = await RoleModel.findById(dto.roleId).lean();
+    const role = await RoleModel.findOne({ name: dto.role }).lean() as { _id: { toString(): string } } | null;
 
     if (!role) {
       throw new AuthenticationError('Invalid role');
@@ -30,8 +30,10 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(dto.password, SALT_ROUNDS);
 
     const user = await this.repository.create({
-      ...dto,
+      name: dto.name,
+      email: dto.email,
       password: hashedPassword,
+      roleId: role._id.toString(),
     });
 
     const token = this.generateToken(user);

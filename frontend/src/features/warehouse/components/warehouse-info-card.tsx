@@ -64,7 +64,7 @@ export function WarehouseInfoCard({ warehouse, onDelete, isDeleting }: Warehouse
                 <Button
                   className="w-full gap-2"
                   variant="outline"
-                  onClick={() => navigate(`/warehouses/${warehouse.id}/edit`)}
+                  onClick={() => navigate(`/dashboard/warehouses/${warehouse.id}/edit`)}
                 >
                   <Pencil className="size-4" />
                   Edit Warehouse

@@ -16,11 +16,11 @@ const typeConfig: Record<NotificationType, { icon: typeof CheckCircle2; classNam
   'Device Reserved': { icon: AlertTriangle, className: 'text-amber-500' },
   'Order Cancelled': { icon: XCircle, className: 'text-red-500' },
   'Pick List Cancelled': { icon: XCircle, className: 'text-red-500' },
-  'System': { icon: Info, className: 'text-blue-500' },
+  'System': { icon: Info, className: 'text-emerald-500' },
 };
 
 export function NotificationTypeIcon({ type }: NotificationTypeIconProps) {
-  const config = typeConfig[type] ?? { icon: Info, className: 'text-blue-500' };
+  const config = typeConfig[type] ?? { icon: Info, className: 'text-emerald-500' };
   const Icon = config.icon;
 
   return (

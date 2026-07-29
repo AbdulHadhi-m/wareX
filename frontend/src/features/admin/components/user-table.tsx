@@ -63,7 +63,7 @@ export function UserTable({
         header: 'Name',
         cell: (info) => (
           <button
-            onClick={() => navigate(`/admin/users/${info.row.original.id}`)}
+            onClick={() => navigate(`/dashboard/admin/users/${info.row.original.id}`)}
             className="font-medium text-foreground hover:text-primary transition-colors"
           >
             {info.getValue()}
@@ -91,14 +91,14 @@ export function UserTable({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(`/admin/users/${info.row.original.id}`)}
+              onClick={() => navigate(`/dashboard/admin/users/${info.row.original.id}`)}
             >
               <Eye className="size-4" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(`/admin/users/${info.row.original.id}/edit`)}
+              onClick={() => navigate(`/dashboard/admin/users/${info.row.original.id}/edit`)}
             >
               <Pencil className="size-4" />
             </Button>
@@ -179,7 +179,7 @@ export function UserTable({
           <EmptyState
             title="No users found"
             description={search || roleFilter ? 'Try a different search term or filter.' : 'Get started by creating your first user.'}
-            action={!search && !roleFilter ? { label: 'Create User', onClick: () => navigate('/admin/users/new') } : undefined}
+            action={!search && !roleFilter ? { label: 'Create User', onClick: () => navigate('/dashboard/admin/users/new') } : undefined}
           />
         }
       />

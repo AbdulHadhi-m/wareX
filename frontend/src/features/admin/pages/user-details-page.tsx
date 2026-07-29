@@ -44,7 +44,7 @@ export function UserDetailsPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Users', href: '/admin/users' },
+          { label: 'Users', href: '/dashboard/admin/users' },
           { label: user.name },
         ]}
       />

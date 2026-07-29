@@ -85,7 +85,7 @@ export function OrderTable({
         header: 'Order Number',
         cell: (info) => (
           <button
-            onClick={() => navigate(`/orders/${info.row.original.id}`)}
+            onClick={() => navigate(`/dashboard/orders/${info.row.original.id}`)}
             className="font-medium text-foreground hover:text-primary transition-colors"
           >
             {info.getValue()}
@@ -121,7 +121,7 @@ export function OrderTable({
               className="px-0"
               onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/pick-lists/${info.getValue()}`);
+                navigate(`/dashboard/pick-lists/${info.getValue()}`);
               }}
             >
               {info.getValue()!.slice(-6)}
@@ -142,7 +142,7 @@ export function OrderTable({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(`/orders/${info.row.original.id}`)}
+              onClick={() => navigate(`/dashboard/orders/${info.row.original.id}`)}
             >
               <Eye className="size-4" />
             </Button>
@@ -243,7 +243,7 @@ export function OrderTable({
             }
             action={
               user?.role === 'Manager' && !search && !statusFilter && !priorityFilter
-                ? { label: 'Create Order', onClick: () => navigate('/orders/new') }
+                ? { label: 'Create Order', onClick: () => navigate('/dashboard/orders/new') }
                 : undefined
             }
           />

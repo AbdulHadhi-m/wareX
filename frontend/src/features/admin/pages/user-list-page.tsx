@@ -40,7 +40,7 @@ export function UserListPage() {
         title="User Management"
         description="Manage system users and their roles."
         actions={
-          <Button onClick={() => navigate('/admin/users/new')} className="gap-2">
+          <Button onClick={() => navigate('/dashboard/admin/users/new')} className="gap-2">
             <Plus className="size-4" />
             Create User
           </Button>

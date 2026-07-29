@@ -2,10 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/common/confirm-dialog';
 import { useAuth, useLogout } from '../hooks/use-auth';
 
 export function UserMenu() {
   const [open, setOpen] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const logout = useLogout();
@@ -21,8 +23,13 @@ export function UserMenu() {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogoutClick = () => {
     setOpen(false);
+    setShowConfirm(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowConfirm(false);
     logout();
     navigate('/auth/login', { replace: true });
   };
@@ -47,7 +54,7 @@ export function UserMenu() {
           </div>
           <div className="border-t" />
           <button
-            onClick={handleLogout}
+            onClick={handleLogoutClick}
             className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors"
           >
             <LogOut className="size-4" />
@@ -55,6 +62,16 @@ export function UserMenu() {
           </button>
         </div>
       )}
+
+      <ConfirmDialog
+        open={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleConfirmLogout}
+        title="Confirm Logout"
+        message="Are you sure you want to log out? You will be redirected to the login page."
+        confirmLabel="Log out"
+        variant="destructive"
+      />
     </div>
   );
 }

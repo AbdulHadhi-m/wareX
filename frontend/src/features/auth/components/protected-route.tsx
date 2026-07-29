@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { LoadingSpinner } from '@/components/common/loading-spinner';
+import { ROUTES } from '@/constants';
 import { useAuth } from '../hooks/use-auth';
 import type { UserRole } from '../types';
 
@@ -25,7 +26,7 @@ export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
   }
 
   if (roles && user && user.role !== 'SuperAdmin' && !roles.includes(user.role)) {
-    return <Navigate to="/access-denied" replace />;
+    return <Navigate to={ROUTES.ACCESS_DENIED} replace />;
   }
 
   return <>{children}</>;

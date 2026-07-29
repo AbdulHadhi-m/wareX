@@ -55,7 +55,7 @@ export function UserInfoCard({ user, onDelete, isDeleting }: UserInfoCardProps) 
             <Button
               className="w-full gap-2"
               variant="outline"
-              onClick={() => navigate(`/admin/users/${user.id}/edit`)}
+              onClick={() => navigate(`/dashboard/admin/users/${user.id}/edit`)}
             >
               <Pencil className="size-4" />
               Edit User

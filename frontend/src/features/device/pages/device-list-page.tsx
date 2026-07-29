@@ -97,7 +97,7 @@ export function DeviceListPage() {
         description="Track and manage all devices in inventory."
         actions={
           isManager && (
-            <Button onClick={() => navigate('/devices/new')} className="gap-2">
+            <Button onClick={() => navigate('/dashboard/devices/new')} className="gap-2">
               <Plus className="size-4" />
               Register Device
             </Button>

@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 
 interface AppLogoProps {
   className?: string;
@@ -7,13 +8,18 @@ interface AppLogoProps {
 
 export function AppLogo({ className, variant = 'default' }: AppLogoProps) {
   return (
-    <div className={cn('flex items-center gap-2', className)}>
-      <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-bold">
-        W
+    <Link to="/" className={cn('flex items-center gap-2.5 group', className)}>
+      <div className="size-9 rounded-full bg-[#111827] flex items-center justify-center text-white transition-transform group-hover:scale-105">
+        <svg className="size-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
       </div>
       {variant === 'default' && (
-        <span className="font-semibold text-foreground tracking-tight">wareX</span>
+        <span className="text-2xl font-black tracking-tight text-[#111827]">
+          ware<span className="text-emerald-600">X</span>
+        </span>
       )}
-    </div>
+    </Link>
   );
 }
+

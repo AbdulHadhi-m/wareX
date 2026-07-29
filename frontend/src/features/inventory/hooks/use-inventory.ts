@@ -132,7 +132,7 @@ export function useMoveDevice() {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.INVENTORY });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.DEVICES });
       toast.success('Device moved successfully');
-      navigate('/inventory', { replace: true });
+      navigate('/dashboard/inventory', { replace: true });
     },
     onError: (error: unknown) => {
       const axiosError = error as {

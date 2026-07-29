@@ -1,5 +1,5 @@
 import { UserModel } from './auth.model';
-import { IUser, RegisterDTO } from './auth.types';
+import { IUser } from './auth.types';
 
 export class AuthRepository {
   async findByEmail(email: string): Promise<IUser | null> {
@@ -14,7 +14,7 @@ export class AuthRepository {
     return UserModel.findById(id).lean();
   }
 
-  async create(data: RegisterDTO & { password: string }): Promise<IUser> {
+  async create(data: { name: string; email: string; password: string; roleId: string }): Promise<IUser> {
     const user = await UserModel.create(data);
     const obj = user.toObject();
     const { password: _, ...userWithoutPassword } = obj;

@@ -42,8 +42,8 @@ export function EditUserPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Users', href: '/admin/users' },
-          { label: user.name, href: `/admin/users/${user.id}` },
+          { label: 'Users', href: '/dashboard/admin/users' },
+          { label: user.name, href: `/dashboard/admin/users/${user.id}` },
           { label: 'Edit' },
         ]}
       />

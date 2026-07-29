@@ -35,7 +35,7 @@ export function OrderDetailsPage() {
     <PageContainer>
       <Breadcrumb
         items={[
-          { label: 'Orders', href: '/orders' },
+          { label: 'Orders', href: '/dashboard/orders' },
           { label: order.orderNumber },
         ]}
       />

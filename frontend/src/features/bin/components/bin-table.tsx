@@ -97,7 +97,7 @@ export function BinTable({
         header: 'Name',
         cell: (info) => (
           <button
-            onClick={() => navigate(`/bins/${info.row.original.id}`)}
+            onClick={() => navigate(`/dashboard/bins/${info.row.original.id}`)}
             className="font-medium text-foreground hover:text-primary transition-colors"
           >
             {info.getValue()}
@@ -151,7 +151,7 @@ export function BinTable({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(`/bins/${info.row.original.id}`)}
+              onClick={() => navigate(`/dashboard/bins/${info.row.original.id}`)}
             >
               <Eye className="size-4" />
             </Button>
@@ -160,7 +160,7 @@ export function BinTable({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => navigate(`/bins/${info.row.original.id}/edit`)}
+                  onClick={() => navigate(`/dashboard/bins/${info.row.original.id}/edit`)}
                 >
                   <Pencil className="size-4" />
                 </Button>
@@ -295,7 +295,7 @@ export function BinTable({
             }
             action={
               isManager && !search && !statusFilter && !warehouseFilter && !zoneFilter && !aisleFilter
-                ? { label: 'Create Bin', onClick: () => navigate('/bins/new') }
+                ? { label: 'Create Bin', onClick: () => navigate('/dashboard/bins/new') }
                 : undefined
             }
           />

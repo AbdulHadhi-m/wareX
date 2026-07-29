@@ -74,7 +74,7 @@ export function ZoneTable({
         header: 'Name',
         cell: (info) => (
           <button
-            onClick={() => navigate(`/zones/${info.row.original.id}`)}
+            onClick={() => navigate(`/dashboard/zones/${info.row.original.id}`)}
             className="font-medium text-foreground hover:text-primary transition-colors"
           >
             {info.getValue()}
@@ -105,7 +105,7 @@ export function ZoneTable({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(`/zones/${info.row.original.id}`)}
+              onClick={() => navigate(`/dashboard/zones/${info.row.original.id}`)}
             >
               <Eye className="size-4" />
             </Button>
@@ -114,7 +114,7 @@ export function ZoneTable({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => navigate(`/zones/${info.row.original.id}/edit`)}
+                  onClick={() => navigate(`/dashboard/zones/${info.row.original.id}/edit`)}
                 >
                   <Pencil className="size-4" />
                 </Button>
@@ -205,7 +205,7 @@ export function ZoneTable({
             }
             action={
               isManager && !search && !warehouseFilter
-                ? { label: 'Create Zone', onClick: () => navigate('/zones/new') }
+                ? { label: 'Create Zone', onClick: () => navigate('/dashboard/zones/new') }
                 : undefined
             }
           />

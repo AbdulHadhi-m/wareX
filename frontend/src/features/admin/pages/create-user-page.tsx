@@ -14,7 +14,7 @@ export function CreateUserPage() {
 
   return (
     <PageContainer>
-      <Breadcrumb items={[{ label: 'Users', href: '/admin/users' }, { label: 'Create User' }]} />
+      <Breadcrumb items={[{ label: 'Users', href: '/dashboard/admin/users' }, { label: 'Create User' }]} />
       <PageHeader
         title="Create User"
         description="Add a new user to the system."
