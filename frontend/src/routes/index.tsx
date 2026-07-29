@@ -28,6 +28,11 @@ import {
   EditDevicePage,
   DeviceDetailsPage,
 } from '@/features/device';
+import {
+  InventoryDashboardPage,
+  MoveDevicePage,
+  DeviceHistoryPage,
+} from '@/features/inventory';
 
 export const router = createBrowserRouter([
   {
@@ -89,12 +94,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.INVENTORY,
-        element: (
-          <ComingSoonPage
-            title="Inventory"
-            description="View and manage device locations and movements."
-          />
-        ),
+        children: [
+          { index: true, element: <InventoryDashboardPage /> },
+          { path: 'move/:deviceId', element: <MoveDevicePage /> },
+          { path: 'history/:deviceId', element: <DeviceHistoryPage /> },
+        ],
       },
       {
         path: ROUTES.PICK_LISTS,
