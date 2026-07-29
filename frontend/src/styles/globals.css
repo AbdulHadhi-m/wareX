@@ -1,62 +1,63 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-background: oklch(1 0 0);
-  --color-foreground: oklch(0.145 0 0);
-  --color-primary: oklch(0.55 0.18 145);
-  --color-primary-foreground: oklch(0.98 0.005 145);
-  --color-secondary: oklch(0.95 0.04 145);
-  --color-secondary-foreground: oklch(0.35 0.08 145);
-  --color-muted: oklch(0.95 0.04 145);
-  --color-muted-foreground: oklch(0.55 0.08 145);
-  --color-accent: oklch(0.95 0.04 145);
-  --color-accent-foreground: oklch(0.35 0.08 145);
-  --color-destructive: oklch(0.637 0.237 25.331);
-  --color-destructive-foreground: oklch(0.955 0.013 285.805);
-  --color-border: oklch(0.9 0.025 145);
-  --color-input: oklch(0.9 0.025 145);
-  --color-ring: oklch(0.55 0.18 145);
-  --color-sidebar: oklch(0.985 0 0);
-  --color-sidebar-foreground: oklch(0.145 0 0);
-  --color-sidebar-muted: oklch(0.95 0.04 145);
-  --color-sidebar-muted-foreground: oklch(0.55 0.08 145);
-  --color-sidebar-accent: oklch(0.95 0.04 145);
-  --color-sidebar-accent-foreground: oklch(0.35 0.08 145);
-  --color-sidebar-border: oklch(0.9 0.025 145);
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+  --color-primary: #10b981;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f0fdf4;
+  --color-secondary-foreground: #166534;
+  --color-muted: #f8fafc;
+  --color-muted-foreground: #64748b;
+  --color-accent: #f0fdf4;
+  --color-accent-foreground: #166534;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #f1f5f9;
+  --color-input: #e2e8f0;
+  --color-ring: #10b981;
+  --color-sidebar: #ffffff;
+  --color-sidebar-foreground: #0f172a;
+  --color-sidebar-muted: #f8fafc;
+  --color-sidebar-muted-foreground: #64748b;
+  --color-sidebar-accent: #f0fdf4;
+  --color-sidebar-accent-foreground: #166534;
+  --color-sidebar-border: #f1f5f9;
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.625rem;
   --radius-xl: 0.75rem;
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Outfit', 'Plus Jakarta Sans', sans-serif;
 }
 
 .dark {
-  --color-background: oklch(0.145 0 0);
-  --color-foreground: oklch(0.955 0.013 145);
-  --color-primary: oklch(0.65 0.18 145);
-  --color-primary-foreground: oklch(0.145 0 0);
-  --color-secondary: oklch(0.25 0.03 145);
-  --color-secondary-foreground: oklch(0.955 0.013 145);
-  --color-muted: oklch(0.25 0.03 145);
-  --color-muted-foreground: oklch(0.7 0.05 145);
-  --color-accent: oklch(0.25 0.03 145);
-  --color-accent-foreground: oklch(0.955 0.013 145);
-  --color-destructive: oklch(0.637 0.237 25.331);
-  --color-destructive-foreground: oklch(0.955 0.013 145);
-  --color-border: oklch(0.25 0.03 145);
-  --color-input: oklch(0.25 0.03 145);
-  --color-ring: oklch(0.65 0.18 145);
-  --color-sidebar: oklch(0.12 0 0);
-  --color-sidebar-foreground: oklch(0.955 0.013 145);
-  --color-sidebar-muted: oklch(0.2 0 0);
-  --color-sidebar-muted-foreground: oklch(0.7 0.05 145);
-  --color-sidebar-accent: oklch(0.25 0.03 145);
-  --color-sidebar-accent-foreground: oklch(0.955 0.013 145);
-  --color-sidebar-border: oklch(0.25 0.03 145);
+  --color-background: #09090b;
+  --color-foreground: #fafafa;
+  --color-primary: #10b981;
+  --color-primary-foreground: #09090b;
+  --color-secondary: #18181b;
+  --color-secondary-foreground: #fafafa;
+  --color-muted: #18181b;
+  --color-muted-foreground: #a1a1aa;
+  --color-accent: #18181b;
+  --color-accent-foreground: #fafafa;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #fafafa;
+  --color-border: #27272a;
+  --color-input: #27272a;
+  --color-ring: #10b981;
+  --color-sidebar: #09090b;
+  --color-sidebar-foreground: #fafafa;
+  --color-sidebar-muted: #18181b;
+  --color-sidebar-muted-foreground: #a1a1aa;
+  --color-sidebar-accent: #18181b;
+  --color-sidebar-accent-foreground: #fafafa;
+  --color-sidebar-border: #27272a;
 }
 
 * {
-  border-color: var(--color-border);
+  border-color: #f1f5f9;
 }
 
 body {
@@ -65,6 +66,10 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.font-display {
+  font-family: var(--font-display);
 }
 
 .text-shimmer {

@@ -46,16 +46,18 @@ export function UserMenu() {
       </Button>
 
       {open && (
-        <div className="absolute right-0 top-10 z-50 w-56 rounded-xl border bg-popover p-1 shadow-lg">
-          <div className="px-3 py-2">
-            <p className="text-sm font-medium text-foreground truncate">{user?.name ?? 'User'}</p>
+        <div className="absolute right-0 mt-2 z-50 w-60 rounded-xl border bg-background p-2 shadow-xl animate-in fade-in zoom-in-95 duration-100">
+          <div className="px-3 py-2.5">
+            <p className="text-sm font-semibold text-foreground truncate">{user?.name ?? 'User'}</p>
             <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
-            <p className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">{user?.role}</p>
+            <span className="mt-1.5 inline-block text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2 py-0.5 rounded-md">
+              {user?.role}
+            </span>
           </div>
-          <div className="border-t" />
+          <div className="my-1 border-t border-border" />
           <button
             onClick={handleLogoutClick}
-            className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors"
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
           >
             <LogOut className="size-4" />
             Log out

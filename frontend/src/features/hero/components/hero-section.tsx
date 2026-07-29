@@ -14,7 +14,7 @@ export function HeroSection() {
           
           {/* Left Column: Headline & CTA */}
           <div className="lg:col-span-6 max-w-xl">
-            <h1 className="text-4xl sm:text-5xl lg:text-[52px] font-extrabold tracking-tight text-[#111827] leading-[1.12] mb-6 font-sans">
+            <h1 className="text-4xl sm:text-5xl lg:text-[52px] font-extrabold tracking-tight text-[#111827] leading-[1.12] mb-6 font-display">
               Warehouse Management, <span className="text-emerald-600">Reimagined</span> for Modern Logistics
             </h1>
 

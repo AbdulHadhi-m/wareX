@@ -23,19 +23,19 @@ export class ReportService {
     const facilities = this.reportRepository.countFacilities();
     const inventorySummary = this.reportRepository.inventoryStatusSummary();
     const devicesPerWarehouse = this.reportRepository.devicesPerEntity(
-      '$warehouseId',
+      'warehouseId',
       'warehouses',
     );
     const devicesPerZone = this.reportRepository.devicesPerEntity(
-      '$zoneId',
+      'zoneId',
       'zones',
     );
     const devicesPerAisle = this.reportRepository.devicesPerEntity(
-      '$aisleId',
+      'aisleId',
       'aisles',
     );
     const devicesPerBin = this.reportRepository.devicesPerEntity(
-      '$binId',
+      'binId',
       'bins',
     );
     const orderSummary = this.reportRepository.orderStatusSummary();

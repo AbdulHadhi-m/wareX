@@ -4,32 +4,10 @@ import { ChevronDown, Menu, X, Phone, MessageCircle, ChevronRight } from 'lucide
 import { ROUTES } from '@/constants';
 import { cn } from '@/lib/utils';
 
-const solutions = [
-  { label: 'Warehouse Management System', href: '#' },
-  { label: 'Multi-Warehouse Inventory', href: '#' },
-  { label: 'B2C & B2B Order Fulfilment', href: '#' },
-  { label: 'Pick, Pack & Dispatch Engine', href: '#' },
-  { label: 'Device & Handheld Scanning', href: '#' },
-  { label: 'Real-time Analytics & Control Tower', href: '#' },
-];
-
-const resources = [
-  { label: 'Documentation', href: '#' },
-  { label: 'API Reference', href: '#' },
-  { label: 'Case Studies', href: '#' },
-  { label: 'Help Center', href: '#' },
-];
-
-const company = [
-  { label: 'About Us', href: '#' },
-  { label: 'Careers', href: '#' },
-  { label: 'Contact Us', href: '#' },
-];
-
-const customerStories = [
-  { label: 'Retail & Fashion', href: '#' },
-  { label: 'Electronics & Tech', href: '#' },
-  { label: 'FMCG & Grocery', href: '#' },
+const navItems = [
+  { label: 'Features', href: '#features' },
+  { label: 'Why wareX', href: '#why-choose' },
+  { label: 'Metrics', href: '#metrics' },
 ];
 
 export function HeroNav() {
@@ -52,8 +30,8 @@ export function HeroNav() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-gray-100/80',
-        scrolled ? 'shadow-sm py-3' : 'py-4',
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-gray-100',
+        scrolled ? 'shadow-xs py-3' : 'py-4',
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -70,32 +48,17 @@ export function HeroNav() {
             </span>
           </Link>
 
-          {/* Desktop Nav Links */}
+          {/* Desktop Direct Nav Links (No Subcontent / No Dropdowns) */}
           <nav className="hidden lg:flex items-center gap-9">
-            <DropdownMenu
-              label="Solutions"
-              isOpen={openDropdown === 'solutions'}
-              onToggle={() => setOpenDropdown(openDropdown === 'solutions' ? null : 'solutions')}
-              items={solutions}
-            />
-            <DropdownMenu
-              label="Resources"
-              isOpen={openDropdown === 'resources'}
-              onToggle={() => setOpenDropdown(openDropdown === 'resources' ? null : 'resources')}
-              items={resources}
-            />
-            <DropdownMenu
-              label="Company"
-              isOpen={openDropdown === 'company'}
-              onToggle={() => setOpenDropdown(openDropdown === 'company' ? null : 'company')}
-              items={company}
-            />
-            <DropdownMenu
-              label="Customer stories"
-              isOpen={openDropdown === 'customerStories'}
-              onToggle={() => setOpenDropdown(openDropdown === 'customerStories' ? null : 'customerStories')}
-              items={customerStories}
-            />
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="text-sm font-semibold text-gray-700 hover:text-emerald-600 transition-colors"
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
 
           {/* Right Action Items */}
@@ -166,16 +129,14 @@ export function HeroNav() {
               )}
             </div>
 
-            {/* Book a Demo Button */}
             <Link to={ROUTES.AUTH.REGISTER}>
-              <button className="px-5 py-2.5 rounded-full border border-gray-300 text-gray-900 font-medium text-sm hover:border-gray-400 hover:bg-gray-50/80 transition-all shadow-xs">
+              <button className="px-5 py-2.5 rounded-full border border-gray-200 hover:border-gray-300 text-gray-900 text-sm font-semibold hover:bg-gray-50 transition-colors">
                 Book a demo
               </button>
             </Link>
 
-            {/* Sign in Button */}
             <Link to={ROUTES.AUTH.LOGIN}>
-              <button className="px-6 py-2.5 rounded-full bg-[#111827] text-white font-medium text-sm hover:bg-gray-800 transition-all shadow-sm">
+              <button className="bg-[#111827] text-white hover:bg-black text-sm font-semibold px-5 py-2.5 rounded-full shadow-xs transition-colors">
                 Sign in
               </button>
             </Link>
@@ -194,20 +155,28 @@ export function HeroNav() {
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-gray-100 bg-white px-5 py-6 space-y-5 shadow-xl">
-          <MobileSection label="Solutions" items={solutions} />
-          <MobileSection label="Resources" items={resources} />
-          <MobileSection label="Company" items={company} />
-          <MobileSection label="Customer stories" items={customerStories} />
-          <div className="pt-4 flex flex-col gap-3">
-            <Link to={ROUTES.AUTH.REGISTER}>
-              <button className="w-full py-3 rounded-full border border-gray-300 text-gray-900 font-medium text-sm hover:bg-gray-50">
-                Book a demo
+        <div className="lg:hidden border-t border-gray-100 bg-white px-5 py-6 space-y-4 shadow-xl">
+          <div className="space-y-3">
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className="block text-base font-semibold text-gray-800 hover:text-emerald-600 py-1"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+          <div className="pt-4 flex flex-col gap-3 border-t border-gray-100">
+            <Link to={ROUTES.AUTH.LOGIN}>
+              <button className="w-full py-3 rounded-full bg-[#111827] text-white font-semibold text-sm hover:bg-gray-800">
+                Sign in
               </button>
             </Link>
-            <Link to={ROUTES.AUTH.LOGIN}>
-              <button className="w-full py-3 rounded-full bg-[#111827] text-white font-medium text-sm hover:bg-gray-800">
-                Sign in
+            <Link to={ROUTES.AUTH.REGISTER}>
+              <button className="w-full py-3 rounded-full border border-gray-300 text-gray-900 font-semibold text-sm hover:bg-gray-50">
+                Book a demo
               </button>
             </Link>
           </div>
@@ -216,59 +185,3 @@ export function HeroNav() {
     </header>
   );
 }
-
-function DropdownMenu({
-  label,
-  isOpen,
-  onToggle,
-  items,
-}: {
-  label: string;
-  isOpen: boolean;
-  onToggle: () => void;
-  items: { label: string; href: string }[];
-}) {
-  return (
-    <div className="relative">
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggle();
-        }}
-        className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
-      >
-        {label}
-        <ChevronDown className={cn('size-4 text-gray-500 transition-transform duration-200', isOpen && 'rotate-180')} />
-      </button>
-      {isOpen && (
-        <div className="absolute top-full left-0 mt-3 w-64 rounded-2xl border border-gray-100 bg-white shadow-xl shadow-gray-200/50 p-2.5 z-50 animate-in fade-in zoom-in-95 duration-150">
-          {items.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="block px-3.5 py-2.5 text-sm font-medium text-gray-700 hover:text-emerald-700 hover:bg-emerald-50/50 rounded-xl transition-colors"
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function MobileSection({ label, items }: { label: string; items: { label: string; href: string }[] }) {
-  return (
-    <div>
-      <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">{label}</p>
-      <div className="space-y-1 pl-2">
-        {items.map((item) => (
-          <a key={item.label} href={item.href} className="block py-1.5 text-sm text-gray-700 hover:text-gray-900 font-medium">
-            {item.label}
-          </a>
-        ))}
-      </div>
-    </div>
-  );
-}
-

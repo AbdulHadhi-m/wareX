@@ -13,7 +13,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
   const { resolvedTheme, setTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 sm:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background px-4 sm:px-6">
       <Button variant="ghost" size="icon" className="lg:hidden" onClick={onMenuToggle}>
         <Menu className="size-5" />
       </Button>

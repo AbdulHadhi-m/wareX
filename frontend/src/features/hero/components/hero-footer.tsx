@@ -59,7 +59,7 @@ export function HeroFooter() {
               </span>
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
-              The intelligent warehouse management platform for modern supply chain operations.
+              Internal role-based warehouse management & IMEI device tracking platform.
             </p>
           </div>
           {footerSections.map((section) => (
