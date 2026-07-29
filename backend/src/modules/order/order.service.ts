@@ -265,12 +265,16 @@ export class OrderService {
         throw new NotFoundError('One or more devices not found');
       }
 
-      for (const device of devices) {
-        if (device.status !== 'Available') {
-          throw new ConflictError(
-            `Device "${device.deviceName}" (${device.serialNumber}) is no longer available`,
-          );
-        }
+      const result = await DeviceModel.updateMany(
+        { _id: { $in: order.deviceIds }, status: 'Available' } as any,
+        { $set: { status: 'Reserved', updatedBy: userId } },
+        { session },
+      );
+
+      if (result.modifiedCount !== order.deviceIds.length) {
+        throw new ConflictError(
+          'One or more devices are no longer available. They may have been reserved by another pick list.',
+        );
       }
 
       const pickListNumber = await this.generatePickListNumber(session);
@@ -285,12 +289,6 @@ export class OrderService {
         createdBy: userId,
         updatedBy: userId,
       } as any], { session });
-
-      await DeviceModel.updateMany(
-        { _id: { $in: order.deviceIds } } as any,
-        { $set: { status: 'Reserved', updatedBy: userId } },
-        { session },
-      );
 
       const updated = await OrderModel.findByIdAndUpdate(
         orderId,

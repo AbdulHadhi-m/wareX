@@ -36,7 +36,7 @@ export const createDeviceSchema = z.object({
     ['Available', 'Reserved', 'Picked', 'Shipped', 'Damaged', 'Returned'],
     { required_error: 'Status is required' },
   ),
-  condition: z.enum(['New', 'Good', 'Fair', 'Damaged'], {
+  condition: z.enum(['New', 'Open-Box', 'RMA', 'Good', 'Fair', 'Damaged'], {
     required_error: 'Condition is required',
   }),
   purchaseDate: z.string().optional().or(z.literal('')),
@@ -89,7 +89,7 @@ export const updateDeviceSchema = z.object({
     .enum(['Available', 'Reserved', 'Picked', 'Shipped', 'Damaged', 'Returned'])
     .optional(),
   condition: z
-    .enum(['New', 'Good', 'Fair', 'Damaged'])
+    .enum(['New', 'Open-Box', 'RMA', 'Good', 'Fair', 'Damaged'])
     .optional(),
   purchaseDate: z.string().optional().or(z.literal('')),
   warrantyExpiry: z.string().optional().or(z.literal('')),

@@ -181,8 +181,43 @@ export async function seedSuperAdminUser(): Promise<void> {
   }, 'Default Super Admin created');
 }
 
+const WORKER_USERS = [
+  { name: 'Anshil', email: 'anshil@warex.com' },
+  { name: 'Erfan', email: 'erfan@warex.com' },
+  { name: 'Hari', email: 'hari@warex.com' },
+  { name: 'Shemil', email: 'shemil@warex.com' },
+];
+
+export async function seedWorkers(): Promise<void> {
+  const workerRole = await RoleModel.findOne({ name: 'Worker' }).lean();
+  if (!workerRole) {
+    logger.warn('Worker role not found — skipping worker user seed');
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash('worker123', SALT_ROUNDS);
+
+  for (const w of WORKER_USERS) {
+    const exists = await UserModel.findOne({ email: w.email }).lean();
+    if (exists) {
+      logger.info(`Worker ${w.email} already exists — skipping`);
+      continue;
+    }
+
+    await UserModel.create({
+      name: w.name,
+      email: w.email,
+      password: hashedPassword,
+      roleId: workerRole._id,
+    });
+
+    logger.info({ email: w.email, name: w.name }, 'Worker user created');
+  }
+}
+
 export async function seedAll(): Promise<void> {
   await seedPermissions();
   await seedRoles();
   await seedSuperAdminUser();
+  await seedWorkers();
 }

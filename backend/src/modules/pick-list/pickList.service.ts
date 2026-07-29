@@ -65,14 +65,6 @@ export class PickListService {
         throw new NotFoundError('One or more devices not found');
       }
 
-      for (const device of devices) {
-        if (device.status !== 'Available') {
-          throw new ConflictError(
-            `Device "${device.deviceName}" (${device.serialNumber}) is not available. Current status: ${device.status}`,
-          );
-        }
-      }
-
       for (const deviceId of uniqueDeviceIds) {
         const active = await this.pickListRepository.findActiveByDeviceId(deviceId, session);
 
@@ -81,6 +73,18 @@ export class PickListService {
             `Device is already part of active pick list ${active.pickListNumber}`,
           );
         }
+      }
+
+      const result = await DeviceModel.updateMany(
+        { _id: { $in: uniqueDeviceIds }, status: 'Available' } as any,
+        { $set: { status: 'Reserved', updatedBy: userId } },
+        { session },
+      );
+
+      if (result.modifiedCount !== uniqueDeviceIds.length) {
+        throw new ConflictError(
+          'One or more devices are no longer available. They may have been reserved by another pick list.',
+        );
       }
 
       const pickListNumber = await this.generatePickListNumber(session);
@@ -99,12 +103,6 @@ export class PickListService {
           updatedBy: userId,
         },
         session,
-      );
-
-      await DeviceModel.updateMany(
-        { _id: { $in: uniqueDeviceIds } } as any,
-        { $set: { status: 'Reserved', updatedBy: userId } },
-        { session },
       );
 
       await session.commitTransaction();

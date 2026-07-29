@@ -121,6 +121,15 @@ const OrderReportsPage = lazy(() =>
 const PickListReportsPage = lazy(() =>
   import('@/features/reports').then((m) => ({ default: m.PickListReportsPage })),
 );
+const PickListListPage = lazy(() =>
+  import('@/features/pick-list').then((m) => ({ default: m.PickListListPage })),
+);
+const CreatePickListPage = lazy(() =>
+  import('@/features/pick-list').then((m) => ({ default: m.CreatePickListPage })),
+);
+const PickListDetailsPage = lazy(() =>
+  import('@/features/pick-list').then((m) => ({ default: m.PickListDetailsPage })),
+);
 
 const AdminUserListPage = lazy(() =>
   import('@/features/admin').then((m) => ({ default: m.UserListPage })),
@@ -220,12 +229,12 @@ export const router = createBrowserRouter([
           },
           {
             path: 'pick-lists',
-            element: (
-              <ComingSoonPage
-                title="Pick Lists"
-                description="Create and manage picking tasks for orders."
-              />
-            ),
+            element: <SuspenseWrapper />,
+            children: [
+              { index: true, element: <PickListListPage /> },
+              { path: 'new', element: <CreatePickListPage /> },
+              { path: ':id', element: <PickListDetailsPage /> },
+            ],
           },
           {
             path: 'orders',

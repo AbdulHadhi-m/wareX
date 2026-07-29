@@ -45,7 +45,7 @@ export function useCreatePickList() {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.PICK_LISTS });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.DEVICES });
       toast.success('Pick list created successfully');
-      navigate('/pick-lists', { replace: true });
+      navigate('/dashboard/pick-lists', { replace: true });
     },
     onError: (error: unknown) => {
       const axiosError = error as {

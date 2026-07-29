@@ -29,7 +29,7 @@ export function PickListDevicesTable({ deviceIds }: PickListDevicesTableProps) {
       const results: Device[] = [];
       for (const id of deviceIds) {
         try {
-          const res = await api.get<ApiResponse<Device>>(`/dashboard/devices/${id}`);
+          const res = await api.get<ApiResponse<Device>>(`/devices/${id}`);
           if (res.data.data) results.push(res.data.data);
         } catch {
           // skip failed fetches

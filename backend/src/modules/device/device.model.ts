@@ -70,7 +70,7 @@ const deviceSchema = new Schema<DeviceDocument>(
     },
     condition: {
       type: String,
-      enum: ['New', 'Good', 'Fair', 'Damaged'],
+      enum: ['New', 'Open-Box', 'RMA', 'Good', 'Fair', 'Damaged'],
       required: true,
     },
     purchaseDate: {

@@ -6,7 +6,7 @@ export type DeviceStatus =
   | 'Damaged'
   | 'Returned';
 
-export type DeviceCondition = 'New' | 'Good' | 'Fair' | 'Damaged';
+export type DeviceCondition = 'New' | 'Open-Box' | 'RMA' | 'Good' | 'Fair' | 'Damaged';
 
 export interface Device {
   id: string;

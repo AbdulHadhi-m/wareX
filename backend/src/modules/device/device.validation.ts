@@ -37,7 +37,7 @@ export const createDeviceSchema = z.object({
     { required_error: 'Status is required', invalid_type_error: 'Invalid device status' },
   ),
   condition: z.enum(
-    ['New', 'Good', 'Fair', 'Damaged'],
+    ['New', 'Open-Box', 'RMA', 'Good', 'Fair', 'Damaged'],
     { required_error: 'Condition is required', invalid_type_error: 'Invalid device condition' },
   ),
   purchaseDate: z.string().optional(),
@@ -93,7 +93,7 @@ export const updateDeviceSchema = z.object({
     })
     .optional(),
   condition: z
-    .enum(['New', 'Good', 'Fair', 'Damaged'], {
+    .enum(['New', 'Open-Box', 'RMA', 'Good', 'Fair', 'Damaged'], {
       invalid_type_error: 'Invalid device condition',
     })
     .optional(),

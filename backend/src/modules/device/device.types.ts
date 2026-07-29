@@ -1,5 +1,5 @@
 export type DeviceStatus = 'Available' | 'Reserved' | 'Picked' | 'Shipped' | 'Damaged' | 'Returned';
-export type DeviceCondition = 'New' | 'Good' | 'Fair' | 'Damaged';
+export type DeviceCondition = 'New' | 'Open-Box' | 'RMA' | 'Good' | 'Fair' | 'Damaged';
 
 export interface IDevice {
   _id: string;
