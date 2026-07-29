@@ -43,6 +43,13 @@ import {
   NotificationListPage,
   NotificationDetailsPage,
 } from '@/features/notification';
+import {
+  ReportsDashboardPage,
+  DeviceReportsPage,
+  InventoryReportsPage,
+  OrderReportsPage,
+  PickListReportsPage,
+} from '@/features/reports';
 
 export const router = createBrowserRouter([
   {
@@ -137,12 +144,13 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.REPORTS,
-        element: (
-          <ComingSoonPage
-            title="Reports"
-            description="Generate and view operational reports."
-          />
-        ),
+        children: [
+          { index: true, element: <ReportsDashboardPage /> },
+          { path: 'devices', element: <DeviceReportsPage /> },
+          { path: 'inventory', element: <InventoryReportsPage /> },
+          { path: 'orders', element: <OrderReportsPage /> },
+          { path: 'pick-lists', element: <PickListReportsPage /> },
+        ],
       },
       {
         path: ROUTES.SETTINGS,
