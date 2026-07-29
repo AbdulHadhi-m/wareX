@@ -1,6 +1,7 @@
-import { Moon, Sun, Bell, Menu, User } from 'lucide-react';
+import { Moon, Sun, Menu, User } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 import { Button } from '@/components/ui/button';
+import { NotificationDropdown } from '@/features/notification';
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -26,10 +27,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
         {resolvedTheme === 'dark' ? <Sun className="size-5" /> : <Moon className="size-5" />}
       </Button>
 
-      <Button variant="ghost" size="icon" className="relative" title="Notifications">
-        <Bell className="size-5" />
-        <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-destructive" />
-      </Button>
+      <NotificationDropdown />
 
       <Button variant="ghost" size="icon" title="User menu">
         <User className="size-5" />

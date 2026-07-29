@@ -39,6 +39,10 @@ import {
   EditOrderPage,
   OrderDetailsPage,
 } from '@/features/order';
+import {
+  NotificationListPage,
+  NotificationDetailsPage,
+} from '@/features/notification';
 
 export const router = createBrowserRouter([
   {
@@ -126,12 +130,10 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.NOTIFICATIONS,
-        element: (
-          <ComingSoonPage
-            title="Notifications"
-            description="View system alerts and notifications."
-          />
-        ),
+        children: [
+          { index: true, element: <NotificationListPage /> },
+          { path: ':id', element: <NotificationDetailsPage /> },
+        ],
       },
       {
         path: ROUTES.REPORTS,
