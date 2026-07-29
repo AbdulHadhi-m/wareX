@@ -6,15 +6,13 @@ exports.createUserSchema = zod_1.z.object({
     name: zod_1.z.string().min(1, 'Name is required').max(100, 'Name must be at most 100 characters'),
     email: zod_1.z.string().email('Invalid email format'),
     password: zod_1.z.string().min(8, 'Password must be at least 8 characters'),
-    role: zod_1.z.enum(['SuperAdmin', 'Manager', 'Worker'], {
-        required_error: 'Role is required',
-    }),
+    roleId: zod_1.z.string({ required_error: 'Role is required' }).min(1, 'Role is required'),
 });
 exports.updateUserSchema = zod_1.z.object({
     name: zod_1.z.string().min(1, 'Name is required').max(100, 'Name must be at most 100 characters').optional(),
     email: zod_1.z.string().email('Invalid email format').optional(),
     password: zod_1.z.string().min(8, 'Password must be at least 8 characters').optional(),
-    role: zod_1.z.enum(['SuperAdmin', 'Manager', 'Worker']).optional(),
+    roleId: zod_1.z.string().min(1, 'Role is required').optional(),
 });
 exports.userListQuerySchema = zod_1.z.object({
     search: zod_1.z.string().optional(),
@@ -22,6 +20,6 @@ exports.userListQuerySchema = zod_1.z.object({
     limit: zod_1.z.coerce.number().positive().max(100).optional(),
     sortBy: zod_1.z.string().optional(),
     sortOrder: zod_1.z.enum(['asc', 'desc']).optional(),
-    role: zod_1.z.enum(['SuperAdmin', 'Manager', 'Worker']).optional(),
+    roleId: zod_1.z.string().optional(),
 });
 //# sourceMappingURL=admin.validation.js.map

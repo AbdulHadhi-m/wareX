@@ -14,10 +14,9 @@ const controller = new admin_controller_1.AdminController(service);
 const router = (0, express_1.Router)();
 exports.adminRouter = router;
 router.use(auth_middleware_1.authenticate);
-router.use((0, auth_middleware_1.authorize)('SuperAdmin'));
-router.get('/', (0, validate_1.validate)(admin_validation_1.userListQuerySchema), controller.list);
-router.get('/:id', controller.getById);
-router.post('/', (0, validate_1.validate)(admin_validation_1.createUserSchema), controller.create);
-router.patch('/:id', (0, validate_1.validate)(admin_validation_1.updateUserSchema), controller.update);
-router.delete('/:id', controller.delete);
+router.get('/', (0, auth_middleware_1.authorize)('admin.user.read'), (0, validate_1.validate)(admin_validation_1.userListQuerySchema), controller.list);
+router.get('/:id', (0, auth_middleware_1.authorize)('admin.user.read'), controller.getById);
+router.post('/', (0, auth_middleware_1.authorize)('admin.user.create'), (0, validate_1.validate)(admin_validation_1.createUserSchema), controller.create);
+router.patch('/:id', (0, auth_middleware_1.authorize)('admin.user.update'), (0, validate_1.validate)(admin_validation_1.updateUserSchema), controller.update);
+router.delete('/:id', (0, auth_middleware_1.authorize)('admin.user.delete'), controller.delete);
 //# sourceMappingURL=admin.routes.js.map

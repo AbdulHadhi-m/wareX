@@ -28,6 +28,8 @@ const auditLog_routes_1 = require("./modules/audit-log/auditLog.routes");
 const notification_routes_1 = require("./modules/notification/notification.routes");
 const report_routes_1 = require("./modules/report/report.routes");
 const admin_routes_1 = require("./modules/admin/admin.routes");
+const permission_routes_1 = require("./modules/permission/permission.routes");
+const role_routes_1 = require("./modules/role/role.routes");
 const app = (0, express_1.default)();
 exports.app = app;
 const startTime = Date.now();
@@ -77,6 +79,8 @@ app.use(`${app_1.appConfig.apiPrefix}/audit-logs`, auditLog_routes_1.auditLogRou
 app.use(`${app_1.appConfig.apiPrefix}/notifications`, notification_routes_1.notificationRouter);
 app.use(`${app_1.appConfig.apiPrefix}/`, report_routes_1.reportRouter);
 app.use(`${app_1.appConfig.apiPrefix}/admin/users`, admin_routes_1.adminRouter);
+app.use(`${app_1.appConfig.apiPrefix}/permissions`, permission_routes_1.permissionRouter);
+app.use(`${app_1.appConfig.apiPrefix}/roles`, role_routes_1.roleRouter);
 app.use(middleware_1.notFoundHandler);
 app.use(middleware_1.errorHandler);
 //# sourceMappingURL=app.js.map

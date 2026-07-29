@@ -13,10 +13,8 @@ exports.registerSchema = zod_1.z.object({
     password: zod_1.z
         .string({ required_error: 'Password is required' })
         .min(8, 'Password must be at least 8 characters'),
-    role: zod_1.z.enum(['Manager', 'Worker'], {
-        required_error: 'Role is required',
-        invalid_type_error: 'Role must be either Manager or Worker',
-    }),
+    role: zod_1.z
+        .enum(['Manager', 'Worker'], { required_error: 'Role is required' }),
 });
 exports.loginSchema = zod_1.z.object({
     email: zod_1.z
