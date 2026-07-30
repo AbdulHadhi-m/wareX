@@ -24,8 +24,8 @@ const navItems = [
 ];
 
 const adminNavItems = [
-  { label: 'Users', path: '/admin/users', icon: Shield },
-  { label: 'Audit Logs', path: '/admin/audit-logs', icon: ScrollText },
+  { label: 'Users', path: '/dashboard/admin/users', icon: Shield },
+  { label: 'Audit Logs', path: '/dashboard/admin/audit-logs', icon: ScrollText },
 ];
 
 interface MobileNavProps {
@@ -73,6 +73,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             <NavLink
               key={item.path}
               to={item.path}
+              end={item.path === ROUTES.DASHBOARD}
               onClick={onClose}
               className={({ isActive }) =>
                 cn(
