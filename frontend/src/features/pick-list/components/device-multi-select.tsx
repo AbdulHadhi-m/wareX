@@ -26,6 +26,7 @@ export function DeviceMultiSelect({
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [devices, setDevices] = useState<DeviceOption[]>([]);
+  const [deviceMap, setDeviceMap] = useState<Map<string, DeviceOption>>(new Map());
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -56,6 +57,11 @@ export function DeviceMultiSelect({
         serialNumber: d.serialNumber,
       }));
       setDevices(mapped);
+      setDeviceMap((prev) => {
+        const next = new Map(prev);
+        mapped.forEach((item) => next.set(item.id, item));
+        return next;
+      });
     } catch {
       setDevices([]);
     } finally {
@@ -90,8 +96,6 @@ export function DeviceMultiSelect({
         d.serialNumber.toLowerCase().includes(search.toLowerCase())),
   );
 
-  const selectedDevices = devices.filter((d) => value.includes(d.id));
-
   return (
     <div ref={containerRef} className="relative">
       <div
@@ -108,13 +112,13 @@ export function DeviceMultiSelect({
           </span>
         ) : (
           value.map((id) => {
-            const d = [...devices, ...selectedDevices].find((x) => x.id === id);
+            const d = deviceMap.get(id);
             return (
               <span
                 key={id}
                 className="flex items-center gap-1 rounded bg-secondary px-2 py-0.5 text-xs font-medium"
               >
-                {d?.deviceName ?? id.slice(-6)}
+                {d ? `${d.deviceName} (${d.serialNumber})` : id.slice(-6)}
                 <button
                   type="button"
                   onClick={(e) => {
