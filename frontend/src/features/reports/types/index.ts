@@ -24,6 +24,7 @@ export interface OrderStatusSummary {
 }
 
 export interface PickListStatusSummary {
+  draft?: number;
   assigned: number;
   inProgress: number;
   completed: number;

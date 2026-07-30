@@ -27,10 +27,10 @@ export const orderApi = {
   fulfill: (id: string) =>
     api.patch<ApiResponse<Order>>(`/orders/${id}/fulfill`).then((r) => r.data.data!),
 
-  searchDevices: (search: string) =>
+  searchDevices: (search?: string) =>
     api
       .get<ApiResponse<Device[]>>('/devices', {
-        params: { search, limit: 20, status: 'Available' },
+        params: { search: search?.trim() || undefined, limit: 100, status: 'Available' },
       })
       .then((r) => r.data.data! ?? []),
 };

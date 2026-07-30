@@ -9,7 +9,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { StatusBadge } from '@/components/common/status-badge';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +18,7 @@ import {
   useStartPickList,
   useCompletePickList,
   useCancelPickList,
+  useWorkers,
 } from '../hooks/use-pick-lists';
 import type { PickList, PickListPriority } from '../types';
 
@@ -49,8 +49,11 @@ function InfoRow({ label, value }: { label: string; value?: string | null }) {
 
 export function PickListInfoCard({ pickList }: PickListInfoCardProps) {
   const { user } = useAuth();
-  const isManager = user?.role === 'Manager';
+  const isManager = user?.role === 'Manager' || user?.role === 'SuperAdmin';
   const isAssignedWorker = user?.id === pickList.workerId;
+  const { data: workers = [] } = useWorkers();
+
+  const assignedWorker = workers.find((w) => w.id === pickList.workerId);
 
   const [showAssign, setShowAssign] = useState(false);
   const [workerId, setWorkerId] = useState('');
@@ -63,7 +66,7 @@ export function PickListInfoCard({ pickList }: PickListInfoCardProps) {
 
   const handleAssign = () => {
     if (!workerId.trim()) {
-      setAssignError('Worker ID is required');
+      setAssignError('Please select a worker');
       return;
     }
     setAssignError('');
@@ -95,7 +98,7 @@ export function PickListInfoCard({ pickList }: PickListInfoCardProps) {
             <div className="grid grid-cols-1 gap-x-8 gap-y-1 sm:grid-cols-2">
               <InfoRow
                 label="Assigned Worker"
-                value={pickList.workerId ?? 'Unassigned'}
+                value={assignedWorker ? `${assignedWorker.name} (${assignedWorker.email})` : (pickList.workerId ?? 'Unassigned')}
               />
               <InfoRow label="Device Count" value={String(pickList.deviceIds.length)} />
               <InfoRow label="Created By" value={pickList.createdBy} />
@@ -137,17 +140,24 @@ export function PickListInfoCard({ pickList }: PickListInfoCardProps) {
               <>
                 {showAssign ? (
                   <div className="space-y-2">
-                    <Label htmlFor="workerId">Worker ID</Label>
-                    <Input
+                    <Label htmlFor="workerId">Select Worker</Label>
+                    <select
                       id="workerId"
                       value={workerId}
                       onChange={(e) => {
                         setWorkerId(e.target.value);
                         setAssignError('');
                       }}
-                      placeholder="Enter worker user ID"
                       disabled={assignMutation.isPending}
-                    />
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <option value="">Select a worker...</option>
+                      {workers.map((w) => (
+                        <option key={w.id} value={w.id}>
+                          {w.name} ({w.email})
+                        </option>
+                      ))}
+                    </select>
                     {assignError && (
                       <p className="text-sm text-destructive">{assignError}</p>
                     )}

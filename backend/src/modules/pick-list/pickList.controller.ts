@@ -49,6 +49,11 @@ export class PickListController {
     sendSuccess(res, result.data, 200, result.meta);
   });
 
+  getWorkers = asyncHandler(async (_req: Request, res: Response) => {
+    const result = await this.pickListService.getWorkers();
+    sendSuccess(res, result);
+  });
+
   assign = asyncHandler(async (req: Request, res: Response) => {
     const oldData = await this.pickListService.findById(String(req.params.id));
     const result = await this.pickListService.assign(

@@ -35,6 +35,13 @@ export function usePickListsByWorker(
   });
 }
 
+export function useWorkers() {
+  return useQuery({
+    queryKey: ['workers'],
+    queryFn: () => pickListApi.getWorkers(),
+  });
+}
+
 export function useCreatePickList() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();

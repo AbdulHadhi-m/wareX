@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { DeviceMultiSelect } from './device-multi-select';
+import { useWorkers } from '../hooks/use-pick-lists';
 import {
   createPickListSchema,
   type CreatePickListFormData,
@@ -17,6 +18,8 @@ interface PickListFormProps {
 }
 
 export function PickListForm({ isPending, onSubmit }: PickListFormProps) {
+  const { data: workers = [] } = useWorkers();
+
   const {
     register,
     handleSubmit,
@@ -26,6 +29,7 @@ export function PickListForm({ isPending, onSubmit }: PickListFormProps) {
   } = useForm<CreatePickListFormData>({
     resolver: zodResolver(createPickListSchema),
     defaultValues: {
+      workerId: '',
       deviceIds: [],
       priority: 'Medium',
       notes: '',
@@ -42,6 +46,28 @@ export function PickListForm({ isPending, onSubmit }: PickListFormProps) {
             Pick List Details
           </h3>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="workerId">Assigned Worker (Optional)</Label>
+              <select
+                id="workerId"
+                {...register('workerId')}
+                disabled={isPending}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="">Unassigned (Draft)</option>
+                {workers.map((w) => (
+                  <option key={w.id} value={w.id}>
+                    {w.name} ({w.email})
+                  </option>
+                ))}
+              </select>
+              {errors.workerId && (
+                <p className="text-sm text-destructive">
+                  {errors.workerId.message}
+                </p>
+              )}
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="priority">Priority *</Label>
               <select

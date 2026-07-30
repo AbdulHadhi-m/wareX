@@ -12,7 +12,7 @@ import { usePickLists } from '../hooks/use-pick-lists';
 export function PickListListPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const isManager = user?.role === 'Manager';
+  const isManager = user?.role === 'Manager' || user?.role === 'SuperAdmin';
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');

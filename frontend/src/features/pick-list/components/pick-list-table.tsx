@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/common/empty-state';
 import { ErrorState } from '@/components/common/error-state';
 import type { PickList, PickListPriority } from '../types';
+import { useWorkers } from '../hooks/use-pick-lists';
 
 const columnHelper = createColumnHelper<PickList>();
 
@@ -68,6 +69,12 @@ export function PickListTable({
   onPriorityFilterChange,
 }: PickListTableProps) {
   const navigate = useNavigate();
+  const { data: workers = [] } = useWorkers();
+
+  const workerMap = useMemo(
+    () => new Map(workers.map((w) => [w.id, w])),
+    [workers],
+  );
 
   const columns = useMemo(
     () => [
@@ -84,7 +91,12 @@ export function PickListTable({
       }),
       columnHelper.accessor('workerId', {
         header: 'Assigned Worker',
-        cell: (info) => info.getValue() ?? '-',
+        cell: (info) => {
+          const id = info.getValue();
+          if (!id) return '-';
+          const w = workerMap.get(id);
+          return w ? w.name : id;
+        },
       }),
       columnHelper.accessor('deviceIds', {
         header: 'Device Count',

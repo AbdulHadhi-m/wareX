@@ -44,3 +44,9 @@ export interface PickListListParams {
   priority?: PickListPriority;
   workerId?: string;
 }
+
+export interface WorkerOption {
+  id: string;
+  name: string;
+  email: string;
+}

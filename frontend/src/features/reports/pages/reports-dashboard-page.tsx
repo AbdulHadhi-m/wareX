@@ -41,17 +41,18 @@ function cardsFromData(data: DashboardData) {
     orderSummary.cancelled;
   const maintenanceDevices =
     inventorySummary.picked + inventorySummary.damaged + inventorySummary.returned;
+
   return [
-    { label: 'Total Warehouses', value: facilities.totalWarehouses, icon: <Building2 className="size-5" /> },
-    { label: 'Total Zones', value: facilities.totalZones, icon: <Layers className="size-5" /> },
-    { label: 'Total Devices', value: facilities.totalDevices, icon: <Cpu className="size-5" /> },
-    { label: 'Available Devices', value: inventorySummary.available, icon: <CheckCircle2 className="size-5" /> },
-    { label: 'Reserved Devices', value: inventorySummary.reserved, icon: <Bookmark className="size-5" /> },
-    { label: 'Under Maintenance', value: maintenanceDevices, icon: <Wrench className="size-5" /> },
-    { label: 'Total Orders', value: totalOrders, icon: <ShoppingCart className="size-5" /> },
-    { label: 'Pending Orders', value: orderSummary.pending, icon: <Clock className="size-5" /> },
-    { label: 'Active Pick Lists', value: pickListSummary.assigned + pickListSummary.inProgress, icon: <ClipboardList className="size-5" /> },
-    { label: 'Inventory Movements', value: 0, icon: <ArrowLeftRight className="size-5" /> },
+    { label: 'Total Warehouses', value: facilities.totalWarehouses, icon: <Building2 className="size-5" />, variant: 'indigo' as const },
+    { label: 'Total Zones', value: facilities.totalZones, icon: <Layers className="size-5" />, variant: 'blue' as const },
+    { label: 'Total Devices', value: facilities.totalDevices, icon: <Cpu className="size-5" />, variant: 'purple' as const },
+    { label: 'Available Devices', value: inventorySummary.available, icon: <CheckCircle2 className="size-5" />, variant: 'emerald' as const, subtitle: 'Ready' },
+    { label: 'Reserved Devices', value: inventorySummary.reserved, icon: <Bookmark className="size-5" />, variant: 'amber' as const, subtitle: 'Allocated' },
+    { label: 'Under Maintenance', value: maintenanceDevices, icon: <Wrench className="size-5" />, variant: 'rose' as const },
+    { label: 'Total Orders', value: totalOrders, icon: <ShoppingCart className="size-5" />, variant: 'indigo' as const },
+    { label: 'Pending Orders', value: orderSummary.pending, icon: <Clock className="size-5" />, variant: 'amber' as const },
+    { label: 'Active Pick Lists', value: pickListSummary.assigned + pickListSummary.inProgress, icon: <ClipboardList className="size-5" />, variant: 'emerald' as const },
+    { label: 'Inventory Movements', value: 0, icon: <ArrowLeftRight className="size-5" />, variant: 'slate' as const },
   ];
 }
 

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const createPickListSchema = z.object({
+  workerId: z.string().optional().or(z.literal('')),
   deviceIds: z
     .array(z.string().min(1, 'Device ID is required'))
     .min(1, 'At least one device is required')

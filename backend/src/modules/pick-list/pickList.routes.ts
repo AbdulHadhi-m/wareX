@@ -23,6 +23,8 @@ router.post('/', authorize('pick-list.create'), validate(createPickListSchema), 
 
 router.get('/', validate(pickListQuerySchema, ValidationSource.QUERY), controller.findAll);
 
+router.get('/workers', controller.getWorkers);
+
 router.get(
   '/worker/:workerId',
   validate(workerIdParamSchema, ValidationSource.PARAMS),

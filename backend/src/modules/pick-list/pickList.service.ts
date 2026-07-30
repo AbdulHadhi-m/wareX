@@ -14,6 +14,7 @@ import { QueryParser, QueryBuilder } from '../../shared/query';
 import { parsePagination, buildPaginationMeta } from '../../shared/utils/pagination';
 import { type PaginationMeta } from '../../shared/types/api-response';
 import { UserModel } from '../auth/auth.model';
+import { RoleModel } from '../role/role.model';
 import { DeviceModel } from '../device/device.model';
 import { eventEmitter, Events } from '../../shared/events/event-emitter';
 
@@ -373,6 +374,25 @@ export class PickListService {
     } finally {
       await session.endSession();
     }
+  }
+
+  async getWorkers(): Promise<Array<{ id: string; name: string; email: string }>> {
+    const workerRole = await RoleModel.findOne({ name: 'Worker' }).lean();
+    if (!workerRole) return [];
+
+    const workers = await UserModel.find({
+      roleId: workerRole._id,
+      isActive: true,
+      isDeleted: { $ne: true },
+    })
+      .select('name email _id')
+      .lean();
+
+    return workers.map((w: any) => ({
+      id: w._id.toString(),
+      name: w.name,
+      email: w.email,
+    }));
   }
 
   private async generatePickListNumber(session?: mongoose.ClientSession): Promise<string> {

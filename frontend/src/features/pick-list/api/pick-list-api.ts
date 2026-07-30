@@ -5,6 +5,7 @@ import type {
   CreatePickListData,
   AssignPickListData,
   PickListListParams,
+  WorkerOption,
 } from '../types';
 import type { Device } from '@/features/device/types';
 
@@ -55,5 +56,10 @@ export const pickListApi = {
       .get<ApiResponse<Device[]>>('/devices', {
         params: { search: search?.trim() || undefined, limit: 100, status: 'Available' },
       })
+      .then((r) => r.data.data! ?? []),
+
+  getWorkers: () =>
+    api
+      .get<ApiResponse<WorkerOption[]>>('/pick-lists/workers')
       .then((r) => r.data.data! ?? []),
 };
