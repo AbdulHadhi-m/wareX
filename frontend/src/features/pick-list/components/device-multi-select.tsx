@@ -47,20 +47,15 @@ export function DeviceMultiSelect({
   }, [open]);
 
   const handleSearch = useCallback(async (term: string) => {
-    if (!term.trim()) {
-      setDevices([]);
-      return;
-    }
     setLoading(true);
     try {
       const results = await pickListApi.searchDevices(term);
-      setDevices(
-        results.map((d: Device) => ({
-          id: d.id,
-          deviceName: d.deviceName,
-          serialNumber: d.serialNumber,
-        })),
-      );
+      const mapped = results.map((d: Device) => ({
+        id: d.id,
+        deviceName: d.deviceName,
+        serialNumber: d.serialNumber,
+      }));
+      setDevices(mapped);
     } catch {
       setDevices([]);
     } finally {
@@ -69,12 +64,12 @@ export function DeviceMultiSelect({
   }, []);
 
   useEffect(() => {
+    handleSearch('');
+  }, [handleSearch]);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
-      if (search.trim()) {
-        handleSearch(search);
-      } else {
-        setDevices([]);
-      }
+      handleSearch(search);
     }, 300);
     return () => clearTimeout(timer);
   }, [search, handleSearch]);
@@ -90,7 +85,8 @@ export function DeviceMultiSelect({
   const filtered = devices.filter(
     (d) =>
       !value.includes(d.id) &&
-      (d.deviceName.toLowerCase().includes(search.toLowerCase()) ||
+      (!search.trim() ||
+        d.deviceName.toLowerCase().includes(search.toLowerCase()) ||
         d.serialNumber.toLowerCase().includes(search.toLowerCase())),
   );
 
@@ -154,8 +150,10 @@ export function DeviceMultiSelect({
                 Searching...
               </li>
             )}
-            {!loading && filtered.length === 0 && search.trim() && (
-              <li className="px-3 py-2 text-sm text-muted-foreground">No devices found</li>
+            {!loading && filtered.length === 0 && (
+              <li className="px-3 py-2 text-sm text-muted-foreground">
+                {search.trim() ? 'No devices found' : 'No available devices to select'}
+              </li>
             )}
             {!loading &&
               filtered.map((d) => (

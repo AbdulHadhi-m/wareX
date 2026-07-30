@@ -50,10 +50,10 @@ export const pickListApi = {
       .patch<ApiResponse<PickList>>(`/pick-lists/${id}/cancel`)
       .then((r) => r.data.data!),
 
-  searchDevices: (search: string) =>
+  searchDevices: (search?: string) =>
     api
       .get<ApiResponse<Device[]>>('/devices', {
-        params: { search, limit: 20, status: 'Available' },
+        params: { search: search?.trim() || undefined, limit: 100, status: 'Available' },
       })
       .then((r) => r.data.data! ?? []),
 };
