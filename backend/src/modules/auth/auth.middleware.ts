@@ -56,6 +56,10 @@ export function authorize(...permissions: string[]) {
         throw new AuthenticationError('User not found');
       }
 
+      if (user.isActive === false) {
+        throw new AuthenticationError('Account has been suspended. Please contact administrator.');
+      }
+
       const role = user.roleId as unknown as {
         _id: string;
         name: string;

@@ -29,7 +29,7 @@ export function useCreateAdminUser() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_USERS });
       toast.success('User created successfully');
-      navigate('/admin/users', { replace: true });
+      navigate('/dashboard/admin/users', { replace: true });
     },
     onError: (error: unknown) => {
       const axiosError = error as { response?: { data?: { error?: { message?: string } } } };
@@ -39,16 +39,19 @@ export function useCreateAdminUser() {
   });
 }
 
-export function useUpdateAdminUser(id: string) {
+export function useUpdateAdminUser(id?: string) {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: (data: UpdateUserData) => adminApi.update(id, data),
+    mutationFn: (params: { id: string; data: UpdateUserData } | UpdateUserData) => {
+      const targetId = id || ('id' in params ? params.id : undefined);
+      const dataPayload = 'data' in params ? params.data : (params as UpdateUserData);
+      if (!targetId) throw new Error('User ID is required');
+      return adminApi.update(targetId, dataPayload);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.ADMIN_USERS });
       toast.success('User updated successfully');
-      navigate('/admin/users', { replace: true });
     },
     onError: (error: unknown) => {
       const axiosError = error as { response?: { data?: { error?: { message?: string } } } };

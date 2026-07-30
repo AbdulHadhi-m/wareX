@@ -37,12 +37,27 @@ export class AdminService {
     if (exists) throw new ConflictError('A user with this email already exists');
 
     const RoleModel = mongoose.model('Role');
-    const role = await RoleModel.findById(dto.roleId).lean();
+    const roleSearch = dto.roleId || dto.role;
+    const isObjectId = mongoose.Types.ObjectId.isValid(roleSearch ?? '');
+
+    const role = (await RoleModel.findOne({
+      $or: [
+        ...(isObjectId ? [{ _id: roleSearch }] : []),
+        { name: roleSearch },
+      ],
+    }).lean()) as unknown as { _id: { toString(): string }; name: string } | null;
+
     if (!role) throw new NotFoundError('Role not found');
 
     const hashedPassword = await bcrypt.hash(dto.password, SALT_ROUNDS);
 
-    const user = await this.repository.create({ ...dto, password: hashedPassword });
+    const user = await this.repository.create({
+      name: dto.name,
+      email: dto.email,
+      password: hashedPassword,
+      roleId: role._id.toString(),
+      isActive: dto.isActive ?? true,
+    });
     return this.toResponse(user);
   }
 
@@ -55,15 +70,29 @@ export class AdminService {
       if (emailExists) throw new ConflictError('A user with this email already exists');
     }
 
-    if (dto.roleId) {
+    const updateData: UpdateUserData & { password?: string; roleId?: string } = {};
+
+    if (dto.name !== undefined) updateData.name = dto.name;
+    if (dto.email !== undefined) updateData.email = dto.email;
+    if (dto.isActive !== undefined) updateData.isActive = dto.isActive;
+
+    const roleSearch = dto.roleId || dto.role;
+    if (roleSearch) {
       const RoleModel = mongoose.model('Role');
-      const role = await RoleModel.findById(dto.roleId).lean();
+      const isObjectId = mongoose.Types.ObjectId.isValid(roleSearch);
+
+      const role = (await RoleModel.findOne({
+        $or: [
+          ...(isObjectId ? [{ _id: roleSearch }] : []),
+          { name: roleSearch },
+        ],
+      }).lean()) as unknown as { _id: { toString(): string }; name: string } | null;
+
       if (!role) throw new NotFoundError('Role not found');
+      updateData.roleId = role._id.toString();
     }
 
-    const updateData: UpdateUserData & { password?: string } = { ...dto };
-
-    if (dto.password) {
+    if (dto.password && dto.password.trim().length >= 8) {
       updateData.password = await bcrypt.hash(dto.password, SALT_ROUNDS);
     }
 
@@ -80,12 +109,19 @@ export class AdminService {
 
   private toResponse(user: Record<string, any>): AdminUserResponse {
     const roleObj = user.roleId as { name?: string; _id?: string } | undefined;
+    const roleName = typeof user.roleId === 'object' && user.roleId?.name
+      ? user.roleId.name
+      : typeof user.roleId === 'string'
+        ? user.roleId
+        : 'Unknown';
+
     return {
       id: (user._id as string).toString(),
       name: user.name as string,
       email: user.email as string,
-      role: roleObj?.name ?? 'Unknown',
+      role: roleObj?.name ?? roleName,
       roleId: (roleObj?._id ?? user.roleId ?? '').toString(),
+      isActive: user.isActive ?? true,
       createdAt: (user.createdAt as Date).toISOString(),
       updatedAt: (user.updatedAt as Date).toISOString(),
     };

@@ -14,6 +14,7 @@ export const createUserSchema = z.object({
   role: z.enum(['SuperAdmin', 'Manager', 'Worker'], {
     required_error: 'Role is required',
   }),
+  isActive: z.boolean().optional(),
 });
 
 export const updateUserSchema = z.object({
@@ -29,8 +30,10 @@ export const updateUserSchema = z.object({
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters')
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   role: z.enum(['SuperAdmin', 'Manager', 'Worker']).optional(),
+  isActive: z.boolean().optional(),
 });
 
 export type CreateUserFormData = z.infer<typeof createUserSchema>;

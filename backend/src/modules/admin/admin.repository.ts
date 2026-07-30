@@ -17,6 +17,10 @@ export class AdminRepository {
       filter.roleId = new mongoose.Types.ObjectId(params.roleId);
     }
 
+    if (params.isActive !== undefined) {
+      filter.isActive = params.isActive;
+    }
+
     const sortField = params.sortBy || 'createdAt';
     const sortOrder = params.sortOrder === 'asc' ? 1 : -1;
 
@@ -42,6 +46,10 @@ export class AdminRepository {
       filter.roleId = new mongoose.Types.ObjectId(params.roleId);
     }
 
+    if (params.isActive !== undefined) {
+      filter.isActive = params.isActive;
+    }
+
     return UserModel.countDocuments(filter);
   }
 
@@ -53,19 +61,21 @@ export class AdminRepository {
     return UserModel.findOne({ email: email.toLowerCase() }).populate('roleId').lean();
   }
 
-  async create(data: CreateUserData & { password: string }) {
+  async create(data: CreateUserData & { password: string; isActive?: boolean }) {
     const user = await UserModel.create(data);
+    await user.populate('roleId');
     const obj = user.toObject();
     const { password: _, ...userWithoutPassword } = obj;
     return userWithoutPassword;
   }
 
-  async update(id: string, data: UpdateUserData) {
+  async update(id: string, data: UpdateUserData & { password?: string; roleId?: string; isActive?: boolean }) {
     const updateData: Record<string, unknown> = {};
     if (data.name !== undefined) updateData.name = data.name;
     if (data.email !== undefined) updateData.email = data.email;
     if (data.password !== undefined) updateData.password = data.password;
     if (data.roleId !== undefined) updateData.roleId = data.roleId;
+    if (data.isActive !== undefined) updateData.isActive = data.isActive;
 
     if (Object.keys(updateData).length === 0) return null;
 

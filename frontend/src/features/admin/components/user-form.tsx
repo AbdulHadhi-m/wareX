@@ -17,20 +17,22 @@ interface UserFormProps {
   onSubmit: (data: CreateUserFormData) => void;
 }
 
-const emptyDefaults: CreateUserFormData = {
+const emptyDefaults: CreateUserFormData & { isActive?: boolean } = {
   name: '',
   email: '',
   password: '',
   role: 'Manager',
+  isActive: true,
 };
 
-function toFormDefaults(user?: AdminUser): CreateUserFormData {
+function toFormDefaults(user?: AdminUser): CreateUserFormData & { isActive?: boolean } {
   if (!user) return emptyDefaults;
   return {
     name: user.name,
     email: user.email,
     password: '',
     role: user.role,
+    isActive: user.isActive ?? true,
   };
 }
 
@@ -38,13 +40,16 @@ export function UserForm({ defaultValues, isPending, onSubmit }: UserFormProps) 
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
-  } = useForm<CreateUserFormData>({
+  } = useForm<CreateUserFormData & { isActive?: boolean }>({
     resolver: zodResolver(createUserSchema),
     defaultValues: toFormDefaults(defaultValues),
   });
 
   const isEdit = !!defaultValues;
+  const currentIsActive = watch('isActive') ?? true;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -90,6 +95,20 @@ export function UserForm({ defaultValues, isPending, onSubmit }: UserFormProps) 
                 <option value="Worker">Worker</option>
               </select>
               {errors.role && <p className="text-sm text-destructive">{errors.role.message}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="status">Account Status *</Label>
+              <select
+                id="status"
+                value={currentIsActive ? 'active' : 'suspended'}
+                onChange={(e) => setValue('isActive', e.target.value === 'active')}
+                disabled={isPending}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="active">Active (Granted Access)</option>
+                <option value="suspended">Suspended (Blocked Access)</option>
+              </select>
             </div>
           </div>
         </CardContent>

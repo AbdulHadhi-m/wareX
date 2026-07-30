@@ -4,6 +4,7 @@ export interface IUser {
   email: string;
   password: string;
   roleId: string;
+  isActive?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,6 +15,7 @@ export interface IUserDocument {
   email: string;
   password?: string;
   roleId: string;
+  isActive?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

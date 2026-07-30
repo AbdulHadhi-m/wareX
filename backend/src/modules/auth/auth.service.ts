@@ -49,6 +49,10 @@ export class AuthService {
       throw new AuthenticationError('Invalid email or password');
     }
 
+    if (user.isActive === false) {
+      throw new AuthenticationError('Account has been suspended. Please contact administrator.');
+    }
+
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
 
     if (!isPasswordValid) {

@@ -31,6 +31,10 @@ const userSchema = new Schema<UserDocument>(
       required: true,
       index: true,
     } as any,
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

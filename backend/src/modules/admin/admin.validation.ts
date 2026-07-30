@@ -4,14 +4,21 @@ export const createUserSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name must be at most 100 characters'),
   email: z.string().email('Invalid email format'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
-  roleId: z.string({ required_error: 'Role is required' }).min(1, 'Role is required'),
+  roleId: z.string().optional(),
+  role: z.string().optional(),
+  isActive: z.boolean().optional(),
+}).refine((data) => data.roleId || data.role, {
+  message: 'Role is required',
+  path: ['role'],
 });
 
 export const updateUserSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name must be at most 100 characters').optional(),
   email: z.string().email('Invalid email format').optional(),
-  password: z.string().min(8, 'Password must be at least 8 characters').optional(),
-  roleId: z.string().min(1, 'Role is required').optional(),
+  password: z.string().min(8, 'Password must be at least 8 characters').or(z.literal('')).optional(),
+  roleId: z.string().optional(),
+  role: z.string().optional(),
+  isActive: z.boolean().optional(),
 });
 
 export const userListQuerySchema = z.object({
@@ -21,4 +28,9 @@ export const userListQuerySchema = z.object({
   sortBy: z.string().optional(),
   sortOrder: z.enum(['asc', 'desc']).optional(),
   roleId: z.string().optional(),
+  role: z.string().optional(),
+  isActive: z
+    .string()
+    .optional()
+    .transform((v) => (v === 'true' ? true : v === 'false' ? false : undefined)),
 });

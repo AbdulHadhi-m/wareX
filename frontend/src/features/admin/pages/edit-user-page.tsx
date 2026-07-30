@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Breadcrumb } from '@/components/common/breadcrumb';
 import { PageContainer } from '@/components/common/page-container';
 import { PageHeader } from '@/components/common/page-header';
@@ -10,12 +10,15 @@ import type { CreateUserFormData } from '../schemas/user-schema';
 
 export function EditUserPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { data: user, isLoading, isError, error, refetch } = useAdminUser(id!);
   const updateMutation = useUpdateAdminUser(id!);
 
-  const handleSubmit = (data: CreateUserFormData) => {
+  const handleSubmit = (data: CreateUserFormData & { isActive?: boolean }) => {
     const { password, ...rest } = data;
-    updateMutation.mutate(password ? data : rest);
+    updateMutation.mutate(password ? data : rest, {
+      onSuccess: () => navigate('/dashboard/admin/users'),
+    });
   };
 
   if (isLoading) {

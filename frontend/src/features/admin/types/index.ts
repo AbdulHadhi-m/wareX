@@ -5,6 +5,7 @@ export interface AdminUser {
   name: string;
   email: string;
   role: UserRole;
+  isActive?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -14,6 +15,7 @@ export interface CreateUserData {
   email: string;
   password: string;
   role: UserRole;
+  isActive?: boolean;
 }
 
 export interface UpdateUserData {
@@ -21,6 +23,7 @@ export interface UpdateUserData {
   email?: string;
   password?: string;
   role?: UserRole;
+  isActive?: boolean;
 }
 
 export interface UserListParams {
@@ -30,4 +33,5 @@ export interface UserListParams {
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
   role?: UserRole;
+  isActive?: boolean;
 }

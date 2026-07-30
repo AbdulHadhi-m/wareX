@@ -7,16 +7,17 @@ import {
   type PaginationState,
   type OnChangeFn,
 } from '@tanstack/react-table';
-import { Eye, Pencil, Trash2, RefreshCw } from 'lucide-react';
+import { Eye, Pencil, Trash2, RefreshCw, UserCheck, UserX } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DataTable } from '@/components/common/data-table';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { SearchInput } from '@/components/common/search-input';
 import { EmptyState } from '@/components/common/empty-state';
 import { ErrorState } from '@/components/common/error-state';
 import { ConfirmDialog } from '@/components/common/confirm-dialog';
 import type { AdminUser } from '../types';
-import { useDeleteAdminUser } from '../hooks/use-admin-users';
+import { useDeleteAdminUser, useUpdateAdminUser } from '../hooks/use-admin-users';
 
 const columnHelper = createColumnHelper<AdminUser>();
 
@@ -55,7 +56,9 @@ export function UserTable({
 }: UserTableProps) {
   const navigate = useNavigate();
   const deleteMutation = useDeleteAdminUser();
+  const updateMutation = useUpdateAdminUser();
   const [deleteTarget, setDeleteTarget] = useState<AdminUser | null>(null);
+  const [toggleTarget, setToggleTarget] = useState<AdminUser | null>(null);
 
   const columns = useMemo(
     () => [
@@ -79,6 +82,17 @@ export function UserTable({
           </span>
         ),
       }),
+      columnHelper.accessor('isActive', {
+        header: 'Status',
+        cell: (info) => {
+          const isActive = info.getValue() ?? true;
+          return (
+            <Badge variant={isActive ? 'success' : 'destructive'} className="font-semibold">
+              {isActive ? 'Active' : 'Suspended'}
+            </Badge>
+          );
+        },
+      }),
       columnHelper.accessor('createdAt', {
         header: 'Created At',
         cell: (info) => new Date(info.getValue()).toLocaleDateString(),
@@ -86,31 +100,51 @@ export function UserTable({
       columnHelper.display({
         id: 'actions',
         header: 'Actions',
-        cell: (info) => (
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate(`/dashboard/admin/users/${info.row.original.id}`)}
-            >
-              <Eye className="size-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate(`/dashboard/admin/users/${info.row.original.id}/edit`)}
-            >
-              <Pencil className="size-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setDeleteTarget(info.row.original)}
-            >
-              <Trash2 className="size-4 text-destructive" />
-            </Button>
-          </div>
-        ),
+        cell: (info) => {
+          const user = info.row.original;
+          const isActive = user.isActive ?? true;
+          return (
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                title="View User Details"
+                onClick={() => navigate(`/dashboard/admin/users/${user.id}`)}
+              >
+                <Eye className="size-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                title="Edit User"
+                onClick={() => navigate(`/dashboard/admin/users/${user.id}/edit`)}
+              >
+                <Pencil className="size-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                title={isActive ? 'Suspend User' : 'Activate User'}
+                onClick={() => setToggleTarget(user)}
+                className={isActive ? 'hover:text-amber-600' : 'hover:text-emerald-600'}
+              >
+                {isActive ? (
+                  <UserX className="size-4 text-amber-500" />
+                ) : (
+                  <UserCheck className="size-4 text-emerald-500" />
+                )}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                title="Delete User"
+                onClick={() => setDeleteTarget(user)}
+              >
+                <Trash2 className="size-4 text-destructive" />
+              </Button>
+            </div>
+          );
+        },
       }),
     ],
     [navigate],
@@ -133,6 +167,15 @@ export function UserTable({
     deleteMutation.mutate(deleteTarget.id, {
       onSuccess: () => setDeleteTarget(null),
     });
+  };
+
+  const handleToggleStatus = () => {
+    if (!toggleTarget) return;
+    const nextStatus = !(toggleTarget.isActive ?? true);
+    updateMutation.mutate(
+      { id: toggleTarget.id, data: { isActive: nextStatus } },
+      { onSuccess: () => setToggleTarget(null) },
+    );
   };
 
   if (isError) {
@@ -207,6 +250,21 @@ export function UserTable({
           </Button>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={!!toggleTarget}
+        onClose={() => setToggleTarget(null)}
+        onConfirm={handleToggleStatus}
+        title={(toggleTarget?.isActive ?? true) ? 'Suspend User' : 'Activate User'}
+        message={
+          (toggleTarget?.isActive ?? true)
+            ? `Are you sure you want to suspend "${toggleTarget?.name}"? Suspended users will be immediately blocked from signing in or calling API endpoints.`
+            : `Are you sure you want to reactivate "${toggleTarget?.name}"? Reactivated users will be granted login and operational permissions again.`
+        }
+        confirmLabel={(toggleTarget?.isActive ?? true) ? 'Suspend' : 'Activate'}
+        variant={(toggleTarget?.isActive ?? true) ? 'destructive' : 'default'}
+        loading={updateMutation.isPending}
+      />
 
       <ConfirmDialog
         open={!!deleteTarget}
