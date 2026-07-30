@@ -181,9 +181,45 @@ export async function seedSuperAdminUser(): Promise<void> {
   }, 'Default Super Admin created');
 }
 
+const MANAGER_USERS = [
+  { name: 'Erfan', email: 'erfan@warex.com' },
+];
+
+export async function seedManagers(): Promise<void> {
+  const managerRole = await RoleModel.findOne({ name: 'Manager' }).lean();
+  if (!managerRole) {
+    logger.warn('Manager role not found — skipping manager user seed');
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash('worker123', SALT_ROUNDS);
+
+  for (const m of MANAGER_USERS) {
+    const exists = await UserModel.findOne({ email: m.email });
+    if (exists) {
+      if (exists.roleId.toString() !== managerRole._id.toString()) {
+        exists.roleId = managerRole._id;
+        await exists.save();
+        logger.info({ email: m.email, name: m.name }, 'Updated user role to Manager');
+      } else {
+        logger.info(`Manager ${m.email} already exists — skipping`);
+      }
+      continue;
+    }
+
+    await UserModel.create({
+      name: m.name,
+      email: m.email,
+      password: hashedPassword,
+      roleId: managerRole._id,
+    });
+
+    logger.info({ email: m.email, name: m.name }, 'Manager user created');
+  }
+}
+
 const WORKER_USERS = [
   { name: 'Anshil', email: 'anshil@warex.com' },
-  { name: 'Erfan', email: 'erfan@warex.com' },
   { name: 'Hari', email: 'hari@warex.com' },
   { name: 'Shemil', email: 'shemil@warex.com' },
 ];
@@ -219,5 +255,6 @@ export async function seedAll(): Promise<void> {
   await seedPermissions();
   await seedRoles();
   await seedSuperAdminUser();
+  await seedManagers();
   await seedWorkers();
 }

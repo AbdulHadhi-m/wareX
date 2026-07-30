@@ -137,7 +137,8 @@ On first startup, the backend automatically seeds:
 - **48 permissions** covering all modules
 - **3 roles:** SuperAdmin, Manager, Worker (each with appropriate permissions)
 - **1 SuperAdmin user:** `superadmin@warex.com` / `superadmin123`
-- **4 Worker users:** `anshil@warex.com`, `erfan@warex.com`, `hari@warex.com`, `shemil@warex.com` (password: `worker123`)
+- **1 Manager user:** `erfan@warex.com` (password: `worker123`)
+- **3 Worker users:** `anshil@warex.com`, `hari@warex.com`, `shemil@warex.com` (password: `worker123`)
 
 Seeding runs automatically when the server starts. To re-run, drop the database and restart.
 
@@ -365,8 +366,8 @@ Critical multi-document operations use **MongoDB transactions** with retry logic
 | Role        | Email                    | Password        |
 |-------------|--------------------------|-----------------|
 | SuperAdmin  | superadmin@warex.com     | superadmin123   |
+| Manager     | erfan@warex.com          | worker123       |
 | Worker      | anshil@warex.com         | worker123       |
-| Worker      | erfan@warex.com          | worker123       |
 | Worker      | hari@warex.com           | worker123       |
 | Worker      | shemil@warex.com         | worker123       |
 
