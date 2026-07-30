@@ -24,11 +24,6 @@ export function AisleListPage() {
   const { data: warehouses = [] } = useWarehousesForAisle();
   const { data: rawZones = [] } = useAllZones();
 
-  const zones: NamedEntity[] = useMemo(
-    () => rawZones.map((z) => ({ id: z.id, name: z.name, code: z.code })),
-    [rawZones],
-  );
-
   const warehouseZoneMap = useMemo(() => {
     const map = new Map<string, NamedEntity[]>();
     rawZones.forEach((z) => {
@@ -91,7 +86,7 @@ export function AisleListPage() {
         zoneFilter={zoneFilter}
         onZoneFilterChange={setZoneFilter}
         warehouses={warehouses}
-        zones={zones}
+        zones={rawZones}
         warehouseZoneMap={warehouseZoneMap}
       />
     </PageContainer>

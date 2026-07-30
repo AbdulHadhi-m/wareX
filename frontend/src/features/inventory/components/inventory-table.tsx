@@ -53,6 +53,9 @@ interface InventoryTableProps {
   zones: ZoneOption[];
   aisles: AisleOption[];
   bins: BinOption[];
+  allZones?: ZoneOption[];
+  allAisles?: AisleOption[];
+  allBins?: BinOption[];
 }
 
 export function InventoryTable({
@@ -82,21 +85,24 @@ export function InventoryTable({
   zones,
   aisles,
   bins,
+  allZones = zones,
+  allAisles = aisles,
+  allBins = bins,
 }: InventoryTableProps) {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const isManager = user?.role === 'Manager';
+  const isManager = user?.role === 'Manager' || user?.role === 'SuperAdmin';
 
   const warehouseMap = useMemo(
     () => new Map(warehouses.map((w) => [w.id, w])),
     [warehouses],
   );
-  const zoneMap = useMemo(() => new Map(zones.map((z) => [z.id, z])), [zones]);
+  const zoneMap = useMemo(() => new Map(allZones.map((z) => [z.id, z])), [allZones]);
   const aisleMap = useMemo(
-    () => new Map(aisles.map((a) => [a.id, a])),
-    [aisles],
+    () => new Map(allAisles.map((a) => [a.id, a])),
+    [allAisles],
   );
-  const binMap = useMemo(() => new Map(bins.map((b) => [b.id, b])), [bins]);
+  const binMap = useMemo(() => new Map(allBins.map((b) => [b.id, b])), [allBins]);
 
   const columns = useMemo(
     () => [

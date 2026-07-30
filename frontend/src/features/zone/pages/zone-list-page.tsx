@@ -12,7 +12,7 @@ import { useZones, useWarehousesForSelect } from '../hooks/use-zones';
 export function ZoneListPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const isManager = user?.role === 'Manager';
+  const isManager = user?.role === 'Manager' || user?.role === 'SuperAdmin';
 
   const [search, setSearch] = useState('');
   const [warehouseFilter, setWarehouseFilter] = useState('');

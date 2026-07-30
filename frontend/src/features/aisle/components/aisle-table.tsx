@@ -17,7 +17,7 @@ import { EmptyState } from '@/components/common/empty-state';
 import { ErrorState } from '@/components/common/error-state';
 import { ConfirmDialog } from '@/components/common/confirm-dialog';
 import { useAuth } from '@/features/auth';
-import type { Aisle, NamedEntity } from '../types';
+import type { Aisle, NamedEntity, ZoneInfo } from '../types';
 import { useDeleteAisle } from '../hooks/use-aisles';
 
 const columnHelper = createColumnHelper<Aisle>();
@@ -40,7 +40,7 @@ interface AisleTableProps {
   zoneFilter: string;
   onZoneFilterChange: (value: string) => void;
   warehouses: NamedEntity[];
-  zones: NamedEntity[];
+  zones: ZoneInfo[];
   warehouseZoneMap: Map<string, NamedEntity[]>;
 }
 
@@ -110,7 +110,7 @@ export function AisleTable({
           const aisle = info.row.original;
           const z = zoneMap.get(aisle.zoneId);
           if (!z) return '-';
-          const w = warehouseMap.get(z.id);
+          const w = warehouseMap.get(z.warehouseId);
           return w ? `${w.name} (${w.code})` : '-';
         },
       },

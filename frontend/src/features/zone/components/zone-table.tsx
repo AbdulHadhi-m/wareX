@@ -59,7 +59,7 @@ export function ZoneTable({
 }: ZoneTableProps) {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const isManager = user?.role === 'Manager';
+  const isManager = user?.role === 'Manager' || user?.role === 'SuperAdmin';
   const deleteMutation = useDeleteZone();
   const [deleteTarget, setDeleteTarget] = useState<Zone | null>(null);
 

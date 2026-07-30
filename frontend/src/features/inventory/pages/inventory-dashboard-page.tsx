@@ -6,9 +6,9 @@ import { InventoryTable } from '../components/inventory-table';
 import {
   useInventory,
   useWarehousesForInventory,
-  useZonesByWarehouse,
-  useAislesByZone,
-  useBinsByAisle,
+  useAllZones,
+  useAllAisles,
+  useAllBins,
 } from '../hooks/use-inventory';
 
 export function InventoryDashboardPage() {
@@ -25,9 +25,34 @@ export function InventoryDashboardPage() {
   });
 
   const { data: warehouses = [] } = useWarehousesForInventory();
-  const { data: zones = [] } = useZonesByWarehouse(warehouseFilter);
-  const { data: aisles = [] } = useAislesByZone(zoneFilter);
-  const { data: bins = [] } = useBinsByAisle(aisleFilter);
+  const { data: allZones = [] } = useAllZones();
+  const { data: allAisles = [] } = useAllAisles();
+  const { data: allBins = [] } = useAllBins();
+
+  const zones = useMemo(
+    () => (warehouseFilter ? allZones.filter((z) => z.warehouseId === warehouseFilter) : allZones),
+    [allZones, warehouseFilter],
+  );
+
+  const aisles = useMemo(() => {
+    let filtered = allAisles;
+    if (warehouseFilter) {
+      const zoneIds = new Set(allZones.filter((z) => z.warehouseId === warehouseFilter).map((z) => z.id));
+      filtered = filtered.filter((a) => zoneIds.has(a.zoneId));
+    }
+    if (zoneFilter) {
+      filtered = filtered.filter((a) => a.zoneId === zoneFilter);
+    }
+    return filtered;
+  }, [allAisles, allZones, warehouseFilter, zoneFilter]);
+
+  const bins = useMemo(() => {
+    let filtered = allBins;
+    if (aisleFilter) {
+      filtered = filtered.filter((b) => b.aisleId === aisleFilter);
+    }
+    return filtered;
+  }, [allBins, aisleFilter]);
 
   const params = useMemo(
     () => ({
@@ -90,6 +115,9 @@ export function InventoryDashboardPage() {
         zones={zones}
         aisles={aisles}
         bins={bins}
+        allZones={allZones}
+        allAisles={allAisles}
+        allBins={allBins}
       />
     </PageContainer>
   );
