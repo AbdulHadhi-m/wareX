@@ -61,6 +61,9 @@ interface DeviceTableProps {
   zones: ZoneOption[];
   aisles: AisleOption[];
   bins: BinOption[];
+  allZones?: ZoneOption[];
+  allAisles?: AisleOption[];
+  allBins?: BinOption[];
   brands: string[];
   categories: string[];
 }
@@ -98,12 +101,15 @@ export function DeviceTable({
   zones,
   aisles,
   bins,
+  allZones = zones,
+  allAisles = aisles,
+  allBins = bins,
   brands,
   categories,
 }: DeviceTableProps) {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const isManager = user?.role === 'Manager';
+  const isManager = user?.role === 'Manager' || user?.role === 'SuperAdmin';
   const deleteMutation = useDeleteDevice();
   const [deleteTarget, setDeleteTarget] = useState<Device | null>(null);
 
@@ -111,12 +117,12 @@ export function DeviceTable({
     () => new Map(warehouses.map((w) => [w.id, w])),
     [warehouses],
   );
-  const zoneMap = useMemo(() => new Map(zones.map((z) => [z.id, z])), [zones]);
+  const zoneMap = useMemo(() => new Map(allZones.map((z) => [z.id, z])), [allZones]);
   const aisleMap = useMemo(
-    () => new Map(aisles.map((a) => [a.id, a])),
-    [aisles],
+    () => new Map(allAisles.map((a) => [a.id, a])),
+    [allAisles],
   );
-  const binMap = useMemo(() => new Map(bins.map((b) => [b.id, b])), [bins]);
+  const binMap = useMemo(() => new Map(allBins.map((b) => [b.id, b])), [allBins]);
 
   const columns = useMemo(
     () => [

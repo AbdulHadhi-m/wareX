@@ -11,15 +11,15 @@ import { DeviceTable } from '../components/device-table';
 import {
   useDevices,
   useWarehousesForDevice,
-  useZonesByWarehouse,
-  useAislesByZone,
-  useBinsByAisle,
+  useAllZones,
+  useAllAisles,
+  useAllBins,
 } from '../hooks/use-devices';
 
 export function DeviceListPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const isManager = user?.role === 'Manager';
+  const isManager = user?.role === 'Manager' || user?.role === 'SuperAdmin';
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -37,9 +37,34 @@ export function DeviceListPage() {
   });
 
   const { data: warehouses = [] } = useWarehousesForDevice();
-  const { data: zones = [] } = useZonesByWarehouse(warehouseFilter);
-  const { data: aisles = [] } = useAislesByZone(zoneFilter);
-  const { data: bins = [] } = useBinsByAisle(aisleFilter);
+  const { data: allZones = [] } = useAllZones();
+  const { data: allAisles = [] } = useAllAisles();
+  const { data: allBins = [] } = useAllBins();
+
+  const zones = useMemo(
+    () => (warehouseFilter ? allZones.filter((z) => z.warehouseId === warehouseFilter) : allZones),
+    [allZones, warehouseFilter],
+  );
+
+  const aisles = useMemo(() => {
+    let filtered = allAisles;
+    if (warehouseFilter) {
+      const zoneIds = new Set(allZones.filter((z) => z.warehouseId === warehouseFilter).map((z) => z.id));
+      filtered = filtered.filter((a) => zoneIds.has(a.zoneId));
+    }
+    if (zoneFilter) {
+      filtered = filtered.filter((a) => a.zoneId === zoneFilter);
+    }
+    return filtered;
+  }, [allAisles, allZones, warehouseFilter, zoneFilter]);
+
+  const bins = useMemo(() => {
+    let filtered = allBins;
+    if (aisleFilter) {
+      filtered = filtered.filter((b) => b.aisleId === aisleFilter);
+    }
+    return filtered;
+  }, [allBins, aisleFilter]);
 
   const params = useMemo(() => {
     const sortBy = sorting[0];
@@ -137,6 +162,9 @@ export function DeviceListPage() {
         zones={zones}
         aisles={aisles}
         bins={bins}
+        allZones={allZones}
+        allAisles={allAisles}
+        allBins={allBins}
         brands={brands}
         categories={categories}
       />

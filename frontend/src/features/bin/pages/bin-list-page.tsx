@@ -11,14 +11,14 @@ import type { BinStatus } from '../types';
 import {
   useBins,
   useWarehouses,
-  useZonesByWarehouse,
-  useAislesByZone,
+  useAllZones,
+  useAllAisles,
 } from '../hooks/use-bins';
 
 export function BinListPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const isManager = user?.role === 'Manager';
+  const isManager = user?.role === 'Manager' || user?.role === 'SuperAdmin';
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -32,8 +32,25 @@ export function BinListPage() {
   });
 
   const { data: warehouses = [] } = useWarehouses();
-  const { data: zones = [] } = useZonesByWarehouse(warehouseFilter);
-  const { data: aisles = [] } = useAislesByZone(zoneFilter);
+  const { data: allZones = [] } = useAllZones();
+  const { data: allAisles = [] } = useAllAisles();
+
+  const zones = useMemo(
+    () => (warehouseFilter ? allZones.filter((z) => z.warehouseId === warehouseFilter) : allZones),
+    [allZones, warehouseFilter],
+  );
+
+  const aisles = useMemo(() => {
+    let filtered = allAisles;
+    if (warehouseFilter) {
+      const zoneIds = new Set(allZones.filter((z) => z.warehouseId === warehouseFilter).map((z) => z.id));
+      filtered = filtered.filter((a) => zoneIds.has(a.zoneId));
+    }
+    if (zoneFilter) {
+      filtered = filtered.filter((a) => a.zoneId === zoneFilter);
+    }
+    return filtered;
+  }, [allAisles, allZones, warehouseFilter, zoneFilter]);
 
   const params = useMemo(() => {
     const sortBy = sorting[0];
@@ -92,6 +109,8 @@ export function BinListPage() {
         warehouses={warehouses}
         zones={zones}
         aisles={aisles}
+        allZones={allZones}
+        allAisles={allAisles}
       />
     </PageContainer>
   );

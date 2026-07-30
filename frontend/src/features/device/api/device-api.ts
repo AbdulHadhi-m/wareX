@@ -29,7 +29,16 @@ export const deviceApi = {
   delete: (id: string) => api.delete(`/devices/${id}`),
 
   warehouses: () =>
-    api.get<ApiResponse<NamedEntity[]>>('/warehouses').then((r) => r.data.data!),
+    api.get<ApiResponse<NamedEntity[]>>('/warehouses', { params: { limit: 1000 } }).then((r) => r.data.data!),
+
+  allZones: () =>
+    api.get<ApiResponse<ZoneOption[]>>('/zones', { params: { limit: 1000 } }).then((r) => r.data.data!),
+
+  allAisles: () =>
+    api.get<ApiResponse<AisleOption[]>>('/aisles', { params: { limit: 1000 } }).then((r) => r.data.data!),
+
+  allBins: () =>
+    api.get<ApiResponse<BinOption[]>>('/bins', { params: { limit: 1000 } }).then((r) => r.data.data!),
 
   zonesByWarehouse: (warehouseId: string) =>
     api

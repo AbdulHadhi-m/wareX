@@ -31,6 +31,27 @@ export function useWarehousesForDevice() {
   });
 }
 
+export function useAllZones() {
+  return useQuery({
+    queryKey: [...QUERY_KEYS.DEVICES, 'all-zones'],
+    queryFn: () => deviceApi.allZones(),
+  });
+}
+
+export function useAllAisles() {
+  return useQuery({
+    queryKey: [...QUERY_KEYS.DEVICES, 'all-aisles'],
+    queryFn: () => deviceApi.allAisles(),
+  });
+}
+
+export function useAllBins() {
+  return useQuery({
+    queryKey: [...QUERY_KEYS.DEVICES, 'all-bins'],
+    queryFn: () => deviceApi.allBins(),
+  });
+}
+
 export function useZonesByWarehouse(warehouseId: string) {
   return useQuery({
     queryKey: [...QUERY_KEYS.DEVICES, 'zones-by-warehouse', warehouseId],

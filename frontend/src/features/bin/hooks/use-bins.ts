@@ -39,6 +39,20 @@ export function useWarehouses() {
   });
 }
 
+export function useAllZones() {
+  return useQuery({
+    queryKey: [...QUERY_KEYS.BINS, 'all-zones'],
+    queryFn: () => binApi.allZones(),
+  });
+}
+
+export function useAllAisles() {
+  return useQuery({
+    queryKey: [...QUERY_KEYS.BINS, 'all-aisles'],
+    queryFn: () => binApi.allAisles(),
+  });
+}
+
 export function useZonesByWarehouse(warehouseId: string) {
   return useQuery({
     queryKey: [...QUERY_KEYS.BINS, 'zones-by-warehouse', warehouseId],
